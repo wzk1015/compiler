@@ -10,4 +10,3 @@ void main(){
     printf("Hello World");
     printf(gets1(10, 20));
 }
-

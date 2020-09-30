@@ -7,6 +7,9 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <map>
+#include <sstream>
+
 #include "LexResults.h"
 #include "error.h"
 

@@ -28,12 +28,19 @@ class ErrorException : public exception {
 //    }
 };
 
+#define E_EMPTY_FILE 1
+
 //Lexer
-#define E_UNEXPECTED_CHAR 1
-#define E_UNKNOWN_CHAR 2
-#define E_UNEXPECTED_EOF 3
+#define E_UNEXPECTED_CHAR 2
+#define E_UNKNOWN_CHAR 3
+#define E_UNEXPECTED_EOF 4
 
 //Grammar
-#define E_GRAMMAR 4
+#define E_GRAMMAR 5
+
+//Semantic
+#define E_UNDEFINED_IDENTF 6
+
+#define DEBUG true
 
 #endif

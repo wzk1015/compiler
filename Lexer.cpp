@@ -3,11 +3,7 @@
 //
 
 #include "Lexer.h"
-#include <map>
-#include <vector>
-#include <sstream>
-#include "error.h"
-#include "LexResults.h"
+
 
 string lower(string wd) {
     string s;
@@ -148,6 +144,9 @@ vector<LexResults> Lexer::analyze(const char *in_path, const char *out_path) {
     stringstream buffer;
     buffer << in.rdbuf();
     source = buffer.str();
+    if (source.empty()) {
+        errors.emplace_back("file not found or empty", E_EMPTY_FILE);
+    }
     in.close();
     ofstream out;
 

@@ -2,20 +2,25 @@
 
 #include <utility>
 #include <vector>
+#include <map>
 #include <fstream>
 #include "LexResults.h"
 #include "GrammarResults.h"
 #include "error.h"
+#include "SymTableItem.h"
 
 class Grammar {
 public:
     vector<LexResults> tokens;
-    bool save_to_file;
     vector<Error> errors;
-    int pos = 0;
+    map<string, SymTableItem> symTable;
+    vector<string> output_str;
+
+    bool save_to_file;
+
     LexResults tk{INVALID, INVALID, -1, -1, -1};
+    int pos = 0;
     string sym = "";
-    ofstream out;
 //    string str = "";
     bool try_back = false;
     bool back = false;
@@ -26,7 +31,7 @@ public:
 
     void retract();
 
-    bool back_track(const string &func);
+//    bool back_track(const string &func);
 
     vector<GrammarResults> analyze(const char *out_path);
 
@@ -68,9 +73,9 @@ public:
 
     void VariableDef();
 
-    void VariableDefNoInit();
-
-    void VariableDefInit();
+//    void VariableDefNoInit();
+//
+//    void VariableDefInit();
 
     void TypeIdentifier();
 

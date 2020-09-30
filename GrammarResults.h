@@ -2,8 +2,8 @@
 // Created by wzk on 2020/9/29.
 //
 
-#ifndef TOKEN_ANALYZE_GRAMMARRESULTS_H
-#define TOKEN_ANALYZE_GRAMMARRESULTS_H
+#ifndef COMPILER_GRAMMARRESULTS_H
+#define COMPILER_GRAMMARRESULTS_H
 
 
 class GrammarResults: LexResults {
@@ -11,4 +11,4 @@ class GrammarResults: LexResults {
 };
 
 
-#endif //TOKEN_ANALYZE_GRAMMARRESULTS_H
+#endif //COMPILER_GRAMMARRESULTS_H
