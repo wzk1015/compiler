@@ -6,10 +6,14 @@
 #define COMPILER_LEXER_H
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include "LexResults.h"
+#include "error.h"
+
 using namespace std;
 
 class Lexer {
-private:
+public:
     char ch{};
     string token;
     string symbol;
@@ -20,11 +24,11 @@ private:
     bool save_to_file = false;
     int int_v = -1;
     int num_tokens = 0;
+    vector<Error> errors;
 
-public:
     int read_char();
-    int analyze(const char *, const char *);
-    int get_token();
+    vector<LexResults> analyze(const char *, const char *);
+    LexResults get_token();
     void retract();
     static string special(char);
     static string reserved(string);
@@ -33,3 +37,14 @@ public:
 
 
 #endif
+
+//标识符   IDENFR	else	ELSETK	    -	MINU	=	ASSIGN
+//整形常量 INTCON	    switch	SWITCHTK	*	MULT	;	SEMICN
+//字符常量 CHARCON	case	CASETK	    /	DIV	    ,	COMMA
+//字符串   STRCON	default	DEFAULTTK	<	LSS	    (	LPARENT
+//const	  CONSTTK	while	WHILETK	    <=	LEQ	    )	RPARENT
+//int	  INTTK	    for	    FORTK	    >	GRE	    [	LBRACK
+//char	  CHARTK	scanf	SCANFTK	    >=	GEQ	    ]	RBRACK
+//void	  VOIDTK	printf	PRINTFTK	==	EQL	    {	LBRACE
+//main	  MAINTK	return	RETURNTK	!=	NEQ	    }	RBRACE
+//if	  IFTK	+	PLUS	：	COLON

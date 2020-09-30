@@ -4,9 +4,10 @@
 
 #include "Lexer.h"
 #include <map>
+#include <vector>
 #include <sstream>
 #include "error.h"
-
+#include "LexResults.h"
 
 string lower(string wd) {
     string s;
@@ -22,7 +23,7 @@ string lower(string wd) {
 }
 
 
-int Lexer::get_token() {
+LexResults Lexer::get_token() {
     token.clear();
     read_char();
     while (isspace(ch) && pos < source.length()) {
@@ -31,8 +32,10 @@ int Lexer::get_token() {
 
     if (isspace(ch)) {
         //last character of file
-        return 1;
+        return LexResults(INVALID, INVALID, -1, -1, -1);
     }
+
+    LexResults r(INVALID, INVALID, line_num, col_num, pos);
 
     if (isalpha(ch) || ch == '_') {
         while (isalnum(ch) || ch == '_') {
@@ -56,15 +59,12 @@ int Lexer::get_token() {
         read_char();
         if (ch != '\'') {
             string err = isspace(ch) ? " " : string(&ch);
-            throw Error("expected single quote sign ' , got " + err + " instead", line_num, col_num);
+            errors.emplace_back("expected single quote sign ' , got " + err + " instead", line_num, col_num,
+                                E_UNEXPECTED_CHAR);
         }
     } else if (ch == '\"') {
         while (true) {
-            try {
-                read_char();
-            } catch (Error) {
-                throw Error("expected double quote sign \", but reach end of file", line_num, col_num);
-            }
+            read_char();
             if (ch == '\"') {
                 break;
             }
@@ -78,7 +78,7 @@ int Lexer::get_token() {
         read_char();
         if (ch != '=') {
             string err = isspace(ch) ? " " : string(&ch);
-            throw Error("expected '!=', got !" + err + " instead", line_num, col_num);
+            errors.emplace_back("expected '!=', got !" + err + " instead", line_num, col_num, E_UNEXPECTED_CHAR);
         }
         token = "!=";
         symbol = "NEQ";
@@ -113,44 +113,75 @@ int Lexer::get_token() {
             retract();
         }
     } else {
-        throw Error("unknown character: " + string(&ch), line_num, col_num);
+        errors.emplace_back("unknown character: " + string(&ch), line_num, col_num, E_UNKNOWN_CHAR);
     }
+
+    r.type = symbol;
+    r.str = token;
     if (symbol == "INTCON") {
-        int_v = (int) strtol(token.c_str(), nullptr, 10);
+        r.v_int = (int) strtol(token.c_str(), nullptr, 10);
     }
-    return 0;
+    else if (symbol == "STRCON") {
+        if (token.empty()) {
+            errors.emplace_back("empty string", line_num, col_num, E_UNEXPECTED_CHAR);
+        }
+        for (auto &c: token) {
+            if (c <= 31 || c == 34 || c >= 127) {
+                errors.emplace_back("invalid ascii character in string: " + string(&c),
+                                    line_num, col_num, E_UNKNOWN_CHAR);
+            }
+        }
+    }
+    else if (symbol == "CHARCON") {
+        r.v_char = token.c_str()[0];
+        if (r.v_char != '+' && r.v_char != '-' && r.v_char != '*'
+            && r.v_char != '/' && r.v_char != '_' && !isalnum(r.v_char)) {
+            errors.emplace_back("invalid character: " + string(&r.v_char),
+                                line_num, col_num, E_UNKNOWN_CHAR);
+        }
+    }
+    return r;
 }
 
-int Lexer::analyze(const char *in_path, const char *out_path) {
+vector<LexResults> Lexer::analyze(const char *in_path, const char *out_path) {
     ifstream in(in_path);
     stringstream buffer;
     buffer << in.rdbuf();
     source = buffer.str();
     in.close();
+    ofstream out;
+
+    vector<LexResults> results;
+
     if (save_to_file) {
-        ofstream out(out_path);
-        while (pos < source.length()) {
-            if (get_token() == 0) {
-                out << symbol << " " << token << endl;
+        out.open(out_path);
+    }
+    while (pos < source.length()) {
+        try {
+            LexResults r = get_token();
+            if (r.type != INVALID) {
+                results.push_back(r);
+                if (save_to_file) {
+                    out << symbol << " " << token << endl;
+                }
                 num_tokens++;
             }
+        } catch (exception) {
+            errors.emplace_back("unexpected end of file", E_UNEXPECTED_EOF);
+            break;
         }
-        out.close();
-    } else {
-        while (pos < source.length())
-            get_token();
     }
+    out.close();
 
     cout << "Lexer complete successfully. Extracted " << num_tokens << " tokens." << endl;
-    return 0;
+    return results;
 }
 
 int Lexer::read_char() {
     if (pos >= source.length()) {
-        throw Error("unexpected end of file", line_num, col_num);
+        throw exception();
     }
-    ch = source[pos];
-    pos++;
+    ch = source[pos++];
     if (ch == '\n') {
         line_num++;
         col_num = 0;
