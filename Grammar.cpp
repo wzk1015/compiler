@@ -44,28 +44,28 @@ void Grammar::error(const string &expected) {
     }
 }
 
-bool Grammar::back_track(const string &func) {
-    int old_pos = pos;
-    try_back = true;
-    if (func == "UnsignedInt") {
-        UnsignedInt();
-    } else if (func == "VariableDeclare") {
-        VariableDeclare();
-    } else if (func == "VariableDefNoInit") {
-        VariableDefNoInit();
-    } else if (func == "VariableDefInit") {
-        VariableDefInit();
-    }
-    try_back = false;
-    if (back) {
-        pos = old_pos;
-        tk = tokens[pos - 1];
-        sym = tk.type;
-        back = false;
-        return true;
-    }
-    return false;
-}
+//bool Grammar::back_track(const string &func) {
+//    int old_pos = pos;
+//    try_back = true;
+//    if (func == "UnsignedInt") {
+//        UnsignedInt();
+//    } else if (func == "VariableDeclare") {
+//        VariableDeclare();
+//    } else if (func == "VariableDefNoInit") {
+//        VariableDefNoInit();
+//    } else if (func == "VariableDefInit") {
+//        VariableDefInit();
+//    }
+//    try_back = false;
+//    if (back) {
+//        pos = old_pos;
+//        tk = tokens[pos - 1];
+//        sym = tk.type;
+//        back = false;
+//        return true;
+//    }
+//    return false;
+//}
 
 
 //void Grammar::AddOp() {
@@ -267,57 +267,8 @@ void Grammar::VariableDeclare() {
 }
 
 void Grammar::VariableDef() {
-//    next_sym();
-//    next_sym();
+    bool init;
 
-
-
-    if (back_track("VariableDefNoInit")) {
-        VariableDefInit();
-    }
-    output("<变量定义>");
-
-    retract();
-}
-
-void Grammar::VariableDefNoInit() {
-    bool first = true;
-
-    while (sym == "COMMA" || first) {
-        if (first) {
-            first = false;
-            TypeIdentifier();
-        }
-        next_sym();
-        Identifier();
-        next_sym();
-        if (sym == "LBRACK") {
-            next_sym();
-            UnsignedInt();
-            next_sym();
-            if (sym != "RBRACK") {
-                error("']'");
-            }
-            next_sym();
-            if (sym == "LBRACK") {
-                next_sym();
-                UnsignedInt();
-                next_sym();
-                if (sym != "RBRACK") {
-                    error("']'");
-                }
-            } else {
-                retract();
-            }
-        } else {
-            retract();
-        }
-    }
-
-    output("<变量定义无初始化>");
-}
-
-void Grammar::VariableDefInit() {
     TypeIdentifier();
     next_sym();
     Identifier();
@@ -325,6 +276,7 @@ void Grammar::VariableDefInit() {
     if (sym == "ASSIGN") {
         next_sym();
         Const();
+        init = true;
     }
     else if (sym == "LBRACK") {
         next_sym();
@@ -348,6 +300,7 @@ void Grammar::VariableDefInit() {
             if (sym != "RBRACE") {
                 error("'}'");
             }
+            init = true;
         }
         else if (sym == "LBRACK") {
             next_sym();
@@ -357,43 +310,170 @@ void Grammar::VariableDefInit() {
                 error("']'");
             }
             next_sym();
-            if (sym != "ASSIGN") {
-                error("'='");
-            }
-            next_sym();
-            if (sym != "LBRACE") {
-                error("'{'");
-            }
-            do {
+            if (sym == "ASSIGN") {
                 next_sym();
                 if (sym != "LBRACE") {
                     error("'{'");
                 }
                 do {
                     next_sym();
-                    Const();
-                    next_sym();
+                    if (sym != "LBRACE") {
+                        error("'{'");
+                    }
+                    do {
+                        next_sym();
+                        Const();
+                        next_sym();
+                    } while (sym == "COMMA");
+                    //已预读
+                    if (sym != "RBRACE") {
+                        error("'}'");
+                    }
                 } while (sym == "COMMA");
                 //已预读
                 if (sym != "RBRACE") {
                     error("'}'");
                 }
-            } while (sym == "COMMA");
-            //已预读
-            if (sym != "RBRACE") {
-                error("'}'");
+                init = true;
+            } else {
+                retract();
+                init = false;
             }
         }
         else {
-            error("array definition with init");
+            retract();
+            init = false;
         }
     }
     else {
-        error("variable definition with init");
+        retract();
+        init = false;
     }
 
-    output("<变量定义及初始化>");
+    if (init) {
+        output("<变量定义及初始化>");
+    }
+    else {
+        output("<变量定义无初始化>");
+    }
+
+    output("<变量定义>");
 }
+
+//void Grammar::VariableDefNoInit() {
+//    bool first = true;
+//
+//    while (sym == "COMMA" || first) {
+//        if (first) {
+//            first = false;
+//            TypeIdentifier();
+//        }
+//        next_sym();
+//        Identifier();
+//        next_sym();
+//        if (sym == "LBRACK") {
+//            next_sym();
+//            UnsignedInt();
+//            next_sym();
+//            if (sym != "RBRACK") {
+//                error("']'");
+//            }
+//            next_sym();
+//            if (sym == "LBRACK") {
+//                next_sym();
+//                UnsignedInt();
+//                next_sym();
+//                if (sym != "RBRACK") {
+//                    error("']'");
+//                }
+//            } else {
+//                retract();
+//            }
+//        } else {
+//            retract();
+//        }
+//    }
+//
+//    output("<变量定义无初始化>");
+//}
+//
+//void Grammar::VariableDefInit() {
+//    TypeIdentifier();
+//    next_sym();
+//    Identifier();
+//    next_sym();
+//    if (sym == "ASSIGN") {
+//        next_sym();
+//        Const();
+//    }
+//    else if (sym == "LBRACK") {
+//        next_sym();
+//        UnsignedInt();
+//        next_sym();
+//        if (sym != "RBRACK") {
+//            error("']'");
+//        }
+//        next_sym();
+//        if (sym == "ASSIGN") {
+//            next_sym();
+//            if (sym != "LBRACE") {
+//                error("'{'");
+//            }
+//            do {
+//                next_sym();
+//                Const();
+//                next_sym();
+//            } while (sym == "COMMA");
+//            //已预读
+//            if (sym != "RBRACE") {
+//                error("'}'");
+//            }
+//        }
+//        else if (sym == "LBRACK") {
+//            next_sym();
+//            UnsignedInt();
+//            next_sym();
+//            if (sym != "RBRACK") {
+//                error("']'");
+//            }
+//            next_sym();
+//            if (sym != "ASSIGN") {
+//                error("'='");
+//            }
+//            next_sym();
+//            if (sym != "LBRACE") {
+//                error("'{'");
+//            }
+//            do {
+//                next_sym();
+//                if (sym != "LBRACE") {
+//                    error("'{'");
+//                }
+//                do {
+//                    next_sym();
+//                    Const();
+//                    next_sym();
+//                } while (sym == "COMMA");
+//                //已预读
+//                if (sym != "RBRACE") {
+//                    error("'}'");
+//                }
+//            } while (sym == "COMMA");
+//            //已预读
+//            if (sym != "RBRACE") {
+//                error("'}'");
+//            }
+//        }
+//        else {
+//            error("array definition with init");
+//        }
+//    }
+//    else {
+//        error("variable definition with init");
+//    }
+//
+//    output("<变量定义及初始化>");
+//}
 
 void Grammar::TypeIdentifier() {
     if (sym != "INTTK" && sym != "CHARTK") {
