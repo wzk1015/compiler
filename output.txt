@@ -1,66 +1,165 @@
-CONSTTK coNst
+CONSTTK const
 INTTK int
-IDENFR cONst1
+IDENFR CONST_INT_2
 ASSIGN =
-INTCON 001
+INTCON 2
 <无符号整数>
 <整数>
-COMMA ,
-IDENFR const2
+<常量定义>
+SEMICN ;
+<常量说明>
+VOIDTK void
+IDENFR func1_print_99
+LPARENT (
+<参数表>
+RPARENT )
+LBRACE {
+CONSTTK const
+INTTK int
+IDENFR a
 ASSIGN =
-MINU -
-INTCON 100
+INTCON 9
 <无符号整数>
 <整数>
 <常量定义>
 SEMICN ;
 CONSTTK const
-CHARTK char
-IDENFR const3
+INTTK int
+IDENFR b
 ASSIGN =
-CHARCON _
+INTCON 11
+<无符号整数>
+<整数>
 <常量定义>
 SEMICN ;
 <常量说明>
-INTTK int
-IDENFR change1
-<变量定义无初始化>
-<变量定义>
-SEMICN ;
-CHARTK char
-IDENFR change3
-<变量定义无初始化>
-<变量定义>
-SEMICN ;
-<变量说明>
-INTTK int
-IDENFR gets1
-<声明头部>
+PRINTFTK printf
 LPARENT (
-INTTK int
-IDENFR var1
-COMMA ,
-INTTK int
-IDENFR var2
-<参数表>
+STRCON -----
+<字符串>
 RPARENT )
-LBRACE {
-IDENFR change1
-ASSIGN =
-IDENFR var1
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+STRCON func1_print_99 done!
+<字符串>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+STRCON The result is: 
+<字符串>
+COMMA ,
+IDENFR a
 <因子>
-<项>
-PLUS +
-IDENFR var2
+MULT *
+IDENFR b
 <因子>
 <项>
 <表达式>
-<赋值语句>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+STRCON -----
+<字符串>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+RETURNTK return
+<返回语句>
+SEMICN ;
+<语句>
+<语句列>
+<复合语句>
+RBRACE }
+<无返回值函数定义>
+INTTK int
+IDENFR fun2_print_return_999
+<声明头部>
+LPARENT (
+<参数表>
+RPARENT )
+LBRACE {
+INTTK int
+IDENFR a
+ASSIGN =
+INTCON 111
+<无符号整数>
+<整数>
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+INTTK int
+IDENFR b
+ASSIGN =
+INTCON 9
+<无符号整数>
+<整数>
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+<变量说明>
+PRINTFTK printf
+LPARENT (
+STRCON -----
+<字符串>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+STRCON fun2_print_return_999 done!
+<字符串>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+STRCON The result is below: 
+<字符串>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a
+<因子>
+MULT *
+IDENFR b
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+STRCON -----
+<字符串>
+RPARENT )
+<写语句>
 SEMICN ;
 <语句>
 RETURNTK return
 LPARENT (
-IDENFR change1
+IDENFR a
+<因子>
+MULT *
+IDENFR b
 <因子>
 <项>
 <表达式>
@@ -77,39 +176,84 @@ MAINTK main
 LPARENT (
 RPARENT )
 LBRACE {
+INTTK int
+IDENFR a
+<变量定义无初始化>
+<变量定义>
+SEMICN ;
+INTTK int
+IDENFR b
+ASSIGN =
+PLUS +
+INTCON 100
+<无符号整数>
+<整数>
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+INTTK int
+IDENFR c
+ASSIGN =
+MINU -
+INTCON 100
+<无符号整数>
+<整数>
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+<变量说明>
+IDENFR c
+ASSIGN =
+IDENFR b
+<因子>
+MULT *
+IDENFR c
+<因子>
+<项>
+MINU -
+LPARENT (
+IDENFR b
+<因子>
+MULT *
+IDENFR b
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
 PRINTFTK printf
 LPARENT (
-STRCON Hello World
+STRCON 18231052
 <字符串>
 RPARENT )
 <写语句>
 SEMICN ;
 <语句>
-PRINTFTK printf
+IDENFR func1_print_99
 LPARENT (
-IDENFR gets1
+<值参数表>
+RPARENT )
+<无返回值函数调用语句>
+SEMICN ;
+<语句>
+IDENFR a
+ASSIGN =
+IDENFR fun2_print_return_999
 LPARENT (
-INTCON 10
-<无符号整数>
-<整数>
-<因子>
-<项>
-<表达式>
-COMMA ,
-INTCON 20
-<无符号整数>
-<整数>
-<因子>
-<项>
-<表达式>
 <值参数表>
 RPARENT )
 <有返回值函数调用语句>
 <因子>
 <项>
 <表达式>
-RPARENT )
-<写语句>
+<赋值语句>
 SEMICN ;
 <语句>
 <语句列>

@@ -41,6 +41,6 @@ class ErrorException : public exception {
 //Semantic
 #define E_UNDEFINED_IDENTF 6
 
-#define DEBUG true
+#define DEBUG false
 
 #endif

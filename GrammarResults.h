@@ -6,7 +6,7 @@
 #define COMPILER_GRAMMARRESULTS_H
 
 
-class GrammarResults: LexResults {
+class GrammarResults {
 
 };
 

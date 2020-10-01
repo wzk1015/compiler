@@ -21,9 +21,6 @@ public:
     LexResults tk{INVALID, INVALID, -1, -1, -1};
     int pos = 0;
     string sym = "";
-//    string str = "";
-    bool try_back = false;
-    bool back = false;
 
     void error(const string &expected);
 
@@ -31,27 +28,12 @@ public:
 
     void retract();
 
-//    bool back_track(const string &func);
 
     vector<GrammarResults> analyze(const char *out_path);
 
     Grammar(vector<LexResults> t, bool save) : tokens(std::move(t)), save_to_file(save) {};
 
-    void output(const string& name);
-
-//    void AddOp();
-//
-//    void MulOp();
-//
-//    void RelationOp();
-//
-//    void Letter();
-//
-//    void Digit();
-
-//    void Char();
-//
-//    void Str();
+    void output(const string &name);
 
     void Program();
 
@@ -71,13 +53,11 @@ public:
 
     void VariableDeclare();
 
-    void VariableDef();
-
-//    void VariableDefNoInit();
-//
-//    void VariableDefInit();
+    void VariableDef();;
 
     void TypeIdentifier();
+
+    void SharedFuncDef();
 
     void RetFuncDef();
 
@@ -114,6 +94,8 @@ public:
     void CaseSubStmt();
 
     void Default();
+
+    void SharedFuncCall();
 
     void RetFuncCall();
 
