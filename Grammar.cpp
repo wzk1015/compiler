@@ -67,8 +67,14 @@ void Grammar::retract() {
 }
 
 void Grammar::error(const string &expected) {
-    Errors::add("Expected " + expected + ", but got " + tk.str + " (type: " + sym + ")",
+    Errors::add("Expected " + expected + ", but got '" + tk.str + "' (type: " + sym + ")",
                 tk.line, tk.column, E_GRAMMAR);
+    while (sym != "SEMICN") {
+        next_sym();    //skip until next statement
+    }
+    if (expected != "';'") {
+        retract();
+    }
 }
 
 

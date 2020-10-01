@@ -12,7 +12,9 @@ int main() {
     Grammar grammar(lex_results, true);
     vector<GrammarResults> grammar_results = grammar.analyze("output.txt");
 
-    Errors::terminate();
+    if (Errors::terminate()) {
+        throw exception();
+    }
 
     return 0;
 }

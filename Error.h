@@ -49,14 +49,22 @@ public:
             cout << errors[errors.size()-1].rich_msg << endl;
         }
     }
-    static void terminate() {
-        cout << errors.size() << " error(s). " << endl;
-        if (!errors.empty()) {
-            for (auto &err: errors) {
-                cout << err.rich_msg << endl;
-            }
-            throw exception();
+    static bool terminate() {
+        if (errors.empty()) {
+            cout << "All correct.";
+            return false;
         }
+
+        if (errors.size() == 1) {
+            cout << "1 error. Listed as below." << endl;
+        } else {
+            cout << errors.size() << " error(s). Listed as below." << endl;
+        }
+
+        for (auto &err: errors) {
+            cout << err.rich_msg << endl;
+        }
+        return true;
     }
 };
 
