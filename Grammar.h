@@ -6,13 +6,12 @@
 #include <fstream>
 #include "LexResults.h"
 #include "GrammarResults.h"
-#include "error.h"
+#include "Error.h"
 #include "SymTableItem.h"
 
 class Grammar {
 public:
     vector<LexResults> tokens;
-    vector<Error> errors;
     map<string, SymTableItem> symTable;
     vector<string> output_str;
 

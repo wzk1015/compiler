@@ -11,7 +11,7 @@
 #include <sstream>
 
 #include "LexResults.h"
-#include "error.h"
+#include "Error.h"
 
 using namespace std;
 
@@ -27,7 +27,6 @@ public:
     bool save_to_file = false;
     int int_v = -1;
     int num_tokens = 0;
-    vector<Error> errors;
 
     int read_char();
     vector<LexResults> analyze(const char *, const char *);

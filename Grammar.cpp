@@ -1,15 +1,22 @@
 #include "Grammar.h"
 
-vector<Error> err;
-
 vector<GrammarResults> Grammar::analyze(const char *out_path) {
     ofstream out;
     if (save_to_file) {
         out.open(out_path);
     }
 
-    next_sym();
-    Program();
+    try {
+        next_sym();
+        Program();
+    } catch (exception) {
+        Errors::add("unexpected end of tokens", E_UNEXPECTED_EOF);
+    }
+
+    if (pos != tokens.size()) {
+        Errors::add("unexpected extra token '" + tokens[pos].str + "' at end of file",
+                    tokens[pos].line, tokens[pos].column, E_UNEXPECTED_CHAR);
+    }
 
     if (save_to_file) {
         for (auto &str: output_str) {
@@ -18,7 +25,6 @@ vector<GrammarResults> Grammar::analyze(const char *out_path) {
     }
 
     out.close();
-    errors.insert(errors.begin(), err.begin(), err.end());
 
     cout << "Grammar complete successfully." << endl;
     return vector<GrammarResults>();
@@ -32,6 +38,9 @@ void Grammar::output(const string &str) {
 }
 
 int Grammar::next_sym() {
+    if (pos >= tokens.size()) {
+        throw exception();
+    }
     tk = tokens[pos++];
     sym = tk.type;
 //    str = tk.str;
@@ -44,7 +53,7 @@ int Grammar::next_sym() {
 
 void Grammar::retract() {
     pos--;
-    tk = tokens[pos-1];
+    tk = tokens[pos - 1];
     sym = tk.type;
     for (unsigned int i = output_str.size() - 1; i >= 0; i--) {
         if (output_str[i][0] != '<') {
@@ -58,11 +67,8 @@ void Grammar::retract() {
 }
 
 void Grammar::error(const string &expected) {
-    err.emplace_back("Expected " + expected + ", but got " + tk.str + " (type: " + sym + ")",
-                         tk.line, tk.column, E_GRAMMAR);
-    if (DEBUG) {
-        cout << "ERROR: " << err[err.size()-1].msg << endl;
-    }
+    Errors::add("Expected " + expected + ", but got " + tk.str + " (type: " + sym + ")",
+                tk.line, tk.column, E_GRAMMAR);
 }
 
 
@@ -78,15 +84,13 @@ void Grammar::Program() {
             retract();
             retract();
             VariableDeclare();
-        }
-        else {
+        } else {
             retract();
             retract();
             while (sym == "INTTK" || sym == "CHARTK" || sym == "VOIDTK") {
                 if (sym == "INTTK" || sym == "CHARTK") {
                     RetFuncDef();
-                } 
-                else {
+                } else {
                     next_sym();
                     if (sym == "MAINTK") {
                         retract();
@@ -242,8 +246,7 @@ void Grammar::VariableDef() {
         next_sym();
         Const();
         init = true;
-    }
-    else if (sym == "LBRACK") {
+    } else if (sym == "LBRACK") {
         next_sym();
         UnsignedInt();
         next_sym();
@@ -266,8 +269,7 @@ void Grammar::VariableDef() {
                 error("'}'");
             }
             init = true;
-        }
-        else if (sym == "LBRACK") {
+        } else if (sym == "LBRACK") {
             next_sym();
             UnsignedInt();
             next_sym();
@@ -305,21 +307,18 @@ void Grammar::VariableDef() {
                 retract();
                 init = false;
             }
-        }
-        else {  //int a[3];
+        } else {  //int a[3];
             retract();
             init = false;
         }
-    }
-    else {  //int a;
+    } else {  //int a;
         retract();
         init = false;
     }
 
     if (init) {
         output("<变量定义及初始化>");
-    }
-    else {  //int a,b,c;
+    } else {  //int a,b,c;
         next_sym();
         while (sym == "COMMA") {
             next_sym();
@@ -516,8 +515,7 @@ void Grammar::Factor() {
         if (sym == "LPARENT") {
             retract(); //func
             RetFuncCall();
-        }
-        else if (sym == "LBRACK") {
+        } else if (sym == "LBRACK") {
             next_sym();
             Expr();
             next_sym();
@@ -559,72 +557,60 @@ void Grammar::Factor() {
 void Grammar::Stmt() {
     if (sym == "WHILETK" || sym == "FORTK") {
         LoopStmt();
-    }
-    else if (sym == "IFTK") {
+    } else if (sym == "IFTK") {
         ConditionStmt();
-    }
-    else if (sym == "SWITCHTK") {
+    } else if (sym == "SWITCHTK") {
         CaseStmt();
-    }
-    else if (sym == "SCANFTK") {
+    } else if (sym == "SCANFTK") {
         ReadStmt();
         next_sym();
         if (sym != "SEMICN") {
             error("';'");
         }
-    }
-    else if (sym == "PRINTFTK") {
+    } else if (sym == "PRINTFTK") {
         WriteStmt();
         next_sym();
         if (sym != "SEMICN") {
             error("';'");
         }
-    }
-    else if (sym == "RETURNTK") {
+    } else if (sym == "RETURNTK") {
         ReturnStmt();
         next_sym();
         if (sym != "SEMICN") {
             error("';'");
         }
-    }
-    else if (sym == "LBRACE") {
+    } else if (sym == "LBRACE") {
         next_sym();
         StmtList();
         next_sym();
         if (sym != "RBRACE") {
             error("'}'");
         }
-    }
-    else if (sym == "SEMICN") {
+    } else if (sym == "SEMICN") {
         //空语句
-    }
-    else if (sym == "IDENFR") {
+    } else if (sym == "IDENFR") {
         next_sym(); // func(
         if (sym == "LPARENT") {
             retract(); //func
             if (symTable.find(tk.str) == symTable.end()) {
-                //TODO：语义错误，未定义函数
-                err.emplace_back("undefined function call", tk.line, tk.column, E_UNDEFINED_IDENTF);
+                Errors::add("undefined function call", tk.line, tk.column, E_UNDEFINED_IDENTF);
             }
             if (symTable.find(tk.str)->second.has_return) {
                 RetFuncCall();
             } else {
                 NonRetFuncCall();
             }
-        }
-        else if (sym == "ASSIGN" || sym == "LBRACK") {
+        } else if (sym == "ASSIGN" || sym == "LBRACK") {
             retract();
             AssignStmt();
-        }
-        else {
+        } else {
             error("assign statement or function call");
         }
         next_sym();
         if (sym != "SEMICN") {
             error("';'");
         }
-    }
-    else {
+    } else {
         error("statement");
     }
     output("<语句>");
