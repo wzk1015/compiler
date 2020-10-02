@@ -9,7 +9,7 @@
 #define NOTFOUND "NOT FOUND"
 #define INVALID "NOT VALID"
 
-#define DEBUG false
+#define DEBUG true
 
 #include <iostream>
 #include <vector>
@@ -51,12 +51,12 @@ public:
     }
     static bool terminate() {
         if (errors.empty()) {
-            cout << "All correct.";
+            cout << endl << "All correct." << endl;
             return false;
         }
 
         if (errors.size() == 1) {
-            cout << "1 error. Listed as below." << endl;
+            cout << endl << "1 error. Listed as below." << endl;
         } else {
             cout << errors.size() << " error(s). Listed as below." << endl;
         }

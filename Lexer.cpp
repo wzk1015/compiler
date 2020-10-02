@@ -28,7 +28,7 @@ LexResults Lexer::get_token() {
 
     if (isspace(ch)) {
         //last character of file
-        return LexResults(INVALID, INVALID, -1, -1, -1);
+        return LexResults(INVALID);
     }
 
     LexResults r(INVALID, INVALID, line_num, col_num, pos);
@@ -139,41 +139,13 @@ LexResults Lexer::get_token() {
     return r;
 }
 
-vector<LexResults> Lexer::analyze(const char *in_path, const char *out_path) {
-    ifstream in(in_path);
-    stringstream buffer;
-    buffer << in.rdbuf();
-    source = buffer.str() + "\n";
-    if (source.empty()) {
-        Errors::add("file not found or empty", E_EMPTY_FILE);
+LexResults Lexer::analyze() {
+    try {
+        return get_token();
+    } catch (exception ex) {
+        Errors::add("unexpected end of file", E_UNEXPECTED_EOF);
     }
-    in.close();
-    ofstream out;
-
-    vector<LexResults> results;
-
-    if (save_to_file) {
-        out.open(out_path);
-    }
-    while (pos < source.length()) {
-        try {
-            LexResults r = get_token();
-            if (r.type != INVALID) {
-                results.push_back(r);
-                if (save_to_file) {
-                    out << symbol << " " << token << endl;
-                }
-                num_tokens++;
-            }
-        } catch (exception ex) {
-            Errors::add("unexpected end of file", E_UNEXPECTED_EOF);
-            break;
-        }
-    }
-    out.close();
-
-    cout << "Lexer complete successfully. Extracted " << num_tokens << " tokens." << endl;
-    return results;
+    return LexResults(INVALID);
 }
 
 int Lexer::read_char() {
@@ -183,7 +155,7 @@ int Lexer::read_char() {
     ch = source[pos++];
     if (ch == '\n') {
         line_num++;
-        col_num = 0;
+        col_num = 1;
     } else {
         col_num++;
     }

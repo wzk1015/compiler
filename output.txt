@@ -238,22 +238,26 @@ SEMICN ;
 <语句>
 IDENFR func1_print_99
 LPARENT (
-LBRACK [
-RPARENT )
-<因子>
-<项>
-<表达式>
 <值参数表>
+RPARENT )
 <无返回值函数调用语句>
 SEMICN ;
 <语句>
-<语句列>
-<复合语句>
-RBRACK ]
 IDENFR a
 ASSIGN =
 IDENFR fun2_print_return_999
 LPARENT (
+<值参数表>
 RPARENT )
+<有返回值函数调用语句>
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+<语句列>
+<复合语句>
+RBRACE }
 <主函数>
 <程序>

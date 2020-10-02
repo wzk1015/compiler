@@ -1,8 +1,8 @@
 #include "Grammar.h"
 
-vector<GrammarResults> Grammar::analyze(const char *out_path) {
+vector<GrammarResults> Grammar::analyze() {
     ofstream out;
-    if (save_to_file) {
+    if (out_path != INVALID) {
         out.open(out_path);
     }
 
@@ -13,12 +13,18 @@ vector<GrammarResults> Grammar::analyze(const char *out_path) {
         Errors::add("unexpected end of tokens", E_UNEXPECTED_EOF);
     }
 
-    if (pos != tokens.size()) {
-        Errors::add("unexpected extra token '" + tokens[pos].str + "' at end of file",
-                    tokens[pos].line, tokens[pos].column, E_UNEXPECTED_CHAR);
+    while (lexer.pos < lexer.source.length() -1) {
+        char a =  lexer.source[lexer.pos];
+        if (isspace(a)) {
+            lexer.read_char();
+            continue;
+        }
+        Errors::add("unexpected character '" + string(&a) + "' at end of file",
+                lexer.line_num, lexer.col_num, E_UNEXPECTED_CHAR);
+        break;
     }
 
-    if (save_to_file) {
+    if (out_path != INVALID) {
         for (auto &str: output_str) {
             out << str << endl;
         }
@@ -38,13 +44,19 @@ void Grammar::output(const string &str) {
 }
 
 int Grammar::next_sym() {
-    if (pos >= tokens.size()) {
-        throw exception();
+    if (pos < cur_lex_results.size()) {
+        tk = cur_lex_results[pos];
+    } else {
+        tk = lexer.analyze();
+        if (tk.type == INVALID) {
+            throw exception();
+        }
+        cur_lex_results.push_back(tk);
     }
-    tk = tokens[pos++];
+    pos++;
     sym = tk.type;
-//    str = tk.str;
     output_str.push_back(tk.type + " " + tk.str);
+
     if (DEBUG) {
         cout << tk.type + " " + tk.str << endl;
     }
@@ -53,10 +65,10 @@ int Grammar::next_sym() {
 
 void Grammar::retract() {
     pos--;
-    tk = tokens[pos - 1];
+    tk = cur_lex_results[pos-1];
     sym = tk.type;
     for (unsigned int i = output_str.size() - 1; i >= 0; i--) {
-        if (output_str[i][0] != '<') {
+        if (output_str[i][0] != '<') {  //词法分析输出
             if (DEBUG) {
                 cout << "retract " << output_str[i] << endl;
             }

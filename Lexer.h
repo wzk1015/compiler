@@ -24,17 +24,24 @@ public:
     int pos = 0;
     int line_num = 1;
     int col_num = 1;
-    bool save_to_file = false;
-    int int_v = -1;
-    int num_tokens = 0;
 
-    int read_char();
-    vector<LexResults> analyze(const char *, const char *);
+
+    LexResults analyze();
     LexResults get_token();
+    int read_char();
     void retract();
     static string special(char);
     static string reserved(string);
-    explicit Lexer(bool save_to_file): save_to_file(save_to_file) {};
+    explicit Lexer(const string& in_path) {
+        ifstream in(in_path);
+        stringstream buffer;
+        buffer << in.rdbuf();
+        source = buffer.str() + "\n";
+        if (source.empty()) {
+            Errors::add("file not found or empty", E_EMPTY_FILE);
+        }
+        in.close();
+    };
 };
 
 

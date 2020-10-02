@@ -6,11 +6,8 @@ using namespace std;
 
 
 int main() {
-    Lexer lexer(false);
-    vector<LexResults> lex_results = lexer.analyze("testfile.txt", "-");
-
-    Grammar grammar(lex_results, true);
-    vector<GrammarResults> grammar_results = grammar.analyze("output.txt");
+    Grammar grammar("testfile.txt", "output.txt");
+    vector<GrammarResults> grammar_results = grammar.analyze();
 
     if (Errors::terminate()) {
         throw exception();
