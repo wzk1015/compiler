@@ -6,13 +6,13 @@
 #ifndef COMPILER_ERROR_H
 #define COMPILER_ERROR_H
 
+#include <iostream>
+#include <vector>
+
 #define NOTFOUND "NOT FOUND"
 #define INVALID "NOT VALID"
 
 #define DEBUG true
-
-#include <iostream>
-#include <vector>
 
 using namespace std;
 
@@ -37,8 +37,8 @@ public:
 class Errors {
 public:
     static vector<Error> errors;
-    static void add(const string& s, int ln, int col, int id) {
-        errors.emplace_back(s, ln, col, id);
+    static void add(const string& s, int line, int col, int id) {
+        errors.emplace_back(s, line, col, id);
         if (DEBUG) {
             cout << errors[errors.size()-1].rich_msg << endl;
         }
@@ -56,13 +56,13 @@ public:
         }
 
         if (errors.size() == 1) {
-            cout << endl << "1 error. Listed as below." << endl;
+            cerr << endl << "1 error. Listed as below." << endl;
         } else {
-            cout << errors.size() << " error(s). Listed as below." << endl;
+            cerr << errors.size() << " error(s). Listed as below." << endl;
         }
 
         for (auto &err: errors) {
-            cout << err.rich_msg << endl;
+            cerr << err.rich_msg << endl;
         }
         return true;
     }
@@ -80,6 +80,7 @@ public:
 
 //Semantic
 #define E_UNDEFINED_IDENTF 6
+#define E_REDEFINED_IDENTF 7
 
 
 

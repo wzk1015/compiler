@@ -19,7 +19,7 @@ string lower(string wd) {
 }
 
 
-LexResults Lexer::get_token() {
+Token Lexer::get_token() {
     token.clear();
     read_char();
     while (isspace(ch) && pos < source.length()) {
@@ -28,10 +28,10 @@ LexResults Lexer::get_token() {
 
     if (isspace(ch)) {
         //last character of file
-        return LexResults(INVALID);
+        return Token(INVALID);
     }
 
-    LexResults r(INVALID, INVALID, line_num, col_num, pos);
+    Token r(INVALID, INVALID, line_num, col_num, pos);
 
     if (isalpha(ch) || ch == '_') {
         while (isalnum(ch) || ch == '_') {
@@ -139,13 +139,13 @@ LexResults Lexer::get_token() {
     return r;
 }
 
-LexResults Lexer::analyze() {
+Token Lexer::analyze() {
     try {
         return get_token();
     } catch (exception ex) {
         Errors::add("unexpected end of file", E_UNEXPECTED_EOF);
     }
-    return LexResults(INVALID);
+    return Token(INVALID);
 }
 
 int Lexer::read_char() {

@@ -1,6 +1,6 @@
 #include "Grammar.h"
 
-vector<GrammarResults> Grammar::analyze() {
+int Grammar::analyze() {
     ofstream out;
     if (out_path != INVALID) {
         out.open(out_path);
@@ -33,7 +33,7 @@ vector<GrammarResults> Grammar::analyze() {
     out.close();
 
     cout << "Grammar complete successfully." << endl;
-    return vector<GrammarResults>();
+    return 0;
 }
 
 void Grammar::output(const string &str) {
@@ -153,6 +153,7 @@ void Grammar::ConstDef() {
         do {
             next_sym();
             Identifier();
+            SymTable::add(tk, constant, integer);
             next_sym();
             if (sym != "ASSIGN") {
                 error("'='");
@@ -165,6 +166,7 @@ void Grammar::ConstDef() {
         do {
             next_sym();
             Identifier();
+            SymTable::add(tk, constant, character);
             next_sym();
             if (sym != "ASSIGN") {
                 error("'='");
@@ -202,15 +204,6 @@ void Grammar::Identifier() {
     if (sym != "IDENFR") {
         error("identifier");
     }
-}
-
-void Grammar::DeclareHead() {
-    if (sym != "INTTK" && sym != "CHARTK") {
-        error("'int' or 'char'");
-    }
-    next_sym();
-    Identifier();
-    output("<声明头部>");
 }
 
 void Grammar::Const() {
@@ -257,13 +250,19 @@ void Grammar::VariableDef() {
     bool init;
 
     TypeIdentifier();
+
+    DataType dataType = (sym == "INTTK") ? integer: character;
+
     next_sym();
     Identifier();
+    Token tk2 = tk;
+
     next_sym();
     if (sym == "ASSIGN") {  //int a=1;
         next_sym();
         Const();
         init = true;
+        SymTable::add(tk2, var, dataType);
     } else if (sym == "LBRACK") {
         next_sym();
         UnsignedInt();
@@ -287,6 +286,7 @@ void Grammar::VariableDef() {
                 error("'}'");
             }
             init = true;
+            SymTable::add(tk2, var, dataType, 1);
         } else if (sym == "LBRACK") {
             next_sym();
             UnsignedInt();
@@ -321,17 +321,21 @@ void Grammar::VariableDef() {
                     error("'}'");
                 }
                 init = true;
+                SymTable::add(tk2, var, dataType, 2);
             } else {    //int a[3][3];
                 retract();
                 init = false;
+                SymTable::add(tk2, var, dataType, 2);
             }
         } else {  //int a[3];
             retract();
             init = false;
+            SymTable::add(tk2, var, dataType, 1);
         }
     } else {  //int a;
         retract();
         init = false;
+        SymTable::add(tk2, var, dataType);
     }
 
     if (init) {
@@ -341,6 +345,7 @@ void Grammar::VariableDef() {
         while (sym == "COMMA") {
             next_sym();
             Identifier();
+            Token tk2 = tk;
             next_sym();
             if (sym == "LBRACK") {
                 next_sym();
@@ -357,10 +362,13 @@ void Grammar::VariableDef() {
                     if (sym != "RBRACK") {
                         error("']'");
                     }
+                    SymTable::add(tk2, var, dataType, 2);
                 } else {
                     retract();
+                    SymTable::add(tk2, var, dataType, 1);
                 }
             } else {
+                SymTable::add(tk2, var, dataType);
                 retract();
             }
             next_sym();
@@ -380,7 +388,7 @@ void Grammar::TypeIdentifier() {
 }
 
 void Grammar::SharedFuncDef() {
-    next_sym();
+    SymTable::add_layer();
     if (sym != "LPARENT") {
         error("'('");
     }
@@ -405,15 +413,26 @@ void Grammar::SharedFuncDef() {
     if (sym != "RBRACE") {
         error("'}'");
     }
+    SymTable::pop_layer();
 }
 
 void Grammar::RetFuncDef() {
-    DeclareHead();
+    DataType ret_type;
+    if (sym == "INTTK") {
+        ret_type = integer;
+    } else if (sym == "CHARTK") {
+        ret_type = character;
+    } else {
+        error("'int' or 'char'");
+        ret_type = integer;
+    }
+    next_sym();
+    Identifier();
+    SymTable::add(tk, func, ret_type);
 
-    SymTableItem sti;
-    sti.has_return = true;
-    symTable.emplace(tk.str, sti);
+    output("<声明头部>");
 
+    next_sym();
     SharedFuncDef();
 
     output("<有返回值函数定义>");
@@ -426,10 +445,9 @@ void Grammar::NonRetFuncDef() {
     next_sym();
     Identifier();
 
-    SymTableItem sti;
-    sti.has_return = false;
-    symTable.emplace(tk.str, sti);
+    SymTable::add(tk, func, void_ret);
 
+    next_sym();
     SharedFuncDef();
 
     output("<无返回值函数定义>");
@@ -451,14 +469,18 @@ void Grammar::CompoundStmt() {
 
 void Grammar::ParaList() {
     TypeIdentifier();
+    DataType dataType = (sym == "INTTK") ? integer : character;
     next_sym();
     Identifier();
+    SymTable::add(tk, para, dataType);
     next_sym();
     while (sym == "COMMA") {
         next_sym();
         TypeIdentifier();
+        DataType dataType = (sym == "INTTK") ? integer : character;
         next_sym();
         Identifier();
+        SymTable::add(tk, para, dataType);
         next_sym();
     }
 
@@ -488,8 +510,11 @@ void Grammar::Main() {
     if (sym != "LBRACE") {
         error("'{'");
     }
+    SymTable::add_layer();
     next_sym();
     CompoundStmt();
+    SymTable::pop_layer();
+
     next_sym();
     if (sym != "RBRACE") {
         error("'}'");
@@ -610,13 +635,10 @@ void Grammar::Stmt() {
         next_sym(); // func(
         if (sym == "LPARENT") {
             retract(); //func
-            if (symTable.find(tk.str) == symTable.end()) {
-                Errors::add("undefined function call", tk.line, tk.column, E_UNDEFINED_IDENTF);
-            }
-            if (symTable.find(tk.str)->second.has_return) {
+            if (SymTable::search(tk).dataType != void_ret) {
                 RetFuncCall();
             } else {
-                NonRetFuncCall();
+                NonRetFuncCall();   //including undefined
             }
         } else if (sym == "ASSIGN" || sym == "LBRACK") {
             retract();

@@ -10,7 +10,7 @@
 #include <map>
 #include <sstream>
 
-#include "LexResults.h"
+#include "Token.h"
 #include "Error.h"
 
 using namespace std;
@@ -26,8 +26,8 @@ public:
     int col_num = 1;
 
 
-    LexResults analyze();
-    LexResults get_token();
+    Token analyze();
+    Token get_token();
     int read_char();
     void retract();
     static string special(char);

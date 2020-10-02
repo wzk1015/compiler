@@ -4,23 +4,22 @@
 #include <vector>
 #include <map>
 #include <fstream>
-#include "LexResults.h"
+#include "Token.h"
 #include "Lexer.h"
-#include "GrammarResults.h"
 #include "Error.h"
-#include "SymTableItem.h"
+#include "SymTable.h"
 
 class Grammar {
 public:
     Lexer lexer;
-    map<string, SymTableItem> symTable;
+    map<string, SymTable> symTable;
     vector<string> output_str;
-    vector<LexResults> cur_lex_results;
+    vector<Token> cur_lex_results;
     int pos = 0;
 
     string out_path = INVALID;
 
-    LexResults tk{INVALID};
+    Token tk{INVALID};
     string sym = "";
 
     void error(const string &expected);
@@ -29,8 +28,7 @@ public:
 
     void retract();
 
-
-    vector<GrammarResults> analyze();
+    int analyze();
 
     Grammar(const string& in_path, string out_path) : out_path(std::move(out_path)), lexer(in_path){};
 
@@ -50,7 +48,7 @@ public:
 
     void Identifier();
 
-    void DeclareHead();
+//    void DeclareHead();
 
     void Const();
 

@@ -85,6 +85,11 @@ INTTK int
 IDENFR fun2_print_return_999
 <声明头部>
 LPARENT (
+CHARTK char
+IDENFR c
+COMMA ,
+INTTK int
+IDENFR s
 <参数表>
 RPARENT )
 LBRACE {
@@ -105,6 +110,63 @@ INTCON 9
 <无符号整数>
 <整数>
 <常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+INTTK int
+IDENFR e
+LBRACK [
+INTCON 5
+<无符号整数>
+RBRACK ]
+LBRACK [
+INTCON 5
+<无符号整数>
+RBRACK ]
+COMMA ,
+IDENFR f
+LBRACK [
+INTCON 3
+<无符号整数>
+RBRACK ]
+COMMA ,
+IDENFR g
+<变量定义无初始化>
+<变量定义>
+SEMICN ;
+INTTK int
+IDENFR d
+LBRACK [
+INTCON 5
+<无符号整数>
+RBRACK ]
+ASSIGN =
+LBRACE {
+INTCON 1
+<无符号整数>
+<整数>
+<常量>
+COMMA ,
+INTCON 2
+<无符号整数>
+<整数>
+<常量>
+COMMA ,
+INTCON 3
+<无符号整数>
+<整数>
+<常量>
+COMMA ,
+INTCON 2
+<无符号整数>
+<整数>
+<常量>
+COMMA ,
+INTCON 1
+<无符号整数>
+<整数>
+<常量>
+RBRACE }
 <变量定义及初始化>
 <变量定义>
 SEMICN ;

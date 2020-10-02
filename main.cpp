@@ -6,11 +6,16 @@ using namespace std;
 
 
 int main() {
+    cout << "wzk's compiler is running..." << endl;
     Grammar grammar("testfile.txt", "output.txt");
-    vector<GrammarResults> grammar_results = grammar.analyze();
+    grammar.analyze();
 
     if (Errors::terminate()) {
         throw exception();
+    }
+
+    if (DEBUG) {
+        SymTable::show();
     }
 
     return 0;

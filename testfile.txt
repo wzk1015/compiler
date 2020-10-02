@@ -13,9 +13,11 @@ void func1_print_99() {
     return ;
 }
 
-int fun2_print_return_999() {
+int fun2_print_return_999(char c, int s) {
     int a = 111;
     int b = 9;
+    int e[5][5], f[3], g;
+    int d[5] = {1,2,3,2,1};
 
     printf("-----");
     printf("fun2_print_return_999 done!");
