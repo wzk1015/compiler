@@ -318,6 +318,48 @@ RPARENT )
 <赋值语句>
 SEMICN ;
 <语句>
+FORTK for
+LPARENT (
+IDENFR a
+ASSIGN =
+INTCON 0
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+SEMICN ;
+IDENFR a
+<因子>
+<项>
+<表达式>
+LSS <
+INTCON 5
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<条件>
+SEMICN ;
+IDENFR a
+ASSIGN =
+IDENFR a
+PLUS +
+INTCON 1
+<无符号整数>
+<步长>
+RPARENT )
+LBRACE {
+LBRACE {
+<语句列>
+RBRACE }
+<语句>
+<语句列>
+RBRACE }
+<语句>
+<循环语句>
+<语句>
 <语句列>
 <复合语句>
 RBRACE }

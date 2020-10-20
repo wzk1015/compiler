@@ -29,7 +29,6 @@ int Grammar::analyze() {
             out << str << endl;
         }
     }
-
     out.close();
 
     cout << "Grammar complete successfully." << endl;
@@ -89,7 +88,6 @@ void Grammar::error(const string &expected) {
     }
 }
 
-
 void Grammar::Program() {
     if (sym == "CONSTTK") {
         ConstDeclare();
@@ -126,7 +124,6 @@ void Grammar::Program() {
         }
         next_sym();
     }
-
 }
 
 void Grammar::ConstDeclare() {
@@ -144,7 +141,6 @@ void Grammar::ConstDeclare() {
     } while (sym == "CONSTTK");
 
     output("<常量说明>");
-
     retract();
 }
 
@@ -180,8 +176,8 @@ void Grammar::ConstDef() {
     } else {
         error("const def");
     }
-    output("<常量定义>");
 
+    output("<常量定义>");
     retract();
 }
 
@@ -189,6 +185,7 @@ void Grammar::UnsignedInt() {
     if (sym != "INTCON") {
         error("unsigned int");
     }
+
     output("<无符号整数>");
 }
 
@@ -197,6 +194,7 @@ void Grammar::Int() {
         next_sym();
     }
     UnsignedInt();
+
     output("<整数>");
 }
 
@@ -212,6 +210,7 @@ void Grammar::Const() {
     } else if (sym != "CHARCON") {
         error("char");
     }
+
     output("<常量>");
 }
 
@@ -242,7 +241,6 @@ void Grammar::VariableDeclare() {
     }
 
     output("<变量说明>");
-
     retract();
 }
 
@@ -429,9 +427,7 @@ void Grammar::RetFuncDef() {
     next_sym();
     Identifier();
     SymTable::add(tk, func, ret_type);
-
     output("<声明头部>");
-
     next_sym();
     SharedFuncDef();
 
@@ -444,9 +440,7 @@ void Grammar::NonRetFuncDef() {
     }
     next_sym();
     Identifier();
-
     SymTable::add(tk, func, void_ret);
-
     next_sym();
     SharedFuncDef();
 
@@ -464,6 +458,7 @@ void Grammar::CompoundStmt() {
         //assert: 语句不以INTTK CHARTK开头
     }
     StmtList();
+
     output("<复合语句>");
 }
 
@@ -485,12 +480,12 @@ void Grammar::ParaList() {
     }
 
     output("<参数表>");
-
     retract();
     //空
 }
 
 void Grammar::Main() {
+    SymTable::add_layer();
     if (sym != "VOIDTK") {
         error("'void'");
     }
@@ -510,16 +505,15 @@ void Grammar::Main() {
     if (sym != "LBRACE") {
         error("'{'");
     }
-    SymTable::add_layer();
     next_sym();
     CompoundStmt();
-    SymTable::pop_layer();
-
     next_sym();
     if (sym != "RBRACE") {
         error("'}'");
     }
+
     output("<主函数>");
+    SymTable::pop_layer();
 }
 
 void Grammar::Expr() {
@@ -533,8 +527,8 @@ void Grammar::Expr() {
         Item();
         next_sym();
     }
-    output("<表达式>");
 
+    output("<表达式>");
     retract();
 }
 
@@ -548,7 +542,6 @@ void Grammar::Item() {
     }
 
     output("<项>");
-
     retract();
 }
 
@@ -653,8 +646,8 @@ void Grammar::Stmt() {
     } else {
         error("statement");
     }
-    output("<语句>");
 
+    output("<语句>");
 }
 
 void Grammar::AssignStmt() {
@@ -719,8 +712,8 @@ void Grammar::ConditionStmt() {
         Stmt();
         next_sym();
     }
-    output("<条件语句>");
 
+    output("<条件语句>");
     retract();
 }
 
@@ -732,6 +725,7 @@ void Grammar::Condition() {
     }
     next_sym();
     Expr();
+
     output("<条件>");
 }
 
@@ -799,7 +793,6 @@ void Grammar::LoopStmt() {
         error("'while' or 'for'");
     }
 
-
     output("<循环语句>");
 }
 
@@ -847,7 +840,6 @@ void Grammar::CaseList() {
     }
 
     output("<情况表>");
-
     retract();
 }
 
@@ -863,6 +855,7 @@ void Grammar::CaseSubStmt() {
     }
     next_sym();
     Stmt();
+
     output("<情况子语句>");
 }
 
@@ -876,6 +869,7 @@ void Grammar::Default() {
     }
     next_sym();
     Stmt();
+
     output("<缺省>");
 }
 
@@ -916,9 +910,7 @@ void Grammar::ValueParaList() {
         Expr();
         next_sym();
     }
-
     output("<值参数表>");
-
     retract();
     //空
 }
@@ -931,6 +923,7 @@ void Grammar::StmtList() {
         Stmt();
         next_sym();
     }
+
     output("<语句列>");
     retract();
     //空
@@ -983,6 +976,7 @@ void Grammar::WriteStmt() {
             error("')'");
         }
     }
+
     output("<写语句>");
 }
 
@@ -1000,8 +994,8 @@ void Grammar::ReturnStmt() {
         }
         next_sym();
     }
-    output("<返回语句>");
 
+    output("<返回语句>");
     retract();
 }
 

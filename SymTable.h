@@ -109,7 +109,7 @@ public:
         for (int i = 0; i < max_name_length - 3; i++) {
             cout << " ";
         }
-        cout << "KIND  TYPE DIM" << endl;
+        cout << "KIND  TYPE DIM" << endl << sep2 << endl;
         int l = 0;
         for (int i = 0; i < items.size(); i++) {
             if (!layers.empty() && i == layers[l]) {

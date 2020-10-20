@@ -4,9 +4,12 @@
 
 using namespace std;
 
-
 int main() {
-    cout << "wzk's compiler is running..." << endl;
+    cout << ":::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl;
+	cout << "::                                                 ::" << endl;
+	cout << "::              wzk's compiler  V0.1               ::" << endl;
+	cout << "::                                                 ::" << endl;
+	cout << ":::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl;
     Grammar grammar("testfile.txt", "output.txt");
     grammar.analyze();
 
