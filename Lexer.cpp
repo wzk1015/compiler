@@ -55,8 +55,10 @@ Token Lexer::get_token() {
         read_char();
         if (ch != '\'') {
             string err = isspace(ch) ? " " : string(&ch);
+//            Errors::add("expected single quote sign ' , got " + err + " instead", line_num, col_num,
+//                                E_UNEXPECTED_CHAR);
             Errors::add("expected single quote sign ' , got " + err + " instead", line_num, col_num,
-                                E_UNEXPECTED_CHAR);
+                                ERR_LEXER);
         }
     } else if (ch == '\"') {
         while (true) {
@@ -74,7 +76,8 @@ Token Lexer::get_token() {
         read_char();
         if (ch != '=') {
             string err = isspace(ch) ? " " : string(&ch);
-            Errors::add("expected '!=', got !" + err + " instead", line_num, col_num, E_UNEXPECTED_CHAR);
+//            Errors::add("expected '!=', got !" + err + " instead", line_num, col_num, E_UNEXPECTED_CHAR);
+            Errors::add("expected '!=', got !" + err + " instead", line_num, col_num, ERR_LEXER);
         }
         token = "!=";
         symbol = "NEQ";
@@ -109,7 +112,8 @@ Token Lexer::get_token() {
             retract();
         }
     } else {
-        Errors::add("unknown character: " + string(&ch), line_num, col_num, E_UNKNOWN_CHAR);
+//        Errors::add("unknown character: " + string(&ch), line_num, col_num, E_UNKNOWN_CHAR);
+        Errors::add("unknown character: " + string(&ch), line_num, col_num, ERR_LEXER);
     }
 
     r.type = symbol;
@@ -119,12 +123,15 @@ Token Lexer::get_token() {
     }
     else if (symbol == "STRCON") {
         if (token.empty()) {
-            Errors::add("empty string", line_num, col_num, E_UNEXPECTED_CHAR);
+//            Errors::add("empty string", line_num, col_num, E_UNEXPECTED_CHAR);
+            Errors::add("empty string", line_num, col_num, ERR_LEXER);
         }
         for (auto &c: token) {
             if (c <= 31 || c == 34 || c >= 127) {
+//                Errors::add("invalid ascii character in string: " + string(&c),
+//                                    line_num, col_num, E_UNKNOWN_CHAR);
                 Errors::add("invalid ascii character in string: " + string(&c),
-                                    line_num, col_num, E_UNKNOWN_CHAR);
+                                    line_num, col_num, ERR_LEXER);
             }
         }
     }
@@ -132,8 +139,10 @@ Token Lexer::get_token() {
         r.v_char = token.c_str()[0];
         if (r.v_char != '+' && r.v_char != '-' && r.v_char != '*'
             && r.v_char != '/' && r.v_char != '_' && !isalnum(r.v_char)) {
+//            Errors::add("invalid character: " + string(&r.v_char),
+//                                line_num, col_num, E_UNKNOWN_CHAR);
             Errors::add("invalid character: " + string(&r.v_char),
-                                line_num, col_num, E_UNKNOWN_CHAR);
+                                line_num, col_num, ERR_LEXER);
         }
     }
     return r;
@@ -143,7 +152,8 @@ Token Lexer::analyze() {
     try {
         return get_token();
     } catch (exception ex) {
-        Errors::add("unexpected end of file", E_UNEXPECTED_EOF);
+//        Errors::add("unexpected end of file", E_UNEXPECTED_EOF);
+        Errors::add("unexpected end of file", ERR_LEXER);
     }
     return Token(INVALID);
 }

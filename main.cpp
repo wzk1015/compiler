@@ -10,16 +10,19 @@ int main() {
 	cout << "::              wzk's compiler  V0.1               ::" << endl;
 	cout << "::                                                 ::" << endl;
 	cout << ":::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl;
-    Grammar grammar("testfile.txt", "output.txt");
+//    Grammar grammar("testfile.txt", "output.txt");
+    Grammar grammar("testfile.txt");
     grammar.analyze();
 
-    if (Errors::terminate()) {
-        throw exception();
-    }
+    Errors::save_to_file("error.txt");
 
-    if (DEBUG) {
-        SymTable::show();
-    }
+//    if (Errors::terminate()) {
+//        throw exception();
+//    }
+
+//    if (DEBUG) {
+//        SymTable::show();
+//    }
 
     return 0;
 }

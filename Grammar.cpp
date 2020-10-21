@@ -37,9 +37,9 @@ int Grammar::analyze() {
 
 void Grammar::output(const string &str) {
     output_str.push_back(str);
-    if (DEBUG) {
-        cout << str << endl;
-    }
+//    if (DEBUG) {
+//        cout << str << endl;
+//    }
 }
 
 int Grammar::next_sym() {
@@ -56,9 +56,9 @@ int Grammar::next_sym() {
     sym = tk.type;
     output_str.push_back(tk.type + " " + tk.str);
 
-    if (DEBUG) {
-        cout << tk.type + " " + tk.str << endl;
-    }
+//    if (DEBUG) {
+//        cout << tk.type + " " + tk.str << endl;
+//    }
     return 0;
 }
 
@@ -68,9 +68,9 @@ void Grammar::retract() {
     sym = tk.type;
     for (unsigned int i = output_str.size() - 1; i >= 0; i--) {
         if (output_str[i][0] != '<') {  //词法分析输出
-            if (DEBUG) {
-                cout << "retract " << output_str[i] << endl;
-            }
+//            if (DEBUG) {
+//                cout << "retract " << output_str[i] << endl;
+//            }
             output_str.erase(output_str.begin() + i);
             break;
         }
@@ -78,14 +78,70 @@ void Grammar::retract() {
 }
 
 void Grammar::error(const string &expected) {
-    Errors::add("Expected " + expected + ", but got '" + tk.str + "' (type: " + sym + ")",
-                tk.line, tk.column, E_GRAMMAR);
-    while (sym != "SEMICN") {
+    if (expected == "'default'") {
+        Errors::add("Expected " + expected + ", but got '" + tk.str + "' (type: " + sym + ")",
+                    tk.line, tk.column, ERR_SWITCH_DEFAULT);
+    }
+    else if (expected == "')'") {
+        Errors::add("Expected " + expected + ", but got '" + tk.str + "' (type: " + sym + ")",
+                    tk.line, tk.column, ERR_RPARENT);
+    }
+    else if (expected == "']'") {
+        Errors::add("Expected " + expected + ", but got '" + tk.str + "' (type: " + sym + ")",
+                    tk.line, tk.column, ERR_RBRACK);
+    }
+    else if (expected == "';'") {
+        Errors::add("Expected " + expected + ", but got '" + tk.str + "' (type: " + sym + ")",
+                    tk.line, tk.column, ERR_SEMICOL);
+    }
+    else if (expected == "array init") {
+        Errors::add("Array init mismatch", tk.line, tk.column, ERR_ARRAY_INIT);
+    }
+    else if (expected == "const type") {
+        Errors::add("Const type mismatch", tk.line, tk.column, ERR_CONST_TYPE);
+    }
+    else if (expected == "change const") {
+        Errors::add("Change const value", tk.line, tk.column, ERR_CONST_ASSIGN);
+    }
+    else if (expected == "para count") {
+        Errors::add("Para count mismatch", tk.line, tk.column, ERR_PARA_COUNT);
+    }
+    else if (expected == "para type") {
+        Errors::add("Para type mismatch", tk.line, tk.column, ERR_PARA_TYPE);
+    }
+    else if (expected == "nonret return") {
+        Errors::add("void function return mismatch", tk.line, tk.column, ERR_NONRET_FUNC);
+    }
+    else if (expected == "ret return") {
+        Errors::add("non-void function return mismatch", tk.line, tk.column, ERR_RET_FUNC);
+    }
+    else if (expected == "condition type") {
+        Errors::add("condition type error", tk.line, tk.column, ERR_CONDITION_TYPE);
+    }
+    else if (expected == "array index type") {
+        Errors::add("array index type error", tk.line, tk.column, ERR_INDEX_CHAR);
+    }
+    else {
+        Errors::add("Expected " + expected + ", but got '" + tk.str + "' (type: " + sym + ")",
+                    tk.line, tk.column, E_GRAMMAR);
+    }
+    if (expected == "';'") {
+        retract();
+        if (DEBUG) {
+            cout << "skip till line " << tk.line << ", column " << tk.column << endl;
+        }
+        return;
+    }
+    int cur_line = lexer.line_num;
+    while (lexer.line_num == cur_line) {
         next_sym();    //skip until next statement
     }
-    if (expected != "';'") {
-        retract();
+    retract();
+    retract();
+    if (DEBUG) {
+        cout << "skip till line " << tk.line << ", column " << tk.column << endl;
     }
+
 }
 
 void Grammar::Program() {
@@ -207,7 +263,11 @@ void Grammar::Identifier() {
 void Grammar::Const() {
     if (sym == "PLUS" || sym == "MINU" || sym == "INTCON") {
         Int();
-    } else if (sym != "CHARCON") {
+        tmp_const_data_type = integer;
+    } else if (sym == "CHARCON") {
+        tmp_const_data_type = character;
+    }
+    else {
         error("char");
     }
 
@@ -259,11 +319,16 @@ void Grammar::VariableDef() {
     if (sym == "ASSIGN") {  //int a=1;
         next_sym();
         Const();
+        if (tmp_const_data_type != dataType) {
+            error("const type");
+        }
+        tmp_const_data_type = invalid;
         init = true;
         SymTable::add(tk2, var, dataType);
     } else if (sym == "LBRACK") {
         next_sym();
         UnsignedInt();
+        tmp_dim1 = tk.v_int;
         next_sym();
         if (sym != "RBRACK") {
             error("']'");
@@ -272,13 +337,23 @@ void Grammar::VariableDef() {
         if (sym == "ASSIGN") {  //int a[3]={1,2,3}
             next_sym();
             if (sym != "LBRACE") {
-                error("'{'");
+//                error("'{'");
+                error("array init");
             }
+            int count = 0;
             do {
+                count++;
                 next_sym();
                 Const();
+                if (tmp_const_data_type != dataType) {
+                    error("const type");
+                }
+                tmp_const_data_type = invalid;
                 next_sym();
             } while (sym == "COMMA");
+            if (count != tmp_dim1) {
+                error("array init");
+            }
             //已预读
             if (sym != "RBRACE") {
                 error("'}'");
@@ -288,6 +363,7 @@ void Grammar::VariableDef() {
         } else if (sym == "LBRACK") {
             next_sym();
             UnsignedInt();
+            tmp_dim2 = tk.v_int;
             next_sym();
             if (sym != "RBRACK") {
                 error("']'");
@@ -296,25 +372,42 @@ void Grammar::VariableDef() {
             if (sym == "ASSIGN") { //int a[3][3]={{1,2,3}, {4,5,6}, {7,8,9}}
                 next_sym();
                 if (sym != "LBRACE") {
-                    error("'{'");
+//                    error("'{'");
+                    error("array init");
                 }
+                int dim1_count = 0;
+                int dim2_count = 0;
                 do {
+                    dim1_count++;
                     next_sym();
                     if (sym != "LBRACE") {
-                        error("'{'");
+//                        error("'{'");
+                        error("array init");
                     }
                     do {
+                        dim2_count++;
                         next_sym();
                         Const();
+                        if (tmp_const_data_type != dataType) {
+                            error("const type");
+                        }
+                        tmp_const_data_type = invalid;
                         next_sym();
                     } while (sym == "COMMA");
                     //已预读
+                    if (dim2_count != tmp_dim2) {
+                        error("array init");
+                        return;
+                    }
                     if (sym != "RBRACE") {
                         error("'}'");
                     }
                     next_sym();
                 } while (sym == "COMMA");
                 //已预读
+                if (dim1_count != tmp_dim1) {
+                    error("array init");
+                }
                 if (sym != "RBRACE") {
                     error("'}'");
                 }
@@ -343,7 +436,7 @@ void Grammar::VariableDef() {
         while (sym == "COMMA") {
             next_sym();
             Identifier();
-            Token tk2 = tk;
+            Token tk3 = tk;
             next_sym();
             if (sym == "LBRACK") {
                 next_sym();
@@ -360,13 +453,13 @@ void Grammar::VariableDef() {
                     if (sym != "RBRACK") {
                         error("']'");
                     }
-                    SymTable::add(tk2, var, dataType, 2);
+                    SymTable::add(tk3, var, dataType, 2);
                 } else {
                     retract();
-                    SymTable::add(tk2, var, dataType, 1);
+                    SymTable::add(tk3, var, dataType, 1);
                 }
             } else {
-                SymTable::add(tk2, var, dataType);
+                SymTable::add(tk3, var, dataType);
                 retract();
             }
             next_sym();
@@ -391,11 +484,15 @@ void Grammar::SharedFuncDef() {
         error("'('");
     }
     next_sym();
-    if (sym == "RPARENT") {
+
+    if (sym == "INTTK" || sym == "CHARTK") {
+        ParaList();
+    } else if (sym == "RPARENT") {
         retract();
         output("<参数表>");
     } else {
-        ParaList();
+        error("')'");
+
     }
     next_sym();
     if (sym != "RPARENT") {
@@ -424,25 +521,39 @@ void Grammar::RetFuncDef() {
         error("'int' or 'char'");
         ret_type = integer;
     }
+    funcdef_ret = ret_type;
     next_sym();
     Identifier();
-    SymTable::add(tk, func, ret_type);
+    Token tk2 = tk;
     output("<声明头部>");
     next_sym();
     SharedFuncDef();
+    if (!has_returned) {
+        error("ret return");
+    }
+
+    SymTable::add_func(tk2, ret_type, tmp_para_count, tmp_para_types);
+    tmp_para_types.clear();
+    funcdef_ret = invalid;
+    has_returned = false;
 
     output("<有返回值函数定义>");
 }
 
 void Grammar::NonRetFuncDef() {
+    funcdef_ret = void_ret;
     if (sym != "VOIDTK") {
         error("'void");
     }
     next_sym();
     Identifier();
-    SymTable::add(tk, func, void_ret);
+    Token tk2 = tk;
     next_sym();
     SharedFuncDef();
+    SymTable::add_func(tk2, void_ret, tmp_para_count, tmp_para_types);
+    tmp_para_types.clear();
+    funcdef_ret = invalid;
+    has_returned = false;
 
     output("<无返回值函数定义>");
 }
@@ -465,18 +576,22 @@ void Grammar::CompoundStmt() {
 void Grammar::ParaList() {
     TypeIdentifier();
     DataType dataType = (sym == "INTTK") ? integer : character;
+    tmp_para_types.push_back(dataType);
     next_sym();
     Identifier();
     SymTable::add(tk, para, dataType);
+    tmp_para_count = 1;
     next_sym();
     while (sym == "COMMA") {
         next_sym();
         TypeIdentifier();
-        DataType dataType = (sym == "INTTK") ? integer : character;
+        DataType dataType2 = (sym == "INTTK") ? integer : character;
+        tmp_para_types.push_back(dataType2);
         next_sym();
         Identifier();
-        SymTable::add(tk, para, dataType);
+        SymTable::add(tk, para, dataType2);
         next_sym();
+        tmp_para_count++;
     }
 
     output("<参数表>");
@@ -485,6 +600,7 @@ void Grammar::ParaList() {
 }
 
 void Grammar::Main() {
+    funcdef_ret = void_ret;
     SymTable::add_layer();
     if (sym != "VOIDTK") {
         error("'void'");
@@ -514,15 +630,18 @@ void Grammar::Main() {
 
     output("<主函数>");
     SymTable::pop_layer();
+    funcdef_ret = invalid;
 }
 
-void Grammar::Expr() {
+DataType Grammar::Expr() {
     if (sym == "PLUS" || sym == "MINU") {
+        must_be_int = true;
         next_sym();
     }
     Item();
     next_sym();
     while (sym == "PLUS" || sym == "MINU") {
+        must_be_int = true;
         next_sym();
         Item();
         next_sym();
@@ -530,12 +649,17 @@ void Grammar::Expr() {
 
     output("<表达式>");
     retract();
+    DataType ret =  must_be_int ? integer : tmp_expr_data_type;
+    tmp_expr_data_type = integer;
+    must_be_int = false;
+    return ret;
 }
 
 void Grammar::Item() {
     Factor();
     next_sym();
     while (sym == "MULT" || sym == "DIV") {
+        must_be_int = true;
         next_sym();
         Factor();
         next_sym();
@@ -547,13 +671,18 @@ void Grammar::Item() {
 
 void Grammar::Factor() {
     if (sym == "IDENFR") {
+        if (SymTable::search(tk).dataType == character) {
+            tmp_expr_data_type = character;
+        }
         next_sym(); // func(
         if (sym == "LPARENT") {
             retract(); //func
             RetFuncCall();
         } else if (sym == "LBRACK") {
             next_sym();
-            Expr();
+            if (Expr() != integer) {
+                error("array index type");
+            }
             next_sym();
             if (sym != "RBRACK") {
                 error("']'");
@@ -561,10 +690,14 @@ void Grammar::Factor() {
             next_sym();
             if (sym == "LBRACK") {
                 next_sym();
-                Expr();
+                if (Expr() != integer) {
+                    error("array index type");
+                }
                 next_sym();
                 if (sym != "RBRACK") {
                     error("']'");
+                    retract();
+                    return;
                 }
             } else {
                 retract();
@@ -573,6 +706,7 @@ void Grammar::Factor() {
             retract();
         }
     } else if (sym == "LPARENT") {
+        must_be_int = true;
         next_sym();
         Expr();
         next_sym();
@@ -580,8 +714,10 @@ void Grammar::Factor() {
             error(")");
         }
     } else if (sym == "PLUS" || sym == "MINU" || sym == "INTCON") {
+        must_be_int = true;
         Int();
     } else if (sym == "CHARCON") {
+        tmp_expr_data_type = character;
         //
     } else {
         error("factor");
@@ -628,7 +764,10 @@ void Grammar::Stmt() {
         next_sym(); // func(
         if (sym == "LPARENT") {
             retract(); //func
-            if (SymTable::search(tk).dataType != void_ret) {
+            if (SymTable::search(tk).stiType != func) {
+                error("function call");
+            }
+            else if (SymTable::search(tk).dataType != void_ret) {
                 RetFuncCall();
             } else {
                 NonRetFuncCall();   //including undefined
@@ -652,16 +791,22 @@ void Grammar::Stmt() {
 
 void Grammar::AssignStmt() {
     Identifier();
+    if (SymTable::search(tk).stiType == constant) {
+        error("change const");
+    }
     next_sym();
     if (sym == "ASSIGN") {
         next_sym();
         Expr();
     } else if (sym == "LBRACK") {
         next_sym();
-        Expr();
+        if (Expr() != integer) {
+            error("array index type");
+        }
         next_sym();
         if (sym != "RBRACK") {
             error("']'");
+            return;
         }
         next_sym();
         if (sym == "ASSIGN") {
@@ -669,10 +814,13 @@ void Grammar::AssignStmt() {
             Expr();
         } else if (sym == "LBRACK") {
             next_sym();
-            Expr();
+            if (Expr() != integer) {
+                error("array index type");
+            }
             next_sym();
             if (sym != "RBRACK") {
                 error("']'");
+                return;
             }
             next_sym();
             if (sym != "ASSIGN") {
@@ -718,13 +866,17 @@ void Grammar::ConditionStmt() {
 }
 
 void Grammar::Condition() {
-    Expr();
+    if (Expr() != integer) {
+        error("condition type");
+    }
     next_sym();
     if (sym != "LSS" && sym != "LEQ" && sym != "GRE" && sym != "GEQ" && sym != "EQL" && sym != "NEQ") {
         error("relation operator");
     }
     next_sym();
-    Expr();
+    if (Expr() != integer) {
+        error("condition type");
+    }
 
     output("<条件>");
 }
@@ -751,6 +903,7 @@ void Grammar::LoopStmt() {
         }
         next_sym();
         Identifier();
+        SymTable::search(tk);
         next_sym();
         if (sym != "ASSIGN") {
             error("'='");
@@ -771,12 +924,14 @@ void Grammar::LoopStmt() {
         next_sym();
 
         Identifier();
+        SymTable::search(tk);
         next_sym();
         if (sym != "ASSIGN") {
             error("'='");
         }
         next_sym();
         Identifier();
+        SymTable::search(tk);
         next_sym();
         if (sym != "PLUS" && sym != "MINU") {
             error("'+' or '-'");
@@ -810,7 +965,7 @@ void Grammar::CaseStmt() {
         error("'('");
     }
     next_sym();
-    Expr();
+    tmp_switch_data_type = Expr();
     next_sym();
     if (sym != "RPARENT") {
         error("')'");
@@ -827,7 +982,7 @@ void Grammar::CaseStmt() {
     if (sym != "RBRACE") {
         error("'}'");
     }
-
+    tmp_switch_data_type = invalid;
     output("<情况语句>");
 }
 
@@ -849,6 +1004,11 @@ void Grammar::CaseSubStmt() {
     }
     next_sym();
     Const();
+    if (tmp_const_data_type != tmp_switch_data_type) {
+        error("const type");
+        tmp_switch_data_type = invalid;
+        tmp_const_data_type = invalid;
+    }
     next_sym();
     if (sym != "COLON") {
         error("':'");
@@ -862,6 +1022,7 @@ void Grammar::CaseSubStmt() {
 void Grammar::Default() {
     if (sym != "DEFAULTTK") {
         error("'default'");
+        return;
     }
     next_sym();
     if (sym != "COLON") {
@@ -875,6 +1036,7 @@ void Grammar::Default() {
 
 void Grammar::SharedFuncCall() {
     Identifier();
+    vector<DataType> types = SymTable::search(tk).types;
     next_sym();
     if (sym != "LPARENT") {
         error("'('");
@@ -884,9 +1046,41 @@ void Grammar::SharedFuncCall() {
         retract();
         output("<值参数表>");
     } else {
-        ValueParaList();
+        if (types.begin() == types.end()) {
+            error("para count");
+            return;
+        }
+        else {
+            if (*(types.begin()) != Expr()) {
+                error("para type");
+                return;
+            }
+            types.erase(types.begin());
+        }
+        next_sym();
+        while (sym == "COMMA") {
+            next_sym();
+            if (types.begin() == types.end()) {
+                error("para count");
+                return;
+            }
+            else {
+                if (*(types.begin()) != Expr()) {
+                    error("para type");
+                    return;
+                }
+                types.erase(types.begin());
+            }
+            next_sym();
+        }
+        output("<值参数表>");
+        retract();
+        //空
     }
     next_sym();
+    if (!types.empty()) {
+        error("para count");
+    }
     if (sym != "RPARENT") {
         error("')'");
     }
@@ -900,19 +1094,6 @@ void Grammar::RetFuncCall() {
 void Grammar::NonRetFuncCall() {
     SharedFuncCall();
     output("<无返回值函数调用语句>");
-}
-
-void Grammar::ValueParaList() {
-    Expr();
-    next_sym();
-    while (sym == "COMMA") {
-        next_sym();
-        Expr();
-        next_sym();
-    }
-    output("<值参数表>");
-    retract();
-    //空
 }
 
 void Grammar::StmtList() {
@@ -939,6 +1120,9 @@ void Grammar::ReadStmt() {
     }
     next_sym();
     Identifier();
+    if (SymTable::search(tk).stiType == constant) {
+        error("change const");
+    }
     next_sym();
     if (sym != "RPARENT") {
         error("')'");
@@ -986,14 +1170,27 @@ void Grammar::ReturnStmt() {
     }
     next_sym();
     if (sym == "LPARENT") {
+        if (funcdef_ret == void_ret) {
+            error("nonret return");
+        }
         next_sym();
-        Expr();
+        if (sym == "RPARENT" && funcdef_ret != void_ret) {
+            error("ret return");
+        }
+        if (Expr() != funcdef_ret) {
+            error("ret return");
+        }
         next_sym();
         if (sym != "RPARENT") {
             error(")");
         }
         next_sym();
+    } else {
+        if (funcdef_ret != void_ret) {
+            error("ret return");
+        }
     }
+    has_returned = true;
 
     output("<返回语句>");
     retract();

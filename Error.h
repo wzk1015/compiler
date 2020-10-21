@@ -8,6 +8,8 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
+#include <fstream>
 
 #define NOTFOUND "NOT FOUND"
 #define INVALID "NOT VALID"
@@ -22,6 +24,7 @@ public:
     int line{};
     int column{};
     int eid;
+    char err_code{};
     string rich_msg;
 
     explicit Error(string s, int id) : msg(move(s)), eid(id) {
@@ -32,23 +35,48 @@ public:
         rich_msg = "Error in line " + to_string(ln) + ", column " + to_string(col)
                    + ": " + msg + " (EID: " + to_string(eid) + ")";
     }
+
+    explicit Error(string s, char ch) : msg(move(s)), eid(1000 + ch), err_code(ch) {
+        rich_msg = "Error: " + msg + " (EID: " + ch + ")";
+    };
+
+    Error(string s, int ln, int col, char ch) : msg(std::move(s)), line(ln), column(col),
+                                                eid(1000 + ch), err_code(ch) {
+        rich_msg = "Error in line " + to_string(ln) + ", column " + to_string(col)
+                   + ": " + msg + " (EID: " + ch + ")";
+    }
 };
 
 class Errors {
 public:
     static vector<Error> errors;
-    static void add(const string& s, int line, int col, int id) {
+
+    static void debug_add() {
+        if (DEBUG) {
+            cout << errors[errors.size() - 1].rich_msg << endl;
+        }
+    }
+
+    static void add(const string &s, int line, int col, int id) {
         errors.emplace_back(s, line, col, id);
-        if (DEBUG) {
-            cout << errors[errors.size()-1].rich_msg << endl;
-        }
+        debug_add();
     }
-    static void add(const string& s, int id) {
+
+    static void add(const string &s, int id) {
         errors.emplace_back(s, id);
-        if (DEBUG) {
-            cout << errors[errors.size()-1].rich_msg << endl;
-        }
+        debug_add();
     }
+
+    static void add(const string &s, int line, int col, char ch) {
+        errors.emplace_back(s, line, col, ch);
+        debug_add();
+    }
+
+    static void add(const string &s, char ch) {
+        errors.emplace_back(s, ch);
+        debug_add();
+    }
+
     static bool terminate() {
         if (errors.empty()) {
             cout << endl << "All correct." << endl;
@@ -65,6 +93,19 @@ public:
             cerr << err.rich_msg << endl;
         }
         return true;
+    }
+
+    static void save_to_file(const string &out_path) {
+        ofstream out(out_path);
+        for (auto &err: errors) {
+            if (err.eid > 1000) {
+                out << err.line << " " << err.err_code << endl;
+                if (DEBUG) {
+                    cout << err.line << " " << err.err_code << endl;
+                }
+            }
+        }
+        out.close();
     }
 };
 
@@ -83,5 +124,22 @@ public:
 #define E_REDEFINED_IDENTF 7
 
 
+//error process homework
+#define ERR_LEXER 'a'
+#define ERR_REDEFINED 'b'
+#define ERR_UNDEFINED 'c'
+#define ERR_PARA_COUNT 'd'
+#define ERR_PARA_TYPE 'e'
+#define ERR_CONDITION_TYPE 'f'
+#define ERR_NONRET_FUNC 'g'
+#define ERR_RET_FUNC 'h'
+#define ERR_INDEX_CHAR 'i'
+#define ERR_CONST_ASSIGN 'j'
+#define ERR_SEMICOL 'k'
+#define ERR_RPARENT 'l'
+#define ERR_RBRACK 'm'
+#define ERR_ARRAY_INIT 'n'
+#define ERR_CONST_TYPE 'o'
+#define ERR_SWITCH_DEFAULT 'p'
 
 #endif

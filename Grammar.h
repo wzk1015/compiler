@@ -12,15 +12,24 @@
 class Grammar {
 public:
     Lexer lexer;
-    map<string, SymTable> symTable;
     vector<string> output_str;
     vector<Token> cur_lex_results;
     int pos = 0;
-
     string out_path = INVALID;
 
     Token tk{INVALID};
     string sym = "";
+
+    DataType tmp_const_data_type = invalid;
+    DataType tmp_switch_data_type = invalid;
+    DataType tmp_expr_data_type = integer;
+    bool must_be_int = false;
+    vector<DataType> tmp_para_types;
+    int tmp_dim1{};
+    int tmp_dim2{};
+    int tmp_para_count = 0;
+    DataType funcdef_ret = invalid;
+    bool has_returned = false;
 
     void error(const string &expected);
 
@@ -70,7 +79,7 @@ public:
 
     void Main();
 
-    void Expr();
+    DataType Expr();
 
     void Item();
 
@@ -101,8 +110,6 @@ public:
     void RetFuncCall();
 
     void NonRetFuncCall();
-
-    void ValueParaList();
 
     void StmtList();
 

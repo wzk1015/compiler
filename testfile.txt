@@ -13,11 +13,9 @@ void func1_print_99() {
     return ;
 }
 
-int fun2_print_return_999(char c, int s) {
+int fun2_print_return_999() {
     int a = 111;
     int b = 9;
-    int e[5][5], f[3], g;
-    int d[5] = {1,2,3,2,1};
 
     printf("-----");
     printf("fun2_print_return_999 done!");
@@ -27,24 +25,22 @@ int fun2_print_return_999(char c, int s) {
 
     return (a*b);
 }
-
+void errfun( {return;}
 void main() {
-
+const char fki = 'k';
     int a;
     int b = +100;
     int c = -100;
+    char ff= 'f';
+    if(ff > 10) printf("nice");
 
     c = b*c - (b*b);
 
     printf("18231052");
+    if(12 > fki) printf("nice");
 
     func1_print_99();
 
     a = fun2_print_return_999();
-
-    for (a=0;a<5;a=a+1) {
-        {
-        }
-    }
+    
 }
-
