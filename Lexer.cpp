@@ -131,7 +131,11 @@ Token Lexer::get_token() {
                                 line_num, col_num, ERR_LEXER);
         }
     }
+    if (r.type == "ELSETK") {
+
+    }
     return r;
+
 }
 
 Token Lexer::analyze() {
@@ -151,6 +155,9 @@ int Lexer::read_char() {
     ch = source[pos++];
     if (ch == '\n') {
         line_num++;
+        if (line_num == 24) {
+
+        }
         col_num = 1;
     } else {
         col_num++;
@@ -159,6 +166,9 @@ int Lexer::read_char() {
 }
 
 void Lexer::retract() {
+    if (ch == '\n') {
+        line_num--;
+    }
     pos--;
     col_num--;
 }
