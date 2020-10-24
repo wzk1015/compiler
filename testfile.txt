@@ -1,46 +1,5 @@
-
-const int CONST_INT_2 = 2;
-
-void func1_print_99() {
-    const int a = 9;
-    const int b = 11;
-
-    printf("-----");
-    printf("func1_print_99 done!");
-    printf("The result is: ", a*b);
-    printf("-----");
-
-    return ;
-}
-
-int fun2_print_return_999() {
-    int a = 111;
-    int b = 9;
-
-    printf("-----");
-    printf("fun2_print_return_999 done!");
-    printf("The result is below: ");
-    printf(a*b);
-    printf("-----");
-
-    return (a*b);
-}
-void errfun( {return;}
-void main() {
-const char fki = 'k';
-    int a;
-    int b = +100;
-    int c = -100;
-    char ff= 'f';
-    if(ff > 10) printf("nice");
-
-    c = b*c - (b*b);
-
-    printf("18231052");
-    if(12 > fki) printf("nice");
-
-    func1_print_99();
-
-    a = fun2_print_return_999();
-    
+const int a = 1;
+void main()
+{
+    a=3;
 }

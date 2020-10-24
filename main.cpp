@@ -11,7 +11,7 @@ int main() {
 	cout << "::                                                 ::" << endl;
 	cout << ":::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl;
 //    Grammar grammar("testfile.txt", "output.txt");
-    Grammar grammar("testfile.txt");
+    Grammar grammar("testfile.txt", "output.txt");
     grammar.analyze();
 
     Errors::save_to_file("error.txt");

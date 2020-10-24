@@ -22,14 +22,14 @@ public:
 
     DataType tmp_const_data_type = invalid;
     DataType tmp_switch_data_type = invalid;
-    DataType tmp_expr_data_type = integer;
-    bool must_be_int = false;
+    vector<DataType> tmp_expr_data_type;
     vector<DataType> tmp_para_types;
     int tmp_dim1{};
     int tmp_dim2{};
     int tmp_para_count = 0;
     DataType funcdef_ret = invalid;
     bool has_returned = false;
+    string skip_instr;
 
     void error(const string &expected);
 
@@ -67,7 +67,9 @@ public:
 
     void TypeIdentifier();
 
-    void SharedFuncDef();
+    void SharedFuncDefHead();
+
+    void SharedFuncDefBody();
 
     void RetFuncDef();
 
@@ -81,9 +83,9 @@ public:
 
     DataType Expr();
 
-    void Item();
+    DataType Item();
 
-    void Factor();
+    DataType Factor();
 
     void Stmt();
 

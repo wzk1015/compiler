@@ -66,26 +66,27 @@ public:
                 return;
             }
         }
-        SymTableItem a(tk.str, stiType, dataType);
+        SymTableItem a(lower(tk.str), stiType, dataType);
         a.dim = dim;
         items.push_back(a);
         max_name_length = max_name_length > tk.str.length() ? max_name_length : tk.str.length();
     }
 
-        static void add_func(const Token& tk, DataType dataType, int num_para, vector<DataType> types) {
+        static int add_func(const Token& tk, DataType dataType, int num_para, vector<DataType> types) {
         int start = layers.empty() ? 0 : layers[layers.size() - 1];
         for (int i = start; i < items.size(); i++) {
             if (items[i].name == tk.str) {
 //                    Errors::add("redefined identifier '" + tk.str + "'", tk.line, tk.column, E_REDEFINED_IDENTF);
                 Errors::add("redefined identifier '" + tk.str + "'", tk.line, tk.column, ERR_REDEFINED);
-                return;
+                return i;
             }
         }
-        SymTableItem a(tk.str, func, dataType);
+        SymTableItem a(lower(tk.str), func, dataType);
         a.num_para = num_para;
         a.types = std::move(types);
         items.push_back(a);
         max_name_length = max_name_length > tk.str.length() ? max_name_length : tk.str.length();
+        return int(items.size()-1);
     }
 
     static void add_layer() {
@@ -109,22 +110,14 @@ public:
     }
 
     static SymTableItem search(const Token &tk) {
+        string str = lower(tk.str);
         for (int i = items.size() - 1; i >= 0; i--) {
-            if (items[i].name == tk.str) {
+            if (items[i].name == str) {
                 return items[i];
             }
         }
 //        Errors::add("undefined identifier '" + tk.str + "'", tk.line, tk.column, E_UNDEFINED_IDENTF);
         Errors::add("undefined identifier '" + tk.str + "'", tk.line, tk.column, ERR_UNDEFINED);
-        return SymTableItem(false);
-    }
-
-    static SymTableItem try_search(const Token &tk) {
-        for (unsigned int i = items.size() - 1; i >= 0; i--) {
-            if (items[i].name == tk.str) {
-                return items[i];
-            }
-        }
         return SymTableItem(false);
     }
 

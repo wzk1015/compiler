@@ -10,6 +10,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include "utils.h"
 
 #define NOTFOUND "NOT FOUND"
 #define INVALID "NOT VALID"
@@ -100,6 +101,9 @@ public:
         for (auto &err: errors) {
             if (err.eid > 1000) {
                 out << err.line << " " << err.err_code << endl;
+//                if (err.err_code == 'j') {
+//                    out << err.msg << endl;
+//                }
                 if (DEBUG) {
                     cout << err.line << " " << err.err_code << endl;
                 }
