@@ -8,6 +8,7 @@
 #include "Lexer.h"
 #include "Error.h"
 #include "SymTable.h"
+#include "MidCode.h"
 
 class Grammar {
 public:
@@ -22,7 +23,6 @@ public:
 
     DataType tmp_const_data_type = invalid;
     DataType tmp_switch_data_type = invalid;
-    vector<DataType> tmp_expr_data_type;
     vector<DataType> tmp_para_types;
     int tmp_dim1{};
     int tmp_dim2{};
@@ -39,9 +39,9 @@ public:
 
     int analyze();
 
-    Grammar(const string& in_path, string out_path) : out_path(std::move(out_path)), lexer(in_path){};
+    Grammar(const string &in_path, string out_path) : out_path(std::move(out_path)), lexer(in_path) {};
 
-    explicit Grammar(const string& in_path) : lexer(in_path){};
+    explicit Grammar(const string &in_path) : lexer(in_path) {};
 
     void output(const string &name);
 
@@ -53,13 +53,13 @@ public:
 
     void UnsignedInt();
 
-    void Int();
+    string Int();
 
-    void Identifier();
+    string Identifier();
 
 //    void DeclareHead();
 
-    void Const();
+    string Const();
 
     void VariableDeclare();
 
@@ -81,11 +81,11 @@ public:
 
     void Main();
 
-    DataType Expr();
+    pair<DataType, string> Expr();
 
-    DataType Item();
+    pair<DataType, string> Item();
 
-    DataType Factor();
+    pair<DataType, string> Factor();
 
     void Stmt();
 

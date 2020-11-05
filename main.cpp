@@ -1,6 +1,4 @@
-#include "Lexer.h"
 #include "Grammar.h"
-#include "Error.h"
 
 using namespace std;
 
@@ -11,10 +9,10 @@ int main() {
 	cout << "::                                                 ::" << endl;
 	cout << ":::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl;
 //    Grammar grammar("testfile.txt", "output.txt");
-    Grammar grammar("testfile.txt", "output.txt");
+    Grammar grammar("testfile.txt");
     grammar.analyze();
 
-    Errors::save_to_file("error.txt");
+//    Errors::save_to_file("error.txt");
 
 //    if (Errors::terminate()) {
 //        throw exception();
@@ -23,6 +21,8 @@ int main() {
 //    if (DEBUG) {
 //        SymTable::show();
 //    }
+
+    MidCodeList::show();
 
     return 0;
 }
