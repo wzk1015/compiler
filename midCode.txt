@@ -1,0 +1,24 @@
+FUNC int func
+para1 = 3
+#T1 = para2 + para1
+para3 = #T1
+FUNC void main
+#T2 = a / e
+#T3 = x + y
+#T4 = d * #T3
+#T5 = c + #T4
+#T6 = b * #T5
+#T7 = #T2 + #T6
+i = #T7
+#T8 = 4 + c
+e = #T8
+SCANF x
+PRINT x expr
+PRINT #ENDL
+PRINT y expr
+PRINT #ENDL
+PRINT 0 strcon
+PRINT #ENDL
+PRINT 1 strcon
+PRINT a expr
+PRINT #ENDL

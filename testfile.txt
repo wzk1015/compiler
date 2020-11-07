@@ -1,4 +1,18 @@
+int func(int para1, char para2, int para3) {
+    para1 = 3;
+    para3 = para2 + para1;
+    return (para3);
+}
+
 void main() {
     int a,b,c,d,e,i,x,y;
+    char m;
+    int f;
     i = a/e + b*(c+d*(x+y));
+    e = 4 + c;
+    scanf(x);
+    printf(x);
+    printf(y);
+    printf("good");
+    printf("fuck",a);
 }

@@ -20,6 +20,7 @@ public:
 
     Token tk{INVALID};
     string sym = "";
+    int local_addr = 0;
 
     DataType tmp_const_data_type = invalid;
     DataType tmp_switch_data_type = invalid;
@@ -27,9 +28,9 @@ public:
     int tmp_dim1{};
     int tmp_dim2{};
     int tmp_para_count = 0;
+
     DataType funcdef_ret = invalid;
     bool has_returned = false;
-    string skip_instr;
 
     void error(const string &expected);
 

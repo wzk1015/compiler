@@ -8,17 +8,21 @@
 #include <iostream>
 #include <utility>
 #include <vector>
+#include <fstream>
+#include <map>
 
-#define VACANT "-"
-#define AUTO "auto"
+#define VACANT "#VACANT"
+#define AUTO "#AUTO"
+#define ENDL "#ENDL"
 
-#define OP_PRINT "print"
-#define OP_SCANF "scanf"
+#define OP_PRINT "PRINT"
+#define OP_SCANF "SCANF"
 #define OP_ASSIGN ":="
 #define OP_ADD "+"
 #define OP_SUB "-"
 #define OP_MUL "*"
 #define OP_DIV "/"
+#define OP_FUNC "FUNC"
 
 using namespace std;
 
@@ -34,20 +38,20 @@ public:
 
     MidCode() = default;
 
-    string to_str() const {
-        return op + ", " + num1 + ", " + num2 + ", " + result;
-    }
+    string to_str() const;
 };
 
 class MidCodeList {
 public:
     static vector<MidCode> codes;
     static int code_index;
+    static vector<string> strcons;
+    static int strcon_index;
 
-    static string add(const string& op, const string& n1, const string& n2, const string& r) {
+    static string add(const string &op, const string &n1, const string &n2, const string &r) {
         string result = r;
         if (result == AUTO) {
-            result = "T" + to_string(code_index);
+            result = "#T" + to_string(code_index);
             code_index++;
         }
         codes.emplace_back(op, n1, n2, result);
@@ -55,15 +59,21 @@ public:
     }
 
     static void show() {
-        cout << "MID CODES:" << endl;
-        for (auto& c: codes) {
+        cout << "========MID CODES========" << endl;
+        for (auto &c: codes) {
             cout << c.to_str() << endl;
         }
+        cout << "=========================" << endl;
+    }
+
+    static void save_to_file(const string &out_path) {
+        ofstream out(out_path);
+        for (auto &c: codes) {
+            out << c.to_str() << endl;
+        }
+        out.close();
     }
 };
-
-
-
 
 
 #endif //COMPILER_MIDCODE_H

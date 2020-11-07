@@ -1,4 +1,5 @@
 #include "Grammar.h"
+#include "MipsGenerator.h"
 
 using namespace std;
 
@@ -22,7 +23,11 @@ int main() {
 //        SymTable::show();
 //    }
 
-    MidCodeList::show();
+//    MidCodeList::show();
+    MidCodeList::save_to_file("midCode.txt");
 
+    MipsGenerator mips(MidCodeList::codes, MidCodeList::strcons);
+    mips.translate();
+//    mips.show();
     return 0;
 }

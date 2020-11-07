@@ -16,6 +16,7 @@ using namespace std;
 enum STIType {
     constant,
     var,
+    tmp,
     para,
     func
 };
@@ -32,13 +33,14 @@ public:
     string name;
     STIType stiType{};
     DataType dataType{};
-    int num_para = 0;
     int dim = 0;
     bool valid = true;
     vector<DataType> types;
+    int addr{};
+    int size{};
 
-    SymTableItem(string name, STIType stiType1, DataType dataType1) :
-            name(std::move(name)), stiType(stiType1), dataType(dataType1) {};
+    SymTableItem(string name, STIType stiType1, DataType dataType1, int addr) :
+            name(std::move(name)), stiType(stiType1), dataType(dataType1), addr(addr) {};
 
     explicit SymTableItem(bool valid) : valid(valid) {};
 
@@ -53,95 +55,23 @@ public:
     static vector<int> layers;
     static unsigned int max_name_length;
 
-    static void add(const Token& tk, STIType stiType, DataType dataType) {
-        add(tk, stiType, dataType, 0);
-    }
+    static void add(const string& name, STIType stiType, DataType dataType, int addr);
 
-    static void add(const Token& tk, STIType stiType, DataType dataType, int dim) {
-        int start = layers.empty() ? 0 : layers[layers.size() - 1];
-        for (int i = start; i < items.size(); i++) {
-            if (items[i].name == tk.str) {
-//                    Errors::add("redefined identifier '" + tk.str + "'", tk.line, tk.column, E_REDEFINED_IDENTF);
-                Errors::add("redefined identifier '" + tk.str + "'", tk.line, tk.column, ERR_REDEFINED);
-                return;
-            }
-        }
-        SymTableItem a(lower(tk.str), stiType, dataType);
-        a.dim = dim;
-        items.push_back(a);
-        max_name_length = max_name_length > tk.str.length() ? max_name_length : tk.str.length();
-    }
+    static void add(const Token& tk, STIType stiType, DataType dataType, int addr);
 
-        static int add_func(const Token& tk, DataType dataType, int num_para, vector<DataType> types) {
-        int start = layers.empty() ? 0 : layers[layers.size() - 1];
-        for (int i = start; i < items.size(); i++) {
-            if (items[i].name == tk.str) {
-//                    Errors::add("redefined identifier '" + tk.str + "'", tk.line, tk.column, E_REDEFINED_IDENTF);
-                Errors::add("redefined identifier '" + tk.str + "'", tk.line, tk.column, ERR_REDEFINED);
-                return i;
-            }
-        }
-        SymTableItem a(lower(tk.str), func, dataType);
-        a.num_para = num_para;
-        a.types = std::move(types);
-        items.push_back(a);
-        max_name_length = max_name_length > tk.str.length() ? max_name_length : tk.str.length();
-        return int(items.size()-1);
-    }
+    static void add(const Token& tk, STIType stiType, DataType dataType, int addr, int dim1, int dim2);
 
-    static void add_layer() {
-//        if (DEBUG) {
-//            cout << "add layer. layers: " << layers.size() << endl;
-//            show();
-//        }
-        layers.push_back(items.size());
-    }
+    static int add_func(const Token& tk, DataType dataType, vector<DataType> types);
 
-    static void pop_layer() {
-//        if (DEBUG) {
-//            cout << "pop layer. layers: " << layers.size() << endl;
-//            show();
-//        }
-        unsigned int pop_items_count = items.size() - layers[layers.size() - 1];
-        for (int i = 0; i < pop_items_count; i++) {
-            items.pop_back();
-        }
-        layers.pop_back();
-    }
+    static void add_layer();
 
-    static SymTableItem search(const Token &tk) {
-        string str = lower(tk.str);
-        for (int i = items.size() - 1; i >= 0; i--) {
-            if (items[i].name == str) {
-                return items[i];
-            }
-        }
-//        Errors::add("undefined identifier '" + tk.str + "'", tk.line, tk.column, E_UNDEFINED_IDENTF);
-        Errors::add("undefined identifier '" + tk.str + "'", tk.line, tk.column, ERR_UNDEFINED);
-        return SymTableItem(false);
-    }
+    static void pop_layer();
 
-    static void show() {
-        string sep1, sep2;
-        for (int i = 0; i < max_name_length + 15; i++) {
-            sep1 += "=";
-            sep2 += "-";
-        }
-        cout << sep1 << endl << "NAME";
-        for (int i = 0; i < max_name_length - 3; i++) {
-            cout << " ";
-        }
-        cout << "KIND  TYPE DIM" << endl << sep2 << endl;
-        int l = 0;
-        for (int i = 0; i < items.size(); i++) {
-            if (!layers.empty() && i == layers[l]) {
-                l++;
-                cout << sep2 << endl;
-            }
-            cout << items[i].to_str() << endl;
-        }
-        cout << sep1 << endl;
-    }
+    static SymTableItem search(const Token &tk);
+
+    static SymTableItem search(const string &str);
+
+    static void show();
 };
 
 
