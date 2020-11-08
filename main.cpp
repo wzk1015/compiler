@@ -15,10 +15,6 @@ int main() {
 
 //    Errors::save_to_file("error.txt");
 
-//    if (Errors::terminate()) {
-//        throw exception();
-//    }
-
 //    if (DEBUG) {
 //        SymTable::show();
 //    }
@@ -28,6 +24,9 @@ int main() {
 
     MipsGenerator mips(MidCodeList::codes, MidCodeList::strcons);
     mips.translate();
-//    mips.show();
+    mips.show();
+
+    SymTable::show();
+    Errors::terminate();
     return 0;
 }

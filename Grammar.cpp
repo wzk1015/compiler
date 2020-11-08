@@ -139,7 +139,6 @@ void Grammar::Program() {
                 } else {
                     next_sym();
                     if (sym == "MAINTK") {
-                        retract();
                         Main();
                         output("<程序>");
                         return;
@@ -181,7 +180,7 @@ void Grammar::ConstDef() {
         do {
             next_sym();
             id = Identifier();
-            SymTable::add(tk, constant, integer, local_addr); //TODO
+            SymTable::add(cur_func, tk, constant, integer, local_addr); //TODO
             local_addr += 4;
             next_sym();
             if (sym != "ASSIGN") {
@@ -195,7 +194,7 @@ void Grammar::ConstDef() {
         do {
             next_sym();
             id = Identifier();
-            SymTable::add(tk, constant, character, local_addr); //TODO
+            SymTable::add(cur_func, tk, constant, character, local_addr); //TODO
             local_addr += 1;
             next_sym();
             if (sym != "ASSIGN") {
@@ -313,8 +312,8 @@ void Grammar::VariableDef() {
         }
         tmp_const_data_type = invalid;
         init = true;
-        SymTable::add(tk2, var, dataType, local_addr);
-        local_addr += (dataType == integer ? 4 : 1);
+        SymTable::add(cur_func, tk2, var, dataType, local_addr);
+        local_addr += size_of(dataType);
         MidCodeList::add(OP_ASSIGN, id, value, VACANT);
     } else if (sym == "LBRACK") {
         //TODO
@@ -354,8 +353,8 @@ void Grammar::VariableDef() {
                 error("'}'");
             }
             init = true;
-            SymTable::add(tk2, var, dataType, local_addr, tmp_dim1, 0);
-            local_addr += (dataType == integer ? 4 : 1) * tmp_dim1; //TODO
+            SymTable::add(cur_func, tk2, var, dataType, local_addr, tmp_dim1, 0);
+            local_addr += size_of(dataType) * tmp_dim1; //TODO
         } else if (sym == "LBRACK") {
             next_sym();
             UnsignedInt();
@@ -414,25 +413,25 @@ void Grammar::VariableDef() {
                     error("'}'");
                 }
                 init = true;
-                SymTable::add(tk2, var, dataType, local_addr, tmp_dim1, tmp_dim2);
-                local_addr += (dataType == integer ? 4 : 1) * tmp_dim1 * tmp_dim2;//TODO
+                SymTable::add(cur_func, tk2, var, dataType, local_addr, tmp_dim1, tmp_dim2);
+                local_addr += size_of(dataType) * tmp_dim1 * tmp_dim2;//TODO
             } else {    //int a[3][3];
                 retract();
                 init = false;
-                SymTable::add(tk2, var, dataType, local_addr, tmp_dim1, tmp_dim2);
-                local_addr += (dataType == integer ? 4 : 1) * tmp_dim1 * tmp_dim2;//TODO
+                SymTable::add(cur_func, tk2, var, dataType, local_addr, tmp_dim1, tmp_dim2);
+                local_addr += size_of(dataType) * tmp_dim1 * tmp_dim2;//TODO
             }
         } else {  //int a[3];
             retract();
             init = false;
-            SymTable::add(tk2, var, dataType, local_addr, tmp_dim1, 0);
-            local_addr += (dataType == integer ? 4 : 1) * tmp_dim1;
+            SymTable::add(cur_func, tk2, var, dataType, local_addr, tmp_dim1, 0);
+            local_addr += size_of(dataType) * tmp_dim1;
         }
     } else {  //int a;
         retract();
         init = false;
-        SymTable::add(tk2, var, dataType, local_addr);
-        local_addr += (dataType == integer ? 4 : 1);
+        SymTable::add(cur_func, tk2, var, dataType, local_addr);
+        local_addr += size_of(dataType);
     }
 
     if (init) {
@@ -447,6 +446,7 @@ void Grammar::VariableDef() {
             if (sym == "LBRACK") {
                 next_sym();
                 UnsignedInt();
+                tmp_dim1 = tk.v_int;
                 next_sym();
                 if (sym != "RBRACK") {
                     error("']'");
@@ -455,20 +455,21 @@ void Grammar::VariableDef() {
                 if (sym == "LBRACK") {
                     next_sym();
                     UnsignedInt();
+                    tmp_dim2 = tk.v_int;
                     next_sym();
                     if (sym != "RBRACK") {
                         error("']'");
                     }
-                    SymTable::add(tk3, var, dataType, 2, local_addr);
-                    local_addr += (dataType == integer ? 4 : 1);//TODO
+                    SymTable::add(cur_func, tk3, var, dataType, local_addr, tmp_dim1, tmp_dim2);
+                    local_addr += size_of(dataType) * tmp_dim1 * tmp_dim2;
                 } else {
                     retract();
-                    SymTable::add(tk3, var, dataType, 1, local_addr);
-                    local_addr += (dataType == integer ? 4 : 1);//TODO
+                    SymTable::add(cur_func, tk3, var, dataType, local_addr, tmp_dim1, 0);
+                    local_addr += size_of(dataType) * tmp_dim1;
                 }
             } else {
-                SymTable::add(tk3, var, dataType, local_addr);
-                local_addr += (dataType == integer ? 4 : 1);
+                SymTable::add(cur_func, tk3, var, dataType, local_addr);
+                local_addr += size_of(dataType);
                 retract();
             }
             next_sym();
@@ -497,12 +498,10 @@ void Grammar::SharedFuncDefBody() {
     if (sym != "RBRACE") {
         error("'}'");
     }
-    SymTable::pop_layer();
     local_addr = 0;
 }
 
 void Grammar::SharedFuncDefHead() {
-    SymTable::add_layer();
     if (sym != "LPARENT") {
         error("'('");
     }
@@ -534,14 +533,19 @@ void Grammar::RetFuncDef() {
         ret_type = integer;
     }
     funcdef_ret = ret_type;
+
     next_sym();
     Identifier();
+    cur_func = tk.str;
     int idx = SymTable::add_func(tk, ret_type, tmp_para_types);
     MidCodeList::add(OP_FUNC, ret_type == integer ? "int" : "char", tk.str, VACANT);
     output("<声明头部>");
+
     next_sym();
     SharedFuncDefHead();
-    SymTable::items[idx].types = tmp_para_types;
+    if (idx != -1) {
+        SymTable::global[idx].types = tmp_para_types;
+    }
     next_sym();
     SharedFuncDefBody();
     if (!has_returned) {
@@ -560,13 +564,18 @@ void Grammar::NonRetFuncDef() {
     if (sym != "VOIDTK") {
         error("'void");
     }
+
     next_sym();
     Identifier();
+    cur_func = tk.str;
     int idx = SymTable::add_func(tk, void_ret, tmp_para_types);
     MidCodeList::add(OP_FUNC, "void", tk.str, VACANT);
+
     next_sym();
     SharedFuncDefHead();
-    SymTable::items[idx].types = tmp_para_types;
+    if (idx != -1) {
+        SymTable::global[idx].types = tmp_para_types;
+    }
     next_sym();
     SharedFuncDefBody();
 
@@ -598,8 +607,8 @@ void Grammar::ParaList() {
     tmp_para_types.push_back(dataType);
     next_sym();
     Identifier();
-    SymTable::add(tk, para, dataType, local_addr);
-    local_addr += (dataType == integer ? 4 : 1);
+    SymTable::add(cur_func, tk, para, dataType, local_addr);
+    local_addr += size_of(dataType);
     tmp_para_count = 1;
     next_sym();
     while (sym == "COMMA") {
@@ -609,8 +618,8 @@ void Grammar::ParaList() {
         tmp_para_types.push_back(dataType2);
         next_sym();
         Identifier();
-        SymTable::add(tk, para, dataType2, local_addr);
-        local_addr += (dataType2 == integer ? 4 : 1);
+        SymTable::add(cur_func, tk, para, dataType2, local_addr);
+        local_addr += size_of(dataType2);
         next_sym();
         tmp_para_count++;
     }
@@ -621,13 +630,10 @@ void Grammar::ParaList() {
 }
 
 void Grammar::Main() {
+    SymTable::add_func(tk, void_ret, tmp_para_types);
     MidCodeList::add(OP_FUNC, "void", "main", VACANT);
     funcdef_ret = void_ret;
-    SymTable::add_layer();
-    if (sym != "VOIDTK") {
-        error("'void'");
-    }
-    next_sym();
+    cur_func = "main";
     if (sym != "MAINTK") {
         error("'main'");
     }
@@ -651,7 +657,6 @@ void Grammar::Main() {
     }
 
     output("<主函数>");
-    SymTable::pop_layer();
     local_addr = 0;
     funcdef_ret = invalid;
 }
@@ -676,14 +681,14 @@ pair<DataType, string> Grammar::Expr() {
         next_sym();
         string num2 = Item().second;
         num1 = MidCodeList::add(op, num1, num2, AUTO);
-        SymTable::add(num1, tmp, integer, local_addr);
+        SymTable::add(cur_func, num1, tmp, integer, local_addr);
         local_addr += 4;
         next_sym();
     }
 
     if (neg) {
         num1 = MidCodeList::add(OP_SUB, "0", num1, AUTO);
-        SymTable::add(num1, tmp, integer, local_addr);
+        SymTable::add(cur_func, num1, tmp, integer, local_addr);
         local_addr += 4;
     }
 
@@ -706,7 +711,7 @@ pair<DataType, string> Grammar::Item() {
         next_sym();
         string num2 = Factor().second;
         num1 = MidCodeList::add(op, num1, num2, AUTO);
-        SymTable::add(num1, tmp, integer, local_addr);
+        SymTable::add(cur_func, num1, tmp, integer, local_addr);
         local_addr += 4;
         next_sym();
     }
@@ -720,7 +725,7 @@ pair<DataType, string> Grammar::Factor() {
     DataType ret_type = integer;
     string ret_str;
     if (sym == "IDENFR") {
-        if (SymTable::search(tk).dataType == character) {
+        if (SymTable::search(cur_func, tk).dataType == character) {
             ret_type = character;
         } else {
             ret_type = integer;
@@ -820,13 +825,13 @@ void Grammar::Stmt() {
         next_sym(); // func(
         if (sym == "LPARENT") {
             retract(); //func
-            if (SymTable::search(tk).stiType != func) {
+            if (SymTable::search(GLOBAL, tk).stiType != func) {
                 //error("function call");
                 while (sym != "SEMICN") {
                     next_sym();
                 }
                 retract();
-            } else if (SymTable::search(tk).dataType != void_ret) {
+            } else if (SymTable::search(GLOBAL, tk).dataType != void_ret) {
                 RetFuncCall();
             } else {
                 NonRetFuncCall();   //including undefined
@@ -851,7 +856,7 @@ void Grammar::Stmt() {
 void Grammar::AssignStmt() {
     string id = Identifier();
     string value;
-    if (SymTable::search(tk).stiType == constant) {
+    if (SymTable::search(cur_func, tk).stiType == constant) {
         error("change const");
     }
     next_sym();
@@ -963,7 +968,7 @@ void Grammar::LoopStmt() {
         }
         next_sym();
         Identifier();
-        SymTable::search(tk);
+        SymTable::search(cur_func, tk);
         next_sym();
         if (sym != "ASSIGN") {
             error("'='");
@@ -982,14 +987,14 @@ void Grammar::LoopStmt() {
         }
         next_sym();
         Identifier();
-        SymTable::search(tk);
+        SymTable::search(cur_func, tk);
         next_sym();
         if (sym != "ASSIGN") {
             error("'='");
         }
         next_sym();
         Identifier();
-        SymTable::search(tk);
+        SymTable::search(cur_func, tk);
         next_sym();
         if (sym != "PLUS" && sym != "MINU") {
             error("'+' or '-'");
@@ -1096,7 +1101,7 @@ void Grammar::Default() {
 void Grammar::SharedFuncCall() {
     bool para_count_err = false;
     Identifier();
-    vector<DataType> types = SymTable::search(tk).types;
+    vector<DataType> types = SymTable::search(cur_func, tk).types;
     next_sym();
     if (sym != "LPARENT") {
         error("'('");
@@ -1180,7 +1185,7 @@ void Grammar::ReadStmt() {
     next_sym();
     Identifier();
     MidCodeList::add(OP_SCANF, tk.str, VACANT, VACANT);
-    if (SymTable::search(tk).stiType == constant) {
+    if (SymTable::search(cur_func, tk).stiType == constant) {
         error("change const");
     }
     next_sym();

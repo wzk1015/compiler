@@ -8,47 +8,7 @@
 
 #include <utility>
 
-string regs[32] = {
-        "$zero", "$at", "$v0", "$v1",
-        "$a0", "$a1", "$a2", "$a3",
-        "$t0", "$t1", "$t2", "$t3",
-        "$t4", "$t5", "$t6", "$t7",
-        "$s0", "$s1", "$s2", "$s3",
-        "$s4", "$s5", "$s6", "$s7",
-        "$t8", "$t9", "$k0", "$k1",
-        "$gp", "$sp", "$fp", "$ra"
-};
-
-map<string, string> op_to_instr = {
-        {OP_ADD, "addu"},
-        {OP_SUB, "subu"},
-        {OP_MUL, "mulu"},
-        {OP_DIV, "divu"},
-};
-
-vector<string> t_reg_table = {
-        VACANT,
-        VACANT,
-        VACANT,
-        VACANT,
-        VACANT,
-        VACANT,
-        VACANT,
-        VACANT,
-        VACANT,
-        VACANT
-};
-
-vector<string> s_reg_table = {
-        VACANT,
-        VACANT,
-        VACANT,
-        VACANT,
-        VACANT,
-        VACANT,
-        VACANT,
-        VACANT
-};
+//TODO：分配st寄存器
 
 void MipsGenerator::generate(const string &code) {
     mips.push_back(code);
@@ -75,17 +35,27 @@ void MipsGenerator::translate() {
             for (int i = 0; i < 8; i++) {
                 s_reg_table[i] = VACANT;
             }
+            if (sp_size != 0) {
+                generate("addi $sp, $sp, " + to_string(sp_size));
+            }
+
+            cur_func = code.num2;
             generate(code.num2 + ":");
-            generate("addi $sp, $sp, -" + to_string()); //TODO
+            sp_size = SymTable::local[code.num2].back().addr + SymTable::local[code.num2].back().size;
+            generate("addi $sp, $sp, -" + to_string(sp_size));
         }
         else if (op == OP_PRINT) {
             if (code.num2 == "strcon") {
                 generate("la $a0, str" + code.num1);
                 generate("li $v0, 4");
                 generate("syscall");
+            } else if (code.num1 == ENDL) {
+                    generate("la $a0, newline");
+                    generate("li $v0, 4");
+                    generate("syscall");
             } else {
-                SymTableItem it = SymTable::search(code.num1); //TODO:考虑临时变量#T1
-                load_value(it.name, "$a0");
+                SymTableItem it = SymTable::search(cur_func, code.num1);
+                load_value(code.num1, "$a0");
                 if (it.dataType == integer) {
                     generate("li $v0, 1");
                 } else {
@@ -93,20 +63,18 @@ void MipsGenerator::translate() {
                 }
                 generate("syscall");
             }
-            generate("la $a0, newline");
-            generate("li $v0, 4");
-            generate("syscall");
+
         }
 
         else if (op == OP_SCANF) {
-            SymTableItem it = SymTable::search(code.num1); //TODO:考虑临时变量#T1
+            SymTableItem it = SymTable::search(cur_func, code.num1);
             if (it.dataType == integer) {
                 generate("li $v0, 5");
             } else {
                 generate("li $v0, 12");
             }
             generate("syscall");
-            save_value("$v0", it.name);
+            save_value("$v0", code.num1);
         }
 
         else if (op == OP_ASSIGN) {
@@ -121,8 +89,8 @@ void MipsGenerator::translate() {
                 } else {
                     //num1,2都在内存
                     string reg = "$k0";
-                    load_value(addr2, reg);
-                    save_value(reg, addr1);
+                    generate("lw " + addr2 + ", " + reg);
+                    generate("sw " + reg + ", " + addr1);
                 }
             }
         }
@@ -175,7 +143,7 @@ void MipsGenerator::save_value(const string &reg, string symbol) {
 }
 
 //返回symbol对应的寄存器或地址
-string MipsGenerator::symbol_to_addr(string symbol) {
+string MipsGenerator::symbol_to_addr(const string& symbol) {
     for (int i = 0; i < 10; i++) {
         if (t_reg_table[i] == symbol) {
             return "$t" + to_string(i);
@@ -186,7 +154,7 @@ string MipsGenerator::symbol_to_addr(string symbol) {
             return "$s" + to_string(i);
         }
     }
-    return to_string(SymTable::search(symbol).addr)+"($sp)";
+    return to_string(SymTable::search(cur_func, symbol).addr)+"($sp)";
 }
 
 string MipsGenerator::assign_t_reg(const string& name) {

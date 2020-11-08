@@ -11,5 +11,4 @@ using namespace std;
 
 string lower(string wd);
 
-
 #endif //COMPILER_UTILS_H

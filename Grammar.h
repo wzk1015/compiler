@@ -31,6 +31,7 @@ public:
 
     DataType funcdef_ret = invalid;
     bool has_returned = false;
+    string cur_func = GLOBAL;
 
     void error(const string &expected);
 

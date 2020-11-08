@@ -11,6 +11,10 @@
 #include "Error.h"
 #include "Token.h"
 
+#define GLOBAL "global"
+#define size_of(dt)  4
+//(dt == integer ? 4 : 1)
+
 using namespace std;
 
 enum STIType {
@@ -51,25 +55,25 @@ public:
 
 class SymTable {
 public:
-    static vector<SymTableItem> items;
-    static vector<int> layers;
+    static vector<SymTableItem> global;
+    static map<string, vector<SymTableItem>> local;
     static unsigned int max_name_length;
 
-    static void add(const string& name, STIType stiType, DataType dataType, int addr);
+    static void add(const string &func, const string &name, STIType stiType, DataType dataType, int addr);
 
-    static void add(const Token& tk, STIType stiType, DataType dataType, int addr);
+    static void add(const string &func, const Token &tk, STIType stiType, DataType dataType, int addr);
 
-    static void add(const Token& tk, STIType stiType, DataType dataType, int addr, int dim1, int dim2);
+    static void add(const string &func, const Token &tk, STIType stiType, DataType dataType, int addr, int dim1, int dim2);
 
-    static int add_func(const Token& tk, DataType dataType, vector<DataType> types);
+    static int add_func(const Token &tk, DataType dataType, vector<DataType> types);
 
-    static void add_layer();
+    static SymTableItem search(const string &func, const Token &tk);
 
-    static void pop_layer();
+    static SymTableItem search(const string &func, const string &str);
 
-    static SymTableItem search(const Token &tk);
+    static SymTableItem try_search(const string &func, const string &str);
 
-    static SymTableItem search(const string &str);
+    static bool search_func(const string &func_name);
 
     static void show();
 };
