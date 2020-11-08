@@ -1,30 +1,30 @@
 .data
-str0: .asciiz "Hello World"
 newline: .asciiz "\n"
 .text
-lui $gp, 0x1001
 jal main
 li $v0, 10
 syscall
 # === FUNC void main ===
 main:
-# === PRINT 0 strcon ===
-la $a0, str0
-li $v0, 4
-syscall
-# === PRINT #ENDL ===
-la $a0, newline
-li $v0, 4
-syscall
-# === SCANF test ===
-li $v0, 5
-syscall
-sw $v0, 0($gp)
-# === PRINT test expr ===
-lw $a0, 0($gp)
-li $v0, 1
-syscall
-# === PRINT #ENDL ===
-la $a0, newline
-li $v0, 4
-syscall
+addi $sp, $sp, -20
+# === #T1 = 0 - 1 ===
+li $k0, 0
+li $k1, 1
+subu $k0, $k0, $k1
+sw $k0, 8($sp)
+# === #T2 = #T1 + 1 ===
+lw $k0, 8($sp)
+li $k1, 1
+addu $k0, $k0, $k1
+sw $k0, 12($sp)
+# === #T3 = #T2 + 1 ===
+lw $k0, 12($sp)
+li $k1, 1
+addu $k0, $k0, $k1
+sw $k0, 16($sp)
+# === a = #T3 ===
+lw $k0, 16($sp)
+sw $k0, 4($sp)
+# === b = 5 ===
+li $k0, 5
+sw $k0, 0($sp)

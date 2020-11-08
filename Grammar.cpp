@@ -130,6 +130,7 @@ void Grammar::Program() {
             retract();
             retract();
             VariableDeclare();
+            global_addr = local_addr;//TODO
         } else {
             retract();
             retract();
@@ -248,7 +249,7 @@ string Grammar::Const() {
         ret = Int();
         tmp_const_data_type = integer;
     } else if (sym == "CHARCON") {
-        ret = tk.str;
+        ret = "'" + tk.str + "'";
         tmp_const_data_type = character;
     } else {
         error("char");
@@ -496,7 +497,7 @@ void Grammar::SharedFuncDefBody() {
     if (sym != "RBRACE") {
         error("'}'");
     }
-    local_addr = 0;
+    local_addr = global_addr;
 }
 
 void Grammar::SharedFuncDefHead() {
@@ -655,7 +656,7 @@ void Grammar::Main() {
     }
 
     output("<主函数>");
-    local_addr = 0;
+    local_addr = global_addr;
     funcdef_ret = invalid;
 }
 
@@ -672,6 +673,11 @@ pair<DataType, string> Grammar::Expr() {
     if (item.first == character && ret_type == invalid) {
         ret_type = character;
     }
+    if (neg) {
+        num1 = MidCodeList::add(OP_SUB, "0", num1, AUTO);
+        SymTable::add(cur_func, num1, tmp, integer, local_addr);
+        local_addr += 4;
+    }
     next_sym();
     while (sym == "PLUS" || sym == "MINU") {
         string op = sym == "PLUS" ? OP_ADD : OP_SUB;
@@ -682,12 +688,6 @@ pair<DataType, string> Grammar::Expr() {
         SymTable::add(cur_func, num1, tmp, integer, local_addr);
         local_addr += 4;
         next_sym();
-    }
-
-    if (neg) {
-        num1 = MidCodeList::add(OP_SUB, "0", num1, AUTO);
-        SymTable::add(cur_func, num1, tmp, integer, local_addr);
-        local_addr += 4;
     }
 
     output("<表达式>");
@@ -1211,7 +1211,7 @@ void Grammar::WriteStmt() {
         if (sym == "COMMA") {
             next_sym();
             string r = Expr().second;
-            MidCodeList::add(OP_PRINT, r, "expr", VACANT); // TODO :TK.STR -> EXPR
+            MidCodeList::add(OP_PRINT, r, "expr", VACANT);
             next_sym();
             if (sym != "RPARENT") {
                 error("')'");
@@ -1221,7 +1221,7 @@ void Grammar::WriteStmt() {
         }
     } else {
         string r = Expr().second;
-        MidCodeList::add(OP_PRINT, r, "expr", VACANT);  // TODO :TK.STR -> EXPR
+        MidCodeList::add(OP_PRINT, r, "expr", VACANT);
         next_sym();
         if (sym != "RPARENT") {
             error("')'");

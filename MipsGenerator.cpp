@@ -22,7 +22,7 @@ void MipsGenerator::translate() {
     generate(R"(newline: .asciiz "\n")");
 
     generate(".text");
-    generate("lui $gp, 0x1001");
+//    generate("lui $gp, 0x1001");
     generate("jal main");
     generate("li $v0, 10");
     generate("syscall");
@@ -58,9 +58,9 @@ void MipsGenerator::translate() {
                 generate("syscall");
             } else {
                 //PRINT 表达式
-                SymTableItem it = SymTable::search(cur_func, code.num1);
+                SymTableItem it = SymTable::try_search(cur_func, code.num1, true);
                 load_value(code.num1, "$a0");
-                if (it.dataType == integer) {
+                if (begins_num(code.num1) || (it.valid && it.dataType == integer)) {
                     generate("li $v0, 1");
                 } else {
                     generate("li $v0, 11");
@@ -116,7 +116,7 @@ void MipsGenerator::translate() {
             string instr = op_to_instr.find(op)->second;
             string addr3 = symbol_to_addr(code.result);
 
-            //TODO: consider addr3 in memory
+//            //TODO: consider addr3 in memory
 //            if (op == OP_MUL && is_2_pow_1) {
 //                generate( "sll " + addr3 + ", " + to_string(int(log2(stoi(code.num1)))) + ", " + addr2);
 //            } else if (op == OP_MUL && is_2_pow_2) {
@@ -188,7 +188,7 @@ string MipsGenerator::symbol_to_addr(const string &symbol) {
             return "$s" + to_string(i);
         }
     }
-    if (isnumber(symbol[0])) {
+    if (begins_num(symbol)) {
         return "i"; //int
     }
     if (symbol[0] == '\'') {
@@ -196,15 +196,13 @@ string MipsGenerator::symbol_to_addr(const string &symbol) {
     }
     SymTableItem item = SymTable::search(cur_func, symbol);
     if (item.stiType == constant) {
-        if (item.dataType == integer) {
-            return "C" + item.const_value; //Const
-        }
-
+        return "C" + item.const_value; //Const
     }
-    SymTableItem global = SymTable::try_search(GLOBAL, symbol);
-    if (global.valid && global.stiType == var) {
-        return to_string(item.addr) + "($gp)";
-    }
+    SymTableItem global = SymTable::try_search(GLOBAL, symbol, true);
+//    if (global.valid && global.stiType == var) {
+//        return to_string(item.addr) + "($gp)";
+//    }
+    //TODO: 超过gp大小时数据存放？
     return to_string(item.addr) + "($sp)";
 }
 

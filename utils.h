@@ -13,4 +13,6 @@ string lower(string wd);
 
 bool is_2_power(int);
 
+bool begins_num(string);
+
 #endif //COMPILER_UTILS_H

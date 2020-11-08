@@ -74,7 +74,7 @@ public:
 
     static SymTableItem search(const string &func, const string &str);
 
-    static SymTableItem try_search(const string &func, const string &str);
+    static SymTableItem try_search(const string &func, const string &str, bool include_global);
 
     static bool search_func(const string &func_name);
 

@@ -1,6 +1,6 @@
 FUNC void main
-PRINT 0 strcon
-PRINT #ENDL
-SCANF test
-PRINT test expr
-PRINT #ENDL
+#T1 = 0 - 1
+#T2 = #T1 + 1
+#T3 = #T2 + 1
+a = #T3
+b = 5

@@ -11,7 +11,7 @@ map<string, vector<SymTableItem>> SymTable::local;
 unsigned int SymTable::max_name_length = 5;
 
 void SymTable::add(const string &func, const string &name, STIType stiType, DataType dataType, int addr) {
-    if (try_search(func, name).valid) {
+    if (try_search(func, name, false).valid) {
         Errors::add("redefined identifier '" + name + "'", ERR_REDEFINED);
         return;
     }
@@ -29,8 +29,9 @@ void SymTable::add(const string &func, const Token &tk, STIType stiType, DataTyp
     add(func, tk, stiType, dataType, addr, 0, 0);
 }
 
-void SymTable::add(const string &func, const Token &tk, STIType stiType, DataType dataType, int addr, int dim1, int dim2) {
-    if (try_search(func, tk.str).valid) {
+void
+SymTable::add(const string &func, const Token &tk, STIType stiType, DataType dataType, int addr, int dim1, int dim2) {
+    if (try_search(func, tk.str, false).valid) {
         Errors::add("redefined identifier '" + tk.str + "'", tk.line, tk.column, ERR_REDEFINED);
         return;
     }
@@ -53,7 +54,7 @@ void SymTable::add(const string &func, const Token &tk, STIType stiType, DataTyp
 }
 
 void SymTable::add_const(const string &func, const Token &tk, DataType dataType, string const_value) {
-    if (try_search(func, tk.str).valid) {
+    if (try_search(func, tk.str, false).valid) {
         Errors::add("redefined const '" + tk.str + "'", tk.line, tk.column, ERR_REDEFINED);
         return;
     }
@@ -68,7 +69,7 @@ void SymTable::add_const(const string &func, const Token &tk, DataType dataType,
 }
 
 int SymTable::add_func(const Token &tk, DataType dataType, vector<DataType> types) {
-    if (try_search(GLOBAL, tk.str).valid) {
+    if (try_search(GLOBAL, tk.str, true).valid) {
         Errors::add("redefined function '" + tk.str + "'", tk.line, tk.column, ERR_REDEFINED);
         return -1;
     }
@@ -126,7 +127,7 @@ SymTableItem SymTable::search(const string &func, const string &str) {
     return SymTableItem(false);
 }
 
-SymTableItem SymTable::try_search(const string &func, const string &str) {
+SymTableItem SymTable::try_search(const string &func, const string &str, bool include_global) {
     if (func != GLOBAL) {
         if (!search_func(func)) {
             return SymTableItem(false);
@@ -137,9 +138,11 @@ SymTableItem SymTable::try_search(const string &func, const string &str) {
             }
         }
     }
-    for (auto &item: global) {
-        if (lower(item.name) == lower(str)) {
-            return item;
+    if (include_global) {
+        for (auto &item: global) {
+            if (lower(item.name) == lower(str)) {
+                return item;
+            }
         }
     }
     return SymTableItem(false);
@@ -157,7 +160,7 @@ bool SymTable::search_func(const string &func_name) {
 
 void SymTable::show() {
     string sep1, sep2;
-    for (int i = 0; i < max_name_length + 20; i++) {
+    for (int i = 0; i < max_name_length + 26; i++) {
         sep1 += "=";
         sep2 += "-";
     }
@@ -165,7 +168,7 @@ void SymTable::show() {
     for (int i = 0; i < max_name_length - 3; i++) {
         cout << " ";
     }
-    cout << "KIND  TYPE DIM ADDR" << endl << sep2 << endl;
+    cout << "KIND  TYPE DIM ADDR VALUE" << endl << sep2 << endl;
     cout << "---" << GLOBAL << endl;
     for (auto &item: global) {
         cout << item.to_str() << endl;
@@ -198,6 +201,7 @@ string SymTableItem::to_str() const {
     for (int i = 0; i < SymTable::max_name_length - name.length(); i++) {
         ans += " ";
     }
+    string sep = addr >= 10000 ? "     " : addr >= 1000 ? " " : addr >= 100 ? "  " : addr >= 10 ? "   " : "    ";
     return ans + " " + stitype_str[stiType] + " " + datatype_str[dataType] + " " + to_string(dim) + "   " +
-           to_string(addr);
+           to_string(addr) + sep + const_value;
 }

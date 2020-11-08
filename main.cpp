@@ -9,11 +9,11 @@ int main() {
 	cout << "::              wzk's compiler  V0.1               ::" << endl;
 	cout << "::                                                 ::" << endl;
 	cout << ":::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl;
-//    Grammar grammar("testfile.txt", "output.txt");
-    Grammar grammar("testfile.txt");
+    Grammar grammar("testfile.txt", "output.txt");
+//    Grammar grammar("testfile.txt");
     grammar.analyze();
 
-//    Errors::save_to_file("error.txt");
+    Errors::save_to_file("error.txt");
 
 //    if (DEBUG) {
 //        SymTable::show();

@@ -20,3 +20,7 @@ string lower(string wd) {
 bool is_2_power(int x){
     return (x&(x-1))==0;
 }
+
+bool begins_num(string symbol) {
+    return isdigit(symbol[0]) || symbol[0] == '+' || symbol[0] == '-';
+}
