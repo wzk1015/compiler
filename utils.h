@@ -11,4 +11,6 @@ using namespace std;
 
 string lower(string wd);
 
+bool is_2_power(int);
+
 #endif //COMPILER_UTILS_H

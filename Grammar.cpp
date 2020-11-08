@@ -180,22 +180,21 @@ void Grammar::ConstDef() {
         do {
             next_sym();
             id = Identifier();
-            SymTable::add(cur_func, tk, constant, integer, local_addr); //TODO
-            local_addr += 4;
+            Token tk2 = tk;
             next_sym();
             if (sym != "ASSIGN") {
                 error("'='");
             }
             next_sym();
             value = Int();
+            SymTable::add_const(cur_func, tk2, integer, value);
             next_sym();
         } while (sym == "COMMA");
     } else if (sym == "CHARTK") {
         do {
             next_sym();
             id = Identifier();
-            SymTable::add(cur_func, tk, constant, character, local_addr); //TODO
-            local_addr += 1;
+            Token tk2 = tk;
             next_sym();
             if (sym != "ASSIGN") {
                 error("'='");
@@ -204,7 +203,7 @@ void Grammar::ConstDef() {
             if (sym != "CHARCON") {
                 error("char");
             }
-            value = tk.str;
+            SymTable::add_const(cur_func, tk2, character, to_string(tk.v_char));
             next_sym();
         } while (sym == "COMMA");
     } else {
@@ -213,7 +212,6 @@ void Grammar::ConstDef() {
 
     output("<常量定义>");
     retract();
-    MidCodeList::add(OP_ASSIGN, id, value, VACANT);
 }
 
 void Grammar::UnsignedInt() {
@@ -778,7 +776,7 @@ pair<DataType, string> Grammar::Factor() {
         ret_str = Int();
     } else if (sym == "CHARCON") {
         ret_type = character;
-        ret_str = tk.str;
+        ret_str = "'" + tk.str + "'";
     } else {
         error("factor");
     }

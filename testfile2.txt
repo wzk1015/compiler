@@ -1,0 +1,22 @@
+const int w=67;
+const char fc='p';
+int k=99;
+
+int function1(int para1, char para2, int para3) {
+    para1 = 3;
+    para3 = para2 + para1;
+    return (para3);
+}
+
+void main() {
+    int a,b,c,d,e,i,x,y;
+    char m;
+    int f;
+    x = 666;
+    i = a/e + b*(c+d*(x+y));
+    e = 4 + c;
+    i = k + w;
+    i = i * fc;
+    scanf(x);
+    printf("fuck",8*a);
+}

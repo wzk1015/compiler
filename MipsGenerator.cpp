@@ -41,19 +41,23 @@ void MipsGenerator::translate() {
 
             cur_func = code.num2;
             generate(code.num2 + ":");
-            sp_size = SymTable::local[code.num2].back().addr + SymTable::local[code.num2].back().size;
-            generate("addi $sp, $sp, -" + to_string(sp_size));
-        }
-        else if (op == OP_PRINT) {
+            if (!SymTable::local[code.num2].empty()) {
+                sp_size = SymTable::local[code.num2].back().addr + SymTable::local[code.num2].back().size;
+                generate("addi $sp, $sp, -" + to_string(sp_size));
+            } else {
+                sp_size = 0;
+            }
+        } else if (op == OP_PRINT) {
             if (code.num2 == "strcon") {
                 generate("la $a0, str" + code.num1);
                 generate("li $v0, 4");
                 generate("syscall");
             } else if (code.num1 == ENDL) {
-                    generate("la $a0, newline");
-                    generate("li $v0, 4");
-                    generate("syscall");
+                generate("la $a0, newline");
+                generate("li $v0, 4");
+                generate("syscall");
             } else {
+                //PRINT 表达式
                 SymTableItem it = SymTable::search(cur_func, code.num1);
                 load_value(code.num1, "$a0");
                 if (it.dataType == integer) {
@@ -64,9 +68,7 @@ void MipsGenerator::translate() {
                 generate("syscall");
             }
 
-        }
-
-        else if (op == OP_SCANF) {
+        } else if (op == OP_SCANF) {
             SymTableItem it = SymTable::search(cur_func, code.num1);
             if (it.dataType == integer) {
                 generate("li $v0, 5");
@@ -75,66 +77,90 @@ void MipsGenerator::translate() {
             }
             generate("syscall");
             save_value("$v0", code.num1);
-        }
-
-        else if (op == OP_ASSIGN) {
+        } else if (op == OP_ASSIGN) {
+            /* 对于a=b:
+             * a在寄存器，b在寄存器：mv a,b
+             * a在寄存器，b在内存：lw a,b
+             * a在内存，b在寄存器：sw b,a
+             * a在内存，b在内存：lw reg,b  sw reg,a
+             */
             string addr1 = symbol_to_addr(code.num1);
-            if (addr1[0] == '$') {
+            if (in_reg(addr1)) {
                 load_value(code.num2, addr1);
             } else {
-                // num1在内存中
+                // a在内存中
                 string addr2 = symbol_to_addr(code.num2);
-                if (addr2[0] == '$') {
-                    save_value(addr2, addr1);
+                if (in_reg(addr2)) {
+                    save_value(code.num2, addr1);
                 } else {
-                    //num1,2都在内存
+                    // a,b都在内存
                     string reg = "$k0";
-                    generate("lw " + addr2 + ", " + reg);
-                    generate("sw " + reg + ", " + addr1);
+                    load_value(code.num2, reg);
+                    save_value(reg, code.num1);
                 }
             }
-        }
-
-        else if (op == OP_ADD || op == OP_SUB || op == OP_MUL || op == OP_DIV) {
+        } else if (op == OP_ADD || op == OP_SUB || op == OP_MUL || op == OP_DIV) {
             string addr1 = symbol_to_addr(code.num1);
-            if (addr1[0] != '$') {
+//            bool is_2_pow_1 = addr1[0] == 'i' && is_2_power(stoi(code.num1));
+            if (!in_reg(addr1)) {   //int, char, const, memory
                 addr1 = "$k0";
                 load_value(code.num1, addr1);
             }
             string addr2 = symbol_to_addr(code.num2);
-            if (addr2[0] != '$') {
+//            bool is_2_pow_2 = addr2[0] == 'i' && is_2_power(stoi(code.num2));
+            if (!in_reg(addr2)) {
                 addr2 = "$k1";
                 load_value(code.num2, addr2);
             }
 
             string instr = op_to_instr.find(op)->second;
             string addr3 = symbol_to_addr(code.result);
+
+            //TODO: consider addr3 in memory
+//            if (op == OP_MUL && is_2_pow_1) {
+//                generate( "sll " + addr3 + ", " + to_string(int(log2(stoi(code.num1)))) + ", " + addr2);
+//            } else if (op == OP_MUL && is_2_pow_2) {
+//                generate( "sll " + addr3 + ", " + addr1 + ", " + to_string(int(log2(stoi(code.num2)))));
+//            } else if (op == OP_DIV && is_2_pow_1) {
+//                generate( "srl " + addr3 + ", " + to_string(int(log2(stoi(code.num1)))) + ", " + addr2);
+//            } else if (op == OP_DIV && is_2_pow_2) {
+//                generate( "srl " + addr3 + ", " + addr1 + ", " + to_string(int(log2(stoi(code.num2)))));
+//            } else {
             if (addr3[0] == '$') {
                 generate(instr + " " + addr3 + ", " + addr1 + ", " + addr2);
-            }
-            else {
+            } else {
                 string reg = "$k0";
                 generate(instr + " " + reg + ", " + addr1 + ", " + addr2);
                 generate("sw " + reg + ", " + addr3);
             }
-            //TODO：优化除法为移位；考虑常数
         }
     }
 }
 
 //将symbol的值读到对应寄存器
-void MipsGenerator::load_value(const string& symbol, const string &reg) {
+void MipsGenerator::load_value(const string &symbol, const string &reg) {
     string addr = symbol_to_addr(symbol);
-    if (addr[0] == '$') {
-        generate("mv " + reg + ", " + addr);
-    } else {
-        generate("lw " + reg + ", " + addr);
+    switch (addr[0]) {
+        case '$':
+            generate("mv " + reg + ", " + addr);
+            break;
+        case 'i':
+            generate("li " + reg + ", " + symbol);
+            break;
+        case 'c':
+            generate("li " + reg + ", " + to_string(symbol[1]));
+            break;
+        case 'C':
+            generate("li " + reg + ", " + addr.substr(1, addr.size() - 1));
+            break;
+        default:
+            generate("lw " + reg + ", " + addr);
     }
 }
 
 //将reg的值存到symbol的位置
-void MipsGenerator::save_value(const string &reg, string symbol) {
-    string addr = symbol_to_addr(std::move(symbol));
+void MipsGenerator::save_value(const string &reg, const string& symbol) {
+    string addr = symbol_to_addr(symbol);
     if (addr[0] == '$') {
         generate("mv " + addr + ", " + reg);
     } else {
@@ -142,8 +168,16 @@ void MipsGenerator::save_value(const string &reg, string symbol) {
     }
 }
 
-//返回symbol对应的寄存器或地址
-string MipsGenerator::symbol_to_addr(const string& symbol) {
+bool in_memory(string ret) {
+    return ret[0] != '$' && ret[0] != 'i' && ret[0] != 'c' && ret[0] != 'C';
+}
+
+bool in_reg(string ret) {
+    return ret[0] == '$';
+}
+
+//返回symbol对应的寄存器或地址，或常量值类型，或常量
+string MipsGenerator::symbol_to_addr(const string &symbol) {
     for (int i = 0; i < 10; i++) {
         if (t_reg_table[i] == symbol) {
             return "$t" + to_string(i);
@@ -154,10 +188,27 @@ string MipsGenerator::symbol_to_addr(const string& symbol) {
             return "$s" + to_string(i);
         }
     }
-    return to_string(SymTable::search(cur_func, symbol).addr)+"($sp)";
+    if (isnumber(symbol[0])) {
+        return "i"; //int
+    }
+    if (symbol[0] == '\'') {
+        return "c"; //char
+    }
+    SymTableItem item = SymTable::search(cur_func, symbol);
+    if (item.stiType == constant) {
+        if (item.dataType == integer) {
+            return "C" + item.const_value; //Const
+        }
+
+    }
+    SymTableItem global = SymTable::try_search(GLOBAL, symbol);
+    if (global.valid && global.stiType == var) {
+        return to_string(item.addr) + "($gp)";
+    }
+    return to_string(item.addr) + "($sp)";
 }
 
-string MipsGenerator::assign_t_reg(const string& name) {
+string MipsGenerator::assign_t_reg(const string &name) {
     for (int i = 0; i < 10; i++) {
         if (t_reg_table[i] == VACANT) {
             t_reg_table[i] = name;
@@ -167,7 +218,7 @@ string MipsGenerator::assign_t_reg(const string& name) {
     return INVALID;
 }
 
-string MipsGenerator::assign_s_reg(const string& name) {
+string MipsGenerator::assign_s_reg(const string &name) {
     for (int i = 0; i < 8; i++) {
         if (s_reg_table[i] == VACANT) {
             s_reg_table[i] = name;
@@ -177,12 +228,7 @@ string MipsGenerator::assign_s_reg(const string& name) {
     return INVALID;
 }
 
-void MipsGenerator::show() {
-    cout << "=============Mips code=============" << endl;
-    for (auto &code: mips) {
-        cout << code << endl;
-    }
-}
+
 
 
 #pragma clang diagnostic pop

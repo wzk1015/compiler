@@ -1,0 +1,30 @@
+.data
+str0: .asciiz "Hello World"
+newline: .asciiz "\n"
+.text
+lui $gp, 0x1001
+jal main
+li $v0, 10
+syscall
+# === FUNC void main ===
+main:
+# === PRINT 0 strcon ===
+la $a0, str0
+li $v0, 4
+syscall
+# === PRINT #ENDL ===
+la $a0, newline
+li $v0, 4
+syscall
+# === SCANF test ===
+li $v0, 5
+syscall
+sw $v0, 0($gp)
+# === PRINT test expr ===
+lw $a0, 0($gp)
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline
+li $v0, 4
+syscall

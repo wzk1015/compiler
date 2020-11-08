@@ -1,15 +1,7 @@
-int function1(int para1, char para2, int para3) {
-    para1 = 3;
-    para3 = para2 + para1;
-    return (para3);
+int test;
+void main(){
+    printf("Hello World");
+    scanf(test);
+    printf(test);
 }
 
-void main() {
-    int a,b,c,d,e,i,x,y;
-    char m;
-    int f;
-    i = a/e + b*(c+d*(x+y));
-    e = 4 + c;
-    scanf(x);
-    printf("fuck",7*a);
-}

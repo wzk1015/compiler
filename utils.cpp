@@ -16,3 +16,7 @@ string lower(string wd) {
     }
     return s;
 }
+
+bool is_2_power(int x){
+    return (x&(x-1))==0;
+}

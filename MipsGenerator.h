@@ -6,6 +6,7 @@
 #define COMPILER_MIPSGENERATOR_H
 
 #include <utility>
+#include <cmath>
 
 #include "MidCode.h"
 #include "Error.h"
@@ -65,11 +66,24 @@ public:
 
     void translate();
 
-    void show();
+    void show() {
+        cout << "=============Mips code=============" << endl;
+        for (auto &code: mips) {
+            cout << code << endl;
+        }
+    }
+
+    void save_to_file(const string &out_path) {
+        ofstream out(out_path);
+        for (auto &c: mips) {
+            out << c << endl;
+        }
+        out.close();
+    }
 
     void load_value(const string &symbol, const string &reg);
 
-    void save_value(const string &reg, string symbol);
+    void save_value(const string &reg, const string &symbol);
 
     string symbol_to_addr(const string &);
 
@@ -79,6 +93,10 @@ public:
 
 //    string allocate_memory();
 };
+
+bool in_reg(string);
+
+bool in_memory(string);
 
 //const string op[] = {
 //    ".data", ".text",

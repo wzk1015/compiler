@@ -12,7 +12,7 @@
 #include "Token.h"
 
 #define GLOBAL "global"
-#define size_of(dt)  4
+#define size_of(dt)  (4)
 //(dt == integer ? 4 : 1)
 
 using namespace std;
@@ -42,6 +42,7 @@ public:
     vector<DataType> types;
     int addr{};
     int size{};
+    string const_value{};
 
     SymTableItem(string name, STIType stiType1, DataType dataType1, int addr) :
             name(std::move(name)), stiType(stiType1), dataType(dataType1), addr(addr) {};
@@ -64,6 +65,8 @@ public:
     static void add(const string &func, const Token &tk, STIType stiType, DataType dataType, int addr);
 
     static void add(const string &func, const Token &tk, STIType stiType, DataType dataType, int addr, int dim1, int dim2);
+
+    static void add_const(const string &func, const Token &tk, DataType dataType, string const_value);
 
     static int add_func(const Token &tk, DataType dataType, vector<DataType> types);
 

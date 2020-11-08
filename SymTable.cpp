@@ -4,6 +4,8 @@
 
 #include "SymTable.h"
 
+#include <utility>
+
 vector<SymTableItem> SymTable::global;
 map<string, vector<SymTableItem>> SymTable::local;
 unsigned int SymTable::max_name_length = 5;
@@ -42,6 +44,21 @@ void SymTable::add(const string &func, const Token &tk, STIType stiType, DataTyp
         a.dim = 2;
         a.size = size_of(dataType) * dim1 * dim2;
     }
+    if (func == GLOBAL) {
+        global.push_back(a);
+    } else {
+        local[func].push_back(a);
+    }
+    max_name_length = max_name_length > tk.str.length() ? max_name_length : tk.str.length();
+}
+
+void SymTable::add_const(const string &func, const Token &tk, DataType dataType, string const_value) {
+    if (try_search(func, tk.str).valid) {
+        Errors::add("redefined const '" + tk.str + "'", tk.line, tk.column, ERR_REDEFINED);
+        return;
+    }
+    SymTableItem a(lower(tk.str), constant, dataType, 0);
+    a.const_value = std::move(const_value);
     if (func == GLOBAL) {
         global.push_back(a);
     } else {
