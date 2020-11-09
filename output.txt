@@ -70,20 +70,20 @@ INTCON 2
 <赋值语句>
 SEMICN ;
 <语句>
-IDENFR b
+IDENFR num4
 ASSIGN =
-CHARCON b
+INTCON 4
+<无符号整数>
+<整数>
 <因子>
 <项>
 <表达式>
 <赋值语句>
 SEMICN ;
 <语句>
-IDENFR num4
+IDENFR b
 ASSIGN =
-INTCON 4
-<无符号整数>
-<整数>
+CHARCON b
 <因子>
 <项>
 <表达式>
@@ -314,6 +314,26 @@ IDENFR num1
 <因子>
 DIV /
 CHARCON *
+<因子>
+<项>
+PLUS +
+IDENFR num4
+<因子>
+MULT *
+INTCON 1087
+<无符号整数>
+<整数>
+<因子>
+DIV /
+CHARCON +
+<因子>
+MULT *
+LPARENT (
+IDENFR num3
+<因子>
+<项>
+<表达式>
+RPARENT )
 <因子>
 <项>
 <表达式>
@@ -1207,14 +1227,6 @@ INTCON 2
 <因子>
 <项>
 <表达式>
-RPARENT )
-<写语句>
-SEMICN ;
-<语句>
-PRINTFTK printf
-LPARENT (
-STRCON file2
-<字符串>
 RPARENT )
 <写语句>
 SEMICN ;

@@ -3,18 +3,17 @@ s_0: .asciiz "%d\\n"
 s_1: .asciiz "%d\\n"
 s_2: .asciiz "%d\\n"
 s_3: .asciiz "%d\\n"
-s_4: .asciiz "file2"
 nextLine: .asciiz "\n"
 .text
 j main
 main:
 move $fp,$sp
-addi $sp,$sp,-468
+addi $sp,$sp,-484
 li $t0,2
 sw $t0,0($gp)
+li $s0,4
 li $t0,98
 sw $t0,4($gp)
-li $s0,4
 li $s1,100
 li $t1,-14537
 mul $t3,$s0,$t1
@@ -56,7 +55,15 @@ lw $t1,0($gp)
 mul $t4,$t4,$t1
 sub $t3,$t3,$t4
 addi $t3,$t3,-45
-addi $t2,$t3,115
+addi $t3,$t3,115
+li $t1,1087
+mul $t4,$s0,$t1
+li $t1,43
+div $t4,$t1
+mflo $t4
+li $t1,3
+mul $t4,$t4,$t1
+add $t2,$t3,$t4
 sw $t2,0($gp)
 la $a0,s_0
 li $v0,4
@@ -266,12 +273,6 @@ li $s2,-1
 addi $t3,$s2,-2
 move $a0,$t3
 li $v0,1
-syscall
-la $a0,nextLine
-li $v0,4
-syscall
-la $a0,s_4
-li $v0,4
 syscall
 la $a0,nextLine
 li $v0,4

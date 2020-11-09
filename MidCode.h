@@ -11,6 +11,9 @@
 #include <fstream>
 #include <map>
 
+#include "utils.h"
+#include "SymTable.h"
+
 #define VACANT "#VACANT"
 #define AUTO "#AUTO"
 #define ENDL "#ENDL"
@@ -57,6 +60,8 @@ public:
         codes.emplace_back(op, n1, n2, result);
         return result;
     }
+
+    static void refactor();
 
     static void show() {
         cout << "========MID CODES========" << endl;

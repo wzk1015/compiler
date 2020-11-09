@@ -313,7 +313,7 @@ void Grammar::VariableDef() {
         init = true;
         SymTable::add(cur_func, tk2, var, dataType, local_addr);
         local_addr += size_of(dataType);
-        MidCodeList::add(OP_ASSIGN, id, value, VACANT);
+        add_midcode(OP_ASSIGN, id, value, VACANT);
     } else if (sym == "LBRACK") {
         //TODO
         next_sym();
@@ -537,7 +537,7 @@ void Grammar::RetFuncDef() {
     Identifier();
     cur_func = tk.str;
     int idx = SymTable::add_func(tk, ret_type, tmp_para_types);
-    MidCodeList::add(OP_FUNC, ret_type == integer ? "int" : "char", tk.str, VACANT);
+    add_midcode(OP_FUNC, ret_type == integer ? "int" : "char", tk.str, VACANT);
     output("<声明头部>");
 
     next_sym();
@@ -568,7 +568,7 @@ void Grammar::NonRetFuncDef() {
     Identifier();
     cur_func = tk.str;
     int idx = SymTable::add_func(tk, void_ret, tmp_para_types);
-    MidCodeList::add(OP_FUNC, "void", tk.str, VACANT);
+    add_midcode(OP_FUNC, "void", tk.str, VACANT);
 
     next_sym();
     SharedFuncDefHead();
@@ -630,7 +630,7 @@ void Grammar::ParaList() {
 
 void Grammar::Main() {
     SymTable::add_func(tk, void_ret, tmp_para_types);
-    MidCodeList::add(OP_FUNC, "void", "main", VACANT);
+    add_midcode(OP_FUNC, "void", "main", VACANT);
     funcdef_ret = void_ret;
     cur_func = "main";
     if (sym != "MAINTK") {
@@ -674,7 +674,7 @@ pair<DataType, string> Grammar::Expr() {
         ret_type = character;
     }
     if (neg) {
-        num1 = MidCodeList::add(OP_SUB, "0", num1, AUTO);
+        num1 = add_midcode(OP_SUB, "0", num1, AUTO);
         SymTable::add(cur_func, num1, tmp, integer, local_addr);
         local_addr += 4;
     }
@@ -684,7 +684,14 @@ pair<DataType, string> Grammar::Expr() {
         ret_type = integer;
         next_sym();
         string num2 = Item().second;
-        num1 = MidCodeList::add(op, num1, num2, AUTO);
+        if (op == OP_SUB && num_or_char(const_replace(num1)) && !num_or_char(const_replace(num2))) { //y=5-x:  z=x-5; y=0-z
+            num1 = add_midcode(OP_SUB, num2, num1, AUTO);
+            SymTable::add(cur_func, num1, tmp, integer, local_addr);
+            local_addr += 4;
+            num1 = add_midcode(OP_SUB, "0", num1, AUTO);
+        } else {
+            num1 = add_midcode(op, num1, num2, AUTO);
+        }
         SymTable::add(cur_func, num1, tmp, integer, local_addr);
         local_addr += 4;
         next_sym();
@@ -708,7 +715,14 @@ pair<DataType, string> Grammar::Item() {
         ret_type = integer;
         next_sym();
         string num2 = Factor().second;
-        num1 = MidCodeList::add(op, num1, num2, AUTO);
+        if (op == OP_DIV && num_or_char(const_replace(num1)) && !num_or_char(const_replace(num2))) { //y=5/x:  z=0+5; y=z/x
+            num1 = add_midcode(OP_ADD, "0", num1, AUTO);
+            SymTable::add(cur_func, num1, tmp, integer, local_addr);
+            local_addr += 4;
+            num1 = add_midcode(OP_DIV, num1, num2, AUTO);
+        } else {
+            num1 = add_midcode(op, num1, num2, AUTO);
+        }
         SymTable::add(cur_func, num1, tmp, integer, local_addr);
         local_addr += 4;
         next_sym();
@@ -861,7 +875,7 @@ void Grammar::AssignStmt() {
     if (sym == "ASSIGN") {
         next_sym();
         value = Expr().second;
-        MidCodeList::add(OP_ASSIGN, id, value, VACANT);
+        add_midcode(OP_ASSIGN, id, value, VACANT);
     } else if (sym == "LBRACK") {
         //TODO
         next_sym();
@@ -1182,7 +1196,7 @@ void Grammar::ReadStmt() {
     }
     next_sym();
     Identifier();
-    MidCodeList::add(OP_SCANF, tk.str, VACANT, VACANT);
+    add_midcode(OP_SCANF, tk.str, VACANT, VACANT);
     if (SymTable::search(cur_func, tk).stiType == constant) {
         error("change const");
     }
@@ -1205,13 +1219,13 @@ void Grammar::WriteStmt() {
     next_sym();
     if (sym == "STRCON") {
         MidCodeList::strcons.push_back(tk.str);
-        MidCodeList::add(OP_PRINT, to_string(MidCodeList::strcons.size()-1), "strcon", VACANT);
+        add_midcode(OP_PRINT, to_string(MidCodeList::strcons.size()-1), "strcon", VACANT);
         output("<字符串>");
         next_sym();
         if (sym == "COMMA") {
             next_sym();
             string r = Expr().second;
-            MidCodeList::add(OP_PRINT, r, "expr", VACANT);
+            add_midcode(OP_PRINT, r, "expr", VACANT);
             next_sym();
             if (sym != "RPARENT") {
                 error("')'");
@@ -1221,13 +1235,13 @@ void Grammar::WriteStmt() {
         }
     } else {
         string r = Expr().second;
-        MidCodeList::add(OP_PRINT, r, "expr", VACANT);
+        add_midcode(OP_PRINT, r, "expr", VACANT);
         next_sym();
         if (sym != "RPARENT") {
             error("')'");
         }
     }
-    MidCodeList::add(OP_PRINT, ENDL, VACANT, VACANT);
+    add_midcode(OP_PRINT, ENDL, VACANT, VACANT);
 
     output("<写语句>");
 }
@@ -1264,6 +1278,19 @@ void Grammar::ReturnStmt() {
     retract();
 }
 
+string Grammar::add_midcode(const string &op, const string &n1, const string &n2, const string &r) const {
+    string num1 = const_replace(n1);
+    string num2 = const_replace(n2);
+    return MidCodeList::add(op, num1, num2, r);
+}
+
+string Grammar::const_replace(string symbol) const{
+    SymTableItem item = SymTable::try_search(cur_func, symbol, true);
+    if (item.valid && item.stiType == constant) {
+        return item.const_value;
+    }
+    return symbol;
+}
 
 
 

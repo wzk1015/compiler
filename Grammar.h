@@ -45,6 +45,10 @@ public:
 
     explicit Grammar(const string &in_path) : lexer(in_path) {};
 
+    string add_midcode(const string &op, const string &n1, const string &n2, const string &r) const;
+
+    string const_replace(string symbol) const;
+
     void output(const string &name);
 
     void Program();

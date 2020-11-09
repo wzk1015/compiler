@@ -24,3 +24,12 @@ bool is_2_power(int x){
 bool begins_num(string symbol) {
     return isdigit(symbol[0]) || symbol[0] == '+' || symbol[0] == '-';
 }
+
+bool num_or_char(string symbol) {
+    return begins_num(symbol) || symbol[0] == '\'';
+}
+
+void panic(const string& msg){
+    cerr << msg << endl;
+    throw exception();
+}

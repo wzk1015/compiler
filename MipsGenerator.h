@@ -64,6 +64,12 @@ public:
 
     void generate(const string &code);
 
+    void generate(const string &op, const string &num1);
+
+    void generate(const string &op, const string &num1, const string& num2);
+
+    void generate(const string &op, const string &num1, const string& num2, const string& num3);
+
     void translate();
 
     void show() {
@@ -90,6 +96,16 @@ public:
     string assign_t_reg(const string &);
 
     string assign_s_reg(const string &);
+
+    bool in_reg(const string& symbol);
+
+    bool in_memory(const string& symbol);
+
+    bool is_const(const string& symbol) const;
+
+    void show_reg_status();
+
+    void release(string);
 
 //    string allocate_memory();
 };
