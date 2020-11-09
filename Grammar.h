@@ -21,7 +21,6 @@ public:
     Token tk{INVALID};
     string sym = "";
     int local_addr = 0;
-    int global_addr = 0;
 
     DataType tmp_const_data_type = invalid;
     DataType tmp_switch_data_type = invalid;
@@ -59,8 +58,6 @@ public:
     string Int();
 
     string Identifier();
-
-//    void DeclareHead();
 
     string Const();
 

@@ -74,7 +74,8 @@ int SymTable::add_func(const Token &tk, DataType dataType, vector<DataType> type
         return -1;
     }
 
-    local.insert(make_pair(tk.str, vector<SymTableItem>()));
+    local[tk.str] = vector<SymTableItem>();
+    //local.insert(make_pair(tk.str, vector<SymTableItem>()));
 
     SymTableItem a(lower(tk.str), func, dataType, 0);
     a.types = std::move(types);
@@ -88,7 +89,8 @@ SymTableItem SymTable::search(const string &func, const Token &tk) {
         if (!search_func(func)) {
             return SymTableItem(false);
         }
-        for (auto &item: local[func]) {
+        vector<SymTableItem> loc = local.find(func)->second;
+        for (auto &item: loc) {
             if (lower(item.name) == lower(tk.str)) {
                 return item;
             }
@@ -112,7 +114,8 @@ SymTableItem SymTable::search(const string &func, const string &str) {
         if (!search_func(func)) {
             return SymTableItem(false);
         }
-        for (auto &item: local[func]) {
+        vector<SymTableItem> loc = local.find(func)->second;
+        for (auto &item: loc) {
             if (lower(item.name) == lower(str)) {
                 return item;
             }
@@ -132,7 +135,8 @@ SymTableItem SymTable::try_search(const string &func, const string &str, bool in
         if (!search_func(func)) {
             return SymTableItem(false);
         }
-        for (auto &item: local[func]) {
+        vector<SymTableItem> loc = local.find(func)->second;
+        for (auto &item: loc) {
             if (lower(item.name) == lower(str)) {
                 return item;
             }

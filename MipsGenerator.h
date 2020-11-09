@@ -53,8 +53,8 @@ public:
     map<string, string> op_to_instr = {
             {OP_ADD, "addu"},
             {OP_SUB, "subu"},
-            {OP_MUL, "mulu"},
-            {OP_DIV, "divu"},
+            {OP_MUL, "mul"},
+            {OP_DIV, "div"},
     };
     string cur_func = GLOBAL;
     int sp_size = 0;

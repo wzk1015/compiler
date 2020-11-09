@@ -1,30 +1,280 @@
 .data
-newline: .asciiz "\n"
+s_0: .asciiz "%d\\n"
+s_1: .asciiz "%d\\n"
+s_2: .asciiz "%d\\n"
+s_3: .asciiz "%d\\n"
+s_4: .asciiz "file2"
+nextLine: .asciiz "\n"
 .text
-jal main
-li $v0, 10
-syscall
-# === FUNC void main ===
+j main
 main:
-addi $sp, $sp, -20
-# === #T1 = 0 - 1 ===
-li $k0, 0
-li $k1, 1
-subu $k0, $k0, $k1
-sw $k0, 8($sp)
-# === #T2 = #T1 + 1 ===
-lw $k0, 8($sp)
-li $k1, 1
-addu $k0, $k0, $k1
-sw $k0, 12($sp)
-# === #T3 = #T2 + 1 ===
-lw $k0, 12($sp)
-li $k1, 1
-addu $k0, $k0, $k1
-sw $k0, 16($sp)
-# === a = #T3 ===
-lw $k0, 16($sp)
-sw $k0, 4($sp)
-# === b = 5 ===
-li $k0, 5
-sw $k0, 0($sp)
+move $fp,$sp
+addi $sp,$sp,-468
+li $t0,2
+sw $t0,0($gp)
+li $t0,98
+sw $t0,4($gp)
+li $s0,4
+li $s1,100
+li $t1,-14537
+mul $t3,$s0,$t1
+move $t3,$t3
+li $t0,47
+div $t0,$s1
+mflo $t4
+li $t1,70
+div $t4,$t1
+mflo $t4
+add $t3,$t3,$t4
+lw $t1,0($gp)
+li $t0,362479
+mul $t4,$t0,$t1
+addi $t4,$t4,9607
+addi $t4,$t4,43
+lw $t1,0($gp)
+mul $t4,$t4,$t1
+li $t1,1176908
+div $t4,$t1
+mflo $t4
+addi $t4,$t4,146947
+sub $t4,$0,$t4
+lw $t0,0($gp)
+li $t1,1642441
+div $t0,$t1
+mflo $t5
+li $t1,48
+div $t5,$t1
+mflo $t5
+li $t1,95
+div $t5,$t1
+mflo $t5
+sub $t4,$t4,$t5
+li $t1,57
+div $t4,$t1
+mflo $t4
+lw $t1,0($gp)
+mul $t4,$t4,$t1
+sub $t3,$t3,$t4
+addi $t3,$t3,-45
+addi $t2,$t3,115
+sw $t2,0($gp)
+la $a0,s_0
+li $v0,4
+syscall
+lw $a0,0($gp)
+li $v0,1
+syscall
+la $a0,nextLine
+li $v0,4
+syscall
+lw $t0,4($gp)
+move $t3,$t0
+li $t1,99
+div $t3,$t1
+mflo $t3
+addi $t3,$t3,-3
+addi $t3,$t3,-1954
+addi $t3,$t3,-393493032
+addi $t3,$t3,0
+addi $t3,$t3,30397968
+li $t1,97
+div $t3,$t1
+mflo $t3
+li $t1,95
+mul $t3,$t3,$t1
+li $t1,95
+mul $t3,$t3,$t1
+addi $t3,$t3,0
+addi $t3,$t3,42
+lw $t0,0($gp)
+li $t1,95
+mul $t4,$t0,$t1
+li $t1,99
+div $t4,$t1
+mflo $t4
+li $t1,47
+mul $t4,$t4,$t1
+add $t3,$t3,$t4
+lw $t0,0($gp)
+li $t1,186
+div $t0,$t1
+mflo $t4
+li $t1,45
+div $t4,$t1
+mflo $t4
+li $t1,175
+mul $t4,$t4,$t1
+add $t3,$t3,$t4
+li $t0,195289
+mul $t3,$t0,$t3
+li $t1,3
+div $t3,$t1
+mflo $t3
+li $t1,156406
+div $t3,$t1
+mflo $t3
+lw $t0,0($gp)
+div $t0,$s0
+mflo $t4
+li $t1,45
+div $t4,$t1
+mflo $t4
+lw $t1,0($gp)
+mul $t4,$t4,$t1
+sub $t3,$t3,$t4
+addi $t3,$t3,-14846
+lw $t1,4($gp)
+li $t0,99
+mul $t4,$t0,$t1
+sub $t3,$t3,$t4
+addi $t3,$t3,-19
+add $t2,$t3,$s0
+sw $t2,0($gp)
+la $a0,s_0
+li $v0,4
+syscall
+lw $a0,0($gp)
+li $v0,1
+syscall
+la $a0,nextLine
+li $v0,4
+syscall
+addi $t3,$s1,0
+lw $t1,0($gp)
+li $t0,15047
+div $t0,$t1
+mflo $t4
+sub $t4,$0,$t4
+addi $t4,$t4,0
+li $t0,5470632
+div $t0,$s1
+mflo $t5
+li $t1,99
+div $t5,$t1
+mflo $t5
+add $t4,$t4,$t5
+addi $t4,$t4,1659606
+lw $t0,4($gp)
+li $t1,3
+div $t0,$t1
+mflo $t5
+li $t1,43
+div $t5,$t1
+mflo $t5
+sub $t4,$t4,$t5
+addi $t4,$t4,121
+li $t0,42
+mul $t4,$t0,$t4
+li $t1,97
+mul $t4,$t4,$t1
+move $t4,$t4
+addi $t4,$t4,9705528
+addi $t4,$t4,9314
+lw $t1,4($gp)
+add $t4,$t4,$t1
+addi $t4,$t4,-1687897
+addi $t4,$t4,43
+li $t0,97
+div $t0,$t4
+mflo $t4
+sub $t3,$t3,$t4
+add $t3,$t3,$s0
+addi $t3,$t3,-1659238
+lw $t0,0($gp)
+li $t1,95
+mul $t4,$t0,$t1
+move $t4,$t4
+move $t4,$t4
+sub $t2,$t3,$t4
+sw $t2,0($gp)
+la $a0,s_0
+li $v0,4
+syscall
+lw $a0,0($gp)
+li $v0,1
+syscall
+la $a0,nextLine
+li $v0,4
+syscall
+lw $t1,0($gp)
+li $t0,1466156
+div $t0,$t1
+mflo $t3
+li $t1,50
+mul $t3,$t3,$t1
+addi $t3,$t3,-1953896
+lw $t1,0($gp)
+move $t4,$t1
+sub $t3,$t3,$t4
+li $t3,0
+li $t1,48
+div $t3,$t1
+mflo $t3
+li $t1,15
+mul $t4,$s1,$t1
+li $t1,1260
+div $t4,$t1
+mflo $t4
+sub $t3,$t3,$t4
+li $t0,17285202
+div $t0,$s0
+mflo $t4
+sub $t3,$t3,$t4
+addi $t3,$t3,0
+addi $t3,$t3,-97
+add $t3,$t3,$s0
+move $t3,$t3
+li $t1,42
+mul $t3,$t3,$t1
+sub $t3,$0,$t3
+lw $t0,4($gp)
+lw $t1,0($gp)
+mul $t4,$t0,$t1
+li $t1,12405
+mul $t4,$t4,$t1
+sub $t3,$t3,$t4
+lw $t0,4($gp)
+lw $t1,0($gp)
+div $t0,$t1
+mflo $t4
+add $t3,$t3,$t4
+mul $t4,$s1,$s0
+li $t1,42
+mul $t4,$t4,$t1
+li $t1,50
+mul $t4,$t4,$t1
+sub $t3,$t3,$t4
+lw $t1,4($gp)
+li $t0,28809
+mul $t4,$t0,$t1
+sub $t3,$t3,$t4
+lw $t1,0($gp)
+li $t0,3315700
+div $t0,$t1
+mflo $t4
+sub $s1,$t3,$t4
+la $a0,s_0
+li $v0,4
+syscall
+move $a0,$s1
+li $v0,11
+syscall
+la $a0,nextLine
+li $v0,4
+syscall
+li $s2,-1
+addi $t3,$s2,-2
+move $a0,$t3
+li $v0,1
+syscall
+la $a0,nextLine
+li $v0,4
+syscall
+la $a0,s_4
+li $v0,4
+syscall
+la $a0,nextLine
+li $v0,4
+syscall
+li $v0,10
+syscall

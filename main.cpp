@@ -19,7 +19,7 @@ int main() {
 //        SymTable::show();
 //    }
 
-//    MidCodeList::show();
+    //MidCodeList::show();
     MidCodeList::save_to_file("midCode.txt");
 
     MipsGenerator mips(MidCodeList::codes, MidCodeList::strcons);
@@ -27,7 +27,7 @@ int main() {
     mips.show();
     mips.save_to_file("mips.txt");
 
-    SymTable::show();
+    //SymTable::show();
     Errors::terminate();
     return 0;
 }

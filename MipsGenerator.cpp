@@ -23,9 +23,8 @@ void MipsGenerator::translate() {
 
     generate(".text");
 //    generate("lui $gp, 0x1001");
-    generate("jal main");
-    generate("li $v0, 10");
-    generate("syscall");
+
+    bool init = true;
 
     for (auto &code:mid) {
         generate("# === " + code.to_str() + " ===");
@@ -37,6 +36,15 @@ void MipsGenerator::translate() {
             }
             if (sp_size != 0) {
                 generate("addi $sp, $sp, " + to_string(sp_size));
+            }
+            if (init) {
+                //此前为全局变量初始化
+                generate("jal main");
+                generate("li $v0, 10");
+                generate("syscall");
+                init = false;
+            } else {
+                generate("jr $ra");
             }
 
             cur_func = code.num2;
@@ -77,6 +85,11 @@ void MipsGenerator::translate() {
             }
             generate("syscall");
             save_value("$v0", code.num1);
+            if (it.dataType == character) {
+                //读换行符
+                generate("li $v0, 12");
+                generate("syscall");
+            }
         } else if (op == OP_ASSIGN) {
             /* 对于a=b:
              * a在寄存器，b在寄存器：mv a,b
@@ -94,7 +107,7 @@ void MipsGenerator::translate() {
                     save_value(code.num2, addr1);
                 } else {
                     // a,b都在内存
-                    string reg = "$k0";
+                    string reg = "$t0";
                     load_value(code.num2, reg);
                     save_value(reg, code.num1);
                 }
@@ -103,13 +116,13 @@ void MipsGenerator::translate() {
             string addr1 = symbol_to_addr(code.num1);
 //            bool is_2_pow_1 = addr1[0] == 'i' && is_2_power(stoi(code.num1));
             if (!in_reg(addr1)) {   //int, char, const, memory
-                addr1 = "$k0";
+                addr1 = "$t0";
                 load_value(code.num1, addr1);
             }
             string addr2 = symbol_to_addr(code.num2);
 //            bool is_2_pow_2 = addr2[0] == 'i' && is_2_power(stoi(code.num2));
             if (!in_reg(addr2)) {
-                addr2 = "$k1";
+                addr2 = "$t1";
                 load_value(code.num2, addr2);
             }
 
@@ -129,12 +142,13 @@ void MipsGenerator::translate() {
             if (addr3[0] == '$') {
                 generate(instr + " " + addr3 + ", " + addr1 + ", " + addr2);
             } else {
-                string reg = "$k0";
+                string reg = "$t0";
                 generate(instr + " " + reg + ", " + addr1 + ", " + addr2);
                 generate("sw " + reg + ", " + addr3);
             }
         }
     }
+    generate("jr $ra");
 }
 
 //将symbol的值读到对应寄存器
@@ -198,10 +212,12 @@ string MipsGenerator::symbol_to_addr(const string &symbol) {
     if (item.stiType == constant) {
         return "C" + item.const_value; //Const
     }
-    SymTableItem global = SymTable::try_search(GLOBAL, symbol, true);
-//    if (global.valid && global.stiType == var) {
-//        return to_string(item.addr) + "($gp)";
-//    }
+    if (!SymTable::try_search(cur_func, symbol, false).valid) { //symbol不是局部变量
+        SymTableItem global = SymTable::try_search(cur_func, symbol, true);
+        if (global.valid && global.stiType == var) {
+            return to_string(item.addr) + "($gp)";
+        }
+    }
     //TODO: 超过gp大小时数据存放？
     return to_string(item.addr) + "($sp)";
 }

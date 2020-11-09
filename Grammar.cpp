@@ -130,7 +130,7 @@ void Grammar::Program() {
             retract();
             retract();
             VariableDeclare();
-            global_addr = local_addr;//TODO
+            local_addr = 0;
         } else {
             retract();
             retract();
@@ -497,7 +497,7 @@ void Grammar::SharedFuncDefBody() {
     if (sym != "RBRACE") {
         error("'}'");
     }
-    local_addr = global_addr;
+    local_addr = 0;
 }
 
 void Grammar::SharedFuncDefHead() {
@@ -656,7 +656,7 @@ void Grammar::Main() {
     }
 
     output("<主函数>");
-    local_addr = global_addr;
+    local_addr = 0;
     funcdef_ret = invalid;
 }
 
