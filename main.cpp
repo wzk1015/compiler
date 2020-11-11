@@ -20,7 +20,9 @@ int main() {
 //    }
 
     MidCodeList::refactor();
-    MidCodeList::save_to_file("midCode.txt");
+    //MidCodeList::save_to_file("midCode_old.txt");
+    MidCodeList::remove_redundant_assign();
+    //MidCodeList::save_to_file("midCode_new.txt");
     MidCodeList::interpret();
     //MidCodeList::show();
     MidCodeList::save_to_file("midCode.txt");

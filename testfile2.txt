@@ -12,6 +12,7 @@ void main() {
     int a,b,c,d,e,i,x,y;
     char m;
     int f;
+    scanf(x);
     x = 666;
     i = a/e + b*(c+d*(x+y));
     e = 4 + c;

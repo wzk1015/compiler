@@ -85,6 +85,8 @@ public:
 
     static void refactor();
 
+    static void remove_redundant_assign();
+
     static void interpret();
 
     static void show() {

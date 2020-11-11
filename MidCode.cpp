@@ -78,6 +78,29 @@ void MidCodeList::refactor() {
     }
 }
 
+void MidCodeList::remove_redundant_assign() {
+    vector<MidCode> new_codes;
+    for (int i = 0; i < codes.size() - 1; i++) {
+        MidCode c1 = codes[i];
+        MidCode c2 = codes[i+1];
+        if (c2.op == OP_ASSIGN && c2.num1[0] != '#' && c1.result == c2.num2 &&
+                (c1.op == OP_ADD || c1.op == OP_SUB || c1.op == OP_MUL || c1.op == OP_DIV)) {
+                    // #T1 = x + y; a = #T1
+                    cout << "before: " << c1.to_str() << "  " << c2.to_str() << endl;
+                    new_codes.emplace_back(c1.op, c1.num1, c1.num2, c2.num1);
+                    cout << "after:  " << new_codes.back().to_str() << endl;
+                    i++;
+        }
+        else if (i == codes.size() - 2){
+            new_codes.push_back(c1);
+            new_codes.push_back(c2);
+        } else {
+            new_codes.push_back(c1);
+        }
+    }
+    codes = new_codes;
+}
+
 void MidCodeList::interpret() {
     vector<MidCode> new_codes;
     int i = 0;
