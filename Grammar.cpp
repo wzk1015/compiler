@@ -537,7 +537,7 @@ void Grammar::RetFuncDef() {
     Identifier();
     cur_func = tk.str;
     int idx = SymTable::add_func(tk, ret_type, tmp_para_types);
-    add_midcode(OP_FUNC, ret_type == integer ? "int" : "char", tk.str, VACANT);
+    add_midcode(OP_FUNC, type_to_str(ret_type), tk.str, VACANT);
     output("<声明头部>");
 
     next_sym();
@@ -554,6 +554,8 @@ void Grammar::RetFuncDef() {
     tmp_para_types.clear();
     funcdef_ret = invalid;
     has_returned = false;
+
+    add_midcode(OP_END_FUNC, ret_type == integer ? "int" : "char", cur_func, VACANT);
 
     output("<有返回值函数定义>");
 }
@@ -582,6 +584,8 @@ void Grammar::NonRetFuncDef() {
     funcdef_ret = invalid;
     has_returned = false;
 
+    add_midcode(OP_END_FUNC, "void", cur_func, VACANT);
+
     output("<无返回值函数定义>");
 }
 
@@ -607,6 +611,7 @@ void Grammar::ParaList() {
     next_sym();
     Identifier();
     SymTable::add(cur_func, tk, para, dataType, local_addr);
+//    add_midcode(OP_PARA, type_to_str(dataType), tk.str, VACANT);
     local_addr += size_of(dataType);
     tmp_para_count = 1;
     next_sym();
@@ -618,6 +623,7 @@ void Grammar::ParaList() {
         next_sym();
         Identifier();
         SymTable::add(cur_func, tk, para, dataType2, local_addr);
+//        add_midcode(OP_PARA, type_to_str(dataType), tk.str, VACANT);
         local_addr += size_of(dataType2);
         next_sym();
         tmp_para_count++;
@@ -654,6 +660,7 @@ void Grammar::Main() {
     if (sym != "RBRACE") {
         error("'}'");
     }
+    add_midcode(OP_END_FUNC, "void", "main", VACANT);
 
     output("<主函数>");
     local_addr = 0;
@@ -684,7 +691,8 @@ pair<DataType, string> Grammar::Expr() {
         ret_type = integer;
         next_sym();
         string num2 = Item().second;
-        if (op == OP_SUB && num_or_char(const_replace(num1)) && !num_or_char(const_replace(num2))) { //y=5-x:  z=x-5; y=0-z
+        if (op == OP_SUB && num_or_char(const_replace(num1)) && !num_or_char(const_replace(num2))) {
+            //y=5-x:  z=x-5; y=0-z
             num1 = add_midcode(OP_SUB, num2, num1, AUTO);
             SymTable::add(cur_func, num1, tmp, integer, local_addr);
             local_addr += 4;
@@ -715,7 +723,8 @@ pair<DataType, string> Grammar::Item() {
         ret_type = integer;
         next_sym();
         string num2 = Factor().second;
-        if (op == OP_DIV && num_or_char(const_replace(num1)) && !num_or_char(const_replace(num2))) { //y=5/x:  z=0+5; y=z/x
+        if (op == OP_DIV && num_or_char(const_replace(num1)) && !num_or_char(const_replace(num2))) {
+            //y=5/x:  z=0+5; y=z/x
             num1 = add_midcode(OP_ADD, "0", num1, AUTO);
             SymTable::add(cur_func, num1, tmp, integer, local_addr);
             local_addr += 4;
@@ -1224,8 +1233,8 @@ void Grammar::WriteStmt() {
         next_sym();
         if (sym == "COMMA") {
             next_sym();
-            string r = Expr().second;
-            add_midcode(OP_PRINT, r, "expr", VACANT);
+            pair<DataType, string> p = Expr();
+            add_midcode(OP_PRINT, p.second, p.first == character ? "char" : "int", VACANT);
             next_sym();
             if (sym != "RPARENT") {
                 error("')'");
@@ -1234,8 +1243,8 @@ void Grammar::WriteStmt() {
             error("')'");
         }
     } else {
-        string r = Expr().second;
-        add_midcode(OP_PRINT, r, "expr", VACANT);
+        pair<DataType, string> p = Expr();
+        add_midcode(OP_PRINT, p.second, p.first == character ? "char" : "int", VACANT);
         next_sym();
         if (sym != "RPARENT") {
             error("')'");

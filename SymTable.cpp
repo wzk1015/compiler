@@ -9,6 +9,7 @@
 vector<SymTableItem> SymTable::global;
 map<string, vector<SymTableItem>> SymTable::local;
 unsigned int SymTable::max_name_length = 5;
+SymTableItem SymTable::invalid  = SymTableItem(false);
 
 void SymTable::add(const string &func, const string &name, STIType stiType, DataType dataType, int addr) {
     if (try_search(func, name, false).valid) {
@@ -107,9 +108,6 @@ SymTableItem SymTable::search(const string &func, const Token &tk) {
 }
 
 SymTableItem SymTable::search(const string &func, const string &str) {
-    if (str == "4") {
-
-    }
     if (func != GLOBAL) {
         if (!search_func(func)) {
             return SymTableItem(false);
@@ -128,6 +126,26 @@ SymTableItem SymTable::search(const string &func, const string &str) {
     }
     Errors::add("undefined identifier '" + str + "'", ERR_UNDEFINED);
     return SymTableItem(false);
+}
+
+SymTableItem &SymTable::ref_search(const string &func, const string &str) {
+    if (func != GLOBAL) {
+        if (!search_func(func)) {
+            return invalid;
+        }
+        for (auto &item: local.find(func)->second) {
+            if (lower(item.name) == lower(str)) {
+                return item;
+            }
+        }
+    }
+    for (auto &item: global) {
+        if (lower(item.name) == lower(str)) {
+            return item;
+        }
+    }
+    //Errors::add("undefined identifier '" + str + "'", ERR_UNDEFINED);
+    return invalid;
 }
 
 SymTableItem SymTable::try_search(const string &func, const string &str, bool include_global) {

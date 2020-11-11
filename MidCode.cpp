@@ -23,13 +23,23 @@ string MidCode::to_str() const {
     return op + " " + num1 + " " + num2;
 }
 
+string MidCode::to_standard_format() const {
+    if (op == OP_FUNC) {
+        return num1 + " " + num2 + "()";
+    }
+    if (op == OP_PARA) {
+        return "para " + num1 + " " + num2;
+    }
+    return INVALID;
+}
+
 void MidCodeList::refactor() {
-    for (auto & code : codes) {
+    for (auto &code : codes) {
         string n1 = code.num1;
         string n2 = code.num2;
         string op = code.op;
         string r = code.result;
-        if (r == "#T4"){
+        if (r == "#T4") {
 
         }
         if (n1[0] == '\'') {
@@ -66,4 +76,96 @@ void MidCodeList::refactor() {
             }
         }
     }
+}
+
+void MidCodeList::interpret() {
+    vector<MidCode> new_codes;
+    int i = 0;
+    while (codes[i].op != OP_FUNC) {
+        if (codes[i].op != OP_ASSIGN) {
+            panic("global code not assign statement: " + codes[i].to_str());
+        }
+        if (!begins_num(codes[i].num2)) {
+            panic("not begins num: " + codes[i].num2);
+        }
+        SymTableItem *it1 = &SymTable::ref_search(GLOBAL, codes[i].num1);
+        it1->const_value = codes[i].num2;
+        new_codes.push_back(codes[i]);
+        i++;
+    }
+    string cur_func = GLOBAL;
+    for (; i < codes.size(); i++) {
+        MidCode c = codes[i];
+        SymTableItem *it1, *it2, *itr;
+        if (!begins_num(c.num1)) {
+            it1 = &SymTable::ref_search(cur_func, c.num1);
+        }
+        if (!begins_num(c.num2)) {
+            it2 = &SymTable::ref_search(cur_func, c.num2);
+        }
+        if (!begins_num(c.result) && c.result != VACANT) {
+            itr = &SymTable::ref_search(cur_func, c.result);
+        }
+
+
+        if (c.op == OP_SCANF) {
+            //将所有值保存
+            for (auto &item: SymTable::global) {
+                if (item.modified) {
+                    new_codes.emplace_back(OP_ASSIGN, item.name, item.const_value, VACANT);
+                    item.modified = false;
+                }
+            }
+            for (auto &item: SymTable::local[cur_func]) {
+                if (item.modified && item.stiType != tmp) {
+                    new_codes.emplace_back(OP_ASSIGN, item.name, item.const_value, VACANT);
+                    item.modified = false;
+                }
+            }
+            while (codes[i].op != OP_END_FUNC) {
+                new_codes.push_back(codes[i]);
+                i++;
+            }
+            new_codes.push_back(codes[i]);
+        } else if (c.op == OP_PRINT) {
+            if (c.num2 == "int" || c.num2 == "char") {
+                if (it1->valid && it1->dataType == character) {
+                    char ch = (char) stoi(it1->const_value);
+                    MidCodeList::strcons.push_back("@" + string(&ch));
+                } else if (c.num2 == "char") {
+                    char ch = (char) stoi(c.num1);
+                    MidCodeList::strcons.push_back("@" + string(&ch));
+                } else if (it1->valid && it1->dataType == integer) {
+                    MidCodeList::strcons.push_back(it1->const_value);
+                } else {
+                    MidCodeList::strcons.push_back(c.num1);
+                }
+                new_codes.emplace_back(OP_PRINT, to_string(MidCodeList::strcons.size()-1), "strcon", VACANT);
+            } else {
+                new_codes.push_back(codes[i]);
+            }
+        } else if (c.op == OP_END_FUNC) {
+            for (auto &item: SymTable::global) {
+                if (item.modified) {
+                    new_codes.emplace_back(OP_ASSIGN, item.name, item.const_value, VACANT);
+                    item.modified = false;
+                }
+            }
+            new_codes.push_back(codes[i]);
+        } else if (c.op == OP_FUNC) {
+            cur_func = c.num2;
+            new_codes.push_back(codes[i]);
+        } else if (c.op == OP_ASSIGN) {
+            it1->const_value = begins_num(c.num2) ? c.num2 : it2->const_value;
+            it1->modified = true;
+        } else if (c.op == OP_ADD || c.op == OP_SUB || c.op == OP_MUL || c.op == OP_DIV) {
+            int v1 = stoi(begins_num(c.num1) ? c.num1 : it1->const_value);
+            int v2 = stoi(begins_num(c.num2) ? c.num2 : it2->const_value);
+            int r = c.op == OP_ADD ? v1 + v2 : c.op == OP_SUB ? v1 - v2 :
+                                               c.op == OP_MUL ? v1 * v2 : c.op == OP_DIV ? v1 / v2 : 23333;
+            itr->const_value = to_string(r);
+            itr->modified = true;
+        }
+    }
+    codes = new_codes;
 }

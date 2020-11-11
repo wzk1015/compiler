@@ -1,136 +1,271 @@
-FUNC void main()
-num2 = 2
-num4 = 4
-b = 98
-d = 100
-#T1 = num4 * -14537
-#T2 = #T1 * 1
-#T3 = 47 / d
-#T4 = #T3 / 70
-#T5 = #T2 + #T4
-#T6 = 362479 * num2
-#T7 = 9607 + #T6
-#T8 = #T7 + 43
-#T9 = #T8 * num2
-#T10 = #T9 / 1176908
-#T11 = -146947 - #T10
-#T12 = num2 / 1642441
-#T13 = #T12 / 48
-#T14 = #T13 / 95
-#T15 = #T11 - #T14
-#T16 = #T15 / 57
-#T17 = #T16 * num2
-#T18 = #T5 - #T17
-#T19 = #T18 - 45
-#T20 = #T19 + 115
-#T21 = num4 * 1087
-#T22 = #T21 / 43
-#T23 = #T22 * 3
-num2 = #T20 + #T23
-PRINT %d\\n 3
-PRINT num2 1
-PRINT EndLine 4
-#T25 = b / 1
-#T26 = #T25 / 99
-#T27 = #T26 - 3
-#T28 = #T27 - 1954
-#T29 = #T28 - 393493032
-#T30 = #T29 + 0
-#T31 = #T30 + 30397968
-#T32 = #T31 / 97
-#T33 = #T32 * 95
-#T34 = #T33 * 95
-#T35 = 0 + #T34
-#T36 = #T35 + 42
-#T37 = num2 * 95
-#T38 = #T37 / 99
-#T39 = #T38 * 47
-#T40 = #T36 + #T39
-#T41 = num2 / 186
-#T42 = #T41 / 45
-#T43 = #T42 * 175
-#T44 = #T40 + #T43
-#T45 = 195289 * #T44
-#T46 = #T45 / 3
-#T47 = #T46 / 156406
-#T48 = num2 / num4
-#T49 = #T48 / 45
-#T50 = #T49 * num2
-#T51 = #T47 - #T50
-#T52 = #T51 - 14846
-#T53 = 99 * b
-#T54 = #T52 - #T53
-#T55 = #T54 - 19
-num2 = #T55 + num4
-PRINT %d\\n 3
-PRINT num2 1
-PRINT EndLine 4
-#T57 = d + 0
-#T58 = 15047 / num2
-#T59 = 0 - #T58
-#T60 = #T59 - 0
-#T61 = 5470632 / d
-#T62 = #T61 / 99
-#T63 = #T60 + #T62
-#T64 = #T63 + 1659606
-#T65 = b / 3
-#T66 = #T65 / 43
-#T67 = #T64 - #T66
-#T68 = #T67 + 121
-#T69 = 42 * #T68
-#T70 = #T69 * 97
-#T71 = #T70 / 1
-#T72 = 9705528 + #T71
-#T73 = #T72 + 9314
-#T74 = #T73 + b
-#T75 = #T74 - 1687897
-#T76 = #T75 + 43
-#T77 = 97 / #T76
-#T78 = #T57 - #T77
-#T79 = #T78 + num4
-#T80 = #T79 - 1659238
-#T81 = num2 * 95
-#T82 = #T81 * 1
-#T83 = #T82 / 1
-num2 = #T80 - #T83
-PRINT %d\\n 3
-PRINT num2 1
-PRINT EndLine 4
-#T85 = 1466156 / num2
-#T86 = #T85 * 50
-#T87 = -1953896 + #T86
-#T88 = 1 * num2
-#T89 = #T87 - #T88
-#T90 = 0 * #T89
-#T91 = #T90 / 48
-#T92 = d * 15
-#T93 = #T92 / 1260
-#T94 = #T91 - #T93
-#T95 = 17285202 / num4
-#T96 = #T94 - #T95
-#T97 = #T96 - 0
-#T98 = #T97 - 97
-#T99 = #T98 + num4
-#T100 = #T99 * 1
-#T101 = #T100 * 42
-#T102 = 0 - #T101
-#T103 = b * num2
-#T104 = #T103 * 12405
-#T105 = #T102 - #T104
-#T106 = b / num2
-#T107 = #T105 + #T106
-#T108 = d * num4
-#T109 = #T108 * 42
-#T110 = #T109 * 50
-#T111 = #T107 - #T110
-#T112 = 28809 * b
-#T113 = #T111 - #T112
-#T114 = 3315700 / num2
-d = #T113 - #T114
-PRINT %d\\n 3
-PRINT d 2
-PRINT EndLine 4
-result = -1
-#T116 = result + -2
-PRINT #T116 1
-PRINT EndLine 4
+str0: a4
+str1: 18231217
+str2: 134214321432143214321
+str3: yes
+===============
+a1 = 1
+a2 = 2
+a3 = 3
+a4 = 4
+a5 = 5
+c1 = 97
+c2 = 97
+c3 = 97
+c4 = 97
+c5 = 88
+c6 = 52
+FUNC void main
+c9 = 101
+c10 = 49
+a6 = 6
+a7 = 7
+a8 = 8
+a9 = 9
+a10 = 10
+a11 = 11
+SCANF a3
+PRINT a3 int
+PRINT #ENDL
+#T1 = -51
+#T2 = #T1 * 3
+#T3 = a3 * #T2
+a3 = #T3
+PRINT a3 int
+PRINT #ENDL
+SCANF a6
+a7 = 18
+SCANF a7
+SCANF c1
+SCANF c7
+#T4 = 0 - a2
+a3 = #T4
+PRINT a3 int
+PRINT #ENDL
+#T5 = a3 * a3
+a3 = #T5
+PRINT a3 int
+PRINT #ENDL
+a3 = a3
+PRINT a3 int
+PRINT #ENDL
+#T6 = -97
+#T7 = -97
+#T8 = -97
+#T9 = #T7 - #T8
+#T10 = #T6 - #T9
+#T11 = 6
+#T12 = #T11 * 43
+#T13 = #T10 - #T12
+#T14 = a1 + 14
+#T15 = #T14 * 13
+#T16 = #T13 + #T15
+a3 = #T16
+PRINT a3 int
+PRINT #ENDL
+#T17 = 7
+#T18 = #T17 + 5
+#T19 = #T18 + 6
+#T20 = #T19 - 7
+#T21 = #T20 - 8
+#T22 = 36
+#T23 = #T22 * 4
+#T24 = #T23 / 3
+#T25 = #T24 / 2
+#T26 = 5
+#T27 = #T25 * #T26
+#T28 = #T21 - #T27
+PRINT #T28 int
+PRINT #ENDL
+c8 = c10
+c4 = c1
+a1 = 12
+a2 = 13
+a3 = 14
+a4 = 15
+a5 = 16
+a6 = 17
+a8 = 19
+#T29 = a9 + 20
+a9 = #T29
+#T30 = a1 + 21
+a10 = #T30
+#T31 = a1 + a10
+a11 = #T31
+PRINT 97 char
+PRINT #ENDL
+PRINT a1 int
+PRINT #ENDL
+#T32 = a1 + 97
+PRINT #T32 int
+PRINT #ENDL
+#T33 = -5
+#T34 = #T33 * 5
+#T35 = 0 - #T34
+PRINT #T35 int
+PRINT #ENDL
+PRINT 0 strcon
+PRINT a4 int
+PRINT #ENDL
+PRINT 3 int
+PRINT #ENDL
+PRINT 1 strcon
+PRINT 18231217 int
+PRINT #ENDL
+PRINT 49 char
+PRINT #ENDL
+PRINT 57 char
+PRINT #ENDL
+#T36 = -49
+#T37 = a3 * 57
+#T38 = #T36 - #T37
+#T39 = -3
+#T40 = #T39 * 14
+#T41 = #T38 + #T40
+#T42 = -1
+#T43 = #T42 + 2
+#T44 = #T43 - 52
+#T45 = #T44 + 60
+#T46 = #T45 * 4
+#T47 = #T46 / 1
+#T48 = #T47 / 1
+#T49 = #T48 / 1
+#T50 = #T41 + #T49
+PRINT #T50 int
+PRINT #ENDL
+PRINT a1 int
+PRINT #ENDL
+PRINT a2 int
+PRINT #ENDL
+PRINT a3 int
+PRINT #ENDL
+PRINT a8 int
+PRINT #ENDL
+PRINT a9 int
+PRINT #ENDL
+PRINT a10 int
+PRINT #ENDL
+PRINT a11 int
+PRINT #ENDL
+PRINT 2 strcon
+PRINT #ENDL
+#T51 = 0 - a2
+#T52 = #T51 + a5
+#T53 = a1 * #T52
+#T54 = a2 + a1
+#T55 = #T54 + 2
+#T56 = #T53 / #T55
+#T57 = a3 - #T56
+#T58 = 0 - a1
+#T59 = a1 * #T58
+#T60 = #T57 - #T59
+#T61 = 15
+#T62 = #T60 + #T61
+#T63 = #T62 + a6
+#T64 = a11 * #T63
+#T65 = 0 - #T64
+#T66 = 0 - a4
+#T67 = #T66 + a2
+#T68 = a3 * #T67
+#T69 = #T65 + #T68
+#T70 = #T69 + a7
+PRINT #T70 int
+PRINT #ENDL
+#T71 = c9 * a6
+#T72 = #T71 + 47
+#T73 = a4 + #T72
+#T74 = a9 * 50
+#T75 = 588
+#T76 = #T75 * 10
+#T77 = #T76 / 4
+#T78 = #T74 - #T77
+#T79 = #T78 * 3
+#T80 = 45
+#T81 = 0 - #T80
+#T82 = a1 + a2
+#T83 = #T81 - #T82
+#T84 = 69
+#T85 = c1 + a4
+#T86 = c3 + a9
+#T87 = #T85 * #T86
+#T88 = #T87 / 100
+#T89 = #T84 - #T88
+#T90 = a9 - 14
+#T91 = a6 * #T90
+#T92 = #T91 - 342
+#T93 = 0 - #T92
+#T94 = #T89 * #T93
+#T95 = #T94 / 4
+#T96 = #T83 - #T95
+#T97 = #T79 * #T96
+#T98 = #T73 - #T97
+#T99 = #T98 * 97
+#T100 = #T99 + 42
+#T101 = 0 - #T100
+#T102 = #T101 - 0
+#T103 = a1 * 4
+#T104 = #T102 + #T103
+a1 = #T104
+PRINT a1 int
+PRINT #ENDL
+PRINT a4 int
+PRINT #ENDL
+PRINT a8 int
+PRINT #ENDL
+PRINT c1 char
+PRINT #ENDL
+#T105 = a1 + a1
+a2 = #T105
+#T106 = a10 + c3
+#T107 = -36000
+#T108 = #T107 / #T106
+#T109 = a2 - 4
+#T110 = #T109 * 12
+#T111 = #T110 * 13
+#T112 = a6 + 24
+#T113 = a4 * #T112
+#T114 = #T113 / 49
+#T115 = #T114 * 10
+#T116 = #T111 + #T115
+#T117 = #T116 - 14
+#T118 = a2 * 42
+#T119 = #T117 + #T118
+#T120 = a9 * 14
+#T121 = #T119 - #T120
+#T122 = #T121 + c1
+#T123 = #T122 + c2
+#T124 = a6 + #T123
+#T125 = a1 - a3
+#T126 = 61
+#T127 = a2 * #T126
+#T128 = #T127 / 12
+#T129 = a5 - #T128
+#T130 = a3 + #T129
+#T131 = #T130 + 42
+#T132 = #T125 * #T131
+#T133 = #T124 + #T132
+#T134 = #T133 + 0
+#T135 = #T134 * -4
+#T136 = 288
+#T137 = #T135 + #T136
+#T138 = a3 * a5
+#T139 = #T138 + c1
+#T140 = #T139 * 2
+#T141 = #T137 + #T140
+#T142 = #T108 / #T141
+#T143 = a4 - 12
+#T144 = #T143 + a5
+#T145 = a3 * #T144
+#T146 = a2 + 2
+#T147 = #T145 / #T146
+#T148 = #T142 + #T147
+a3 = #T148
+PRINT a3 int
+PRINT #ENDL
+PRINT 3 strcon
+PRINT a2 int
+PRINT #ENDL
+PRINT a4 int
+PRINT #ENDL
+PRINT -1 int
+PRINT #ENDL
+END_FUNC void main

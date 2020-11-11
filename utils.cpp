@@ -31,5 +31,5 @@ bool num_or_char(string symbol) {
 
 void panic(const string& msg){
     cerr << msg << endl;
-    throw exception();
+    exit(1);
 }

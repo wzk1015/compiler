@@ -1,26 +1,143 @@
 CONSTTK const
 INTTK int
-IDENFR num1
+IDENFR b1
 ASSIGN =
-INTCON 1
+INTCON 10
+<无符号整数>
+<整数>
+COMMA ,
+IDENFR b2
+ASSIGN =
+INTCON 12
 <无符号整数>
 <整数>
 <常量定义>
 SEMICN ;
 CONSTTK const
 CHARTK char
-IDENFR a
+IDENFR d1
+ASSIGN =
+CHARCON 1
+COMMA ,
+IDENFR d2
+ASSIGN =
+CHARCON _
+COMMA ,
+IDENFR d3
 ASSIGN =
 CHARCON a
+COMMA ,
+IDENFR d4
+ASSIGN =
+CHARCON +
 <常量定义>
 SEMICN ;
 <常量说明>
 INTTK int
-IDENFR num2
+IDENFR a1
+ASSIGN =
+INTCON 1
+<无符号整数>
+<整数>
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+INTTK int
+IDENFR a2
+ASSIGN =
+INTCON 2
+<无符号整数>
+<整数>
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+INTTK int
+IDENFR a3
+ASSIGN =
+INTCON 3
+<无符号整数>
+<整数>
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+INTTK int
+IDENFR a4
+ASSIGN =
+INTCON 4
+<无符号整数>
+<整数>
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+INTTK int
+IDENFR a5
+ASSIGN =
+INTCON 5
+<无符号整数>
+<整数>
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+INTTK int
+IDENFR a12
+COMMA ,
+IDENFR a13
+COMMA ,
+IDENFR a14
+<变量定义无初始化>
 <变量定义>
 SEMICN ;
 CHARTK char
-IDENFR b
+IDENFR c1
+ASSIGN =
+CHARCON a
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+CHARTK char
+IDENFR c2
+ASSIGN =
+CHARCON a
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+CHARTK char
+IDENFR c3
+ASSIGN =
+CHARCON a
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+CHARTK char
+IDENFR c4
+ASSIGN =
+CHARCON a
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+CHARTK char
+IDENFR c5
+ASSIGN =
+CHARCON X
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+CHARTK char
+IDENFR c6
+ASSIGN =
+CHARCON 4
+<常量>
+<变量定义及初始化>
 <变量定义>
 SEMICN ;
 <变量说明>
@@ -31,37 +148,204 @@ RPARENT )
 LBRACE {
 CONSTTK const
 INTTK int
-IDENFR num3
+IDENFR b3
 ASSIGN =
-INTCON 3
+INTCON 13
+<无符号整数>
+<整数>
+COMMA ,
+IDENFR b1
+ASSIGN =
+INTCON 14
 <无符号整数>
 <整数>
 <常量定义>
 SEMICN ;
 CONSTTK const
 CHARTK char
-IDENFR c
+IDENFR d2
 ASSIGN =
-CHARCON c
+CHARCON 9
+COMMA ,
+IDENFR d5
+ASSIGN =
+CHARCON /
+<常量定义>
+SEMICN ;
+CONSTTK const
+INTTK int
+IDENFR xxx
+ASSIGN =
+MINU -
+INTCON 1
+<无符号整数>
+<整数>
 <常量定义>
 SEMICN ;
 <常量说明>
 INTTK int
-IDENFR num4
+IDENFR a3
+COMMA ,
+IDENFR a4
+<变量定义无初始化>
 <变量定义>
 SEMICN ;
 CHARTK char
-IDENFR d
+IDENFR c7
+COMMA ,
+IDENFR c4
+COMMA ,
+IDENFR c8
+<变量定义无初始化>
+<变量定义>
+SEMICN ;
+CHARTK char
+IDENFR c9
+ASSIGN =
+CHARCON e
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+CHARTK char
+IDENFR c10
+ASSIGN =
+CHARCON 1
+<常量>
+<变量定义及初始化>
 <变量定义>
 SEMICN ;
 INTTK int
-IDENFR result
+IDENFR a6
+ASSIGN =
+INTCON 6
+<无符号整数>
+<整数>
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+INTTK int
+IDENFR a7
+ASSIGN =
+INTCON 7
+<无符号整数>
+<整数>
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+INTTK int
+IDENFR a8
+ASSIGN =
+INTCON 8
+<无符号整数>
+<整数>
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+INTTK int
+IDENFR a9
+ASSIGN =
+INTCON 9
+<无符号整数>
+<整数>
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+INTTK int
+IDENFR a10
+ASSIGN =
+INTCON 10
+<无符号整数>
+<整数>
+<常量>
+<变量定义及初始化>
+<变量定义>
+SEMICN ;
+INTTK int
+IDENFR a11
+ASSIGN =
+INTCON 11
+<无符号整数>
+<整数>
+<常量>
+<变量定义及初始化>
 <变量定义>
 SEMICN ;
 <变量说明>
-IDENFR num2
+SCANFTK scanf
+LPARENT (
+IDENFR a3
+RPARENT )
+<读语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a3
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+IDENFR a3
 ASSIGN =
-INTCON 2
+IDENFR a3
+<因子>
+MULT *
+LPARENT (
+LPARENT (
+MINU -
+CHARCON 3
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+MULT *
+LPARENT (
+INTCON 3
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a3
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+SCANFTK scanf
+LPARENT (
+IDENFR a6
+RPARENT )
+<读语句>
+SEMICN ;
+<语句>
+IDENFR a7
+ASSIGN =
+INTCON 18
 <无符号整数>
 <整数>
 <因子>
@@ -70,1160 +354,1322 @@ INTCON 2
 <赋值语句>
 SEMICN ;
 <语句>
-IDENFR num4
+SCANFTK scanf
+LPARENT (
+IDENFR a7
+RPARENT )
+<读语句>
+SEMICN ;
+<语句>
+SCANFTK scanf
+LPARENT (
+IDENFR c1
+RPARENT )
+<读语句>
+SEMICN ;
+<语句>
+SCANFTK scanf
+LPARENT (
+IDENFR c7
+RPARENT )
+<读语句>
+SEMICN ;
+<语句>
+IDENFR a3
 ASSIGN =
+MINU -
+IDENFR a2
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a3
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+IDENFR a3
+ASSIGN =
+IDENFR a3
+<因子>
+MULT *
+IDENFR a3
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a3
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+IDENFR a3
+ASSIGN =
+IDENFR a3
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a3
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+IDENFR a3
+ASSIGN =
+MINU -
+IDENFR d3
+<因子>
+<项>
+MINU -
+LPARENT (
+MINU -
+IDENFR d3
+<因子>
+<项>
+MINU -
+LPARENT (
+MINU -
+IDENFR d3
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+MINU -
+IDENFR d4
+<因子>
+MULT *
+LPARENT (
+IDENFR b2
+<因子>
+DIV /
+INTCON 2
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+PLUS +
+IDENFR b3
+<因子>
+MULT *
+LPARENT (
+IDENFR a1
+<因子>
+<项>
+PLUS +
+IDENFR b1
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a3
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+INTCON 3
+<无符号整数>
+<整数>
+<因子>
+<项>
+PLUS +
+INTCON 4
+<无符号整数>
+<整数>
+<因子>
+<项>
+PLUS +
+INTCON 5
+<无符号整数>
+<整数>
+<因子>
+<项>
+PLUS +
+INTCON 6
+<无符号整数>
+<整数>
+<因子>
+<项>
+MINU -
+INTCON 7
+<无符号整数>
+<整数>
+<因子>
+<项>
+MINU -
+INTCON 8
+<无符号整数>
+<整数>
+<因子>
+<项>
+MINU -
+INTCON 9
+<无符号整数>
+<整数>
+<因子>
+MULT *
+INTCON 4
+<无符号整数>
+<整数>
+<因子>
+MULT *
+INTCON 4
+<无符号整数>
+<整数>
+<因子>
+DIV /
+INTCON 3
+<无符号整数>
+<整数>
+<因子>
+DIV /
+INTCON 2
+<无符号整数>
+<整数>
+<因子>
+MULT *
+LPARENT (
+INTCON 2
+<无符号整数>
+<整数>
+<因子>
+<项>
+PLUS +
+INTCON 3
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+IDENFR c8
+ASSIGN =
+IDENFR c10
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+IDENFR c4
+ASSIGN =
+IDENFR c1
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+IDENFR a1
+ASSIGN =
+INTCON 12
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+IDENFR a2
+ASSIGN =
+INTCON 13
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+IDENFR a3
+ASSIGN =
+INTCON 14
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+IDENFR a4
+ASSIGN =
+INTCON 15
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+IDENFR a5
+ASSIGN =
+INTCON 16
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+IDENFR a6
+ASSIGN =
+INTCON 17
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+IDENFR a8
+ASSIGN =
+INTCON 19
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+IDENFR a9
+ASSIGN =
+INTCON 20
+<无符号整数>
+<整数>
+<因子>
+<项>
+PLUS +
+IDENFR a9
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+IDENFR a10
+ASSIGN =
+IDENFR a1
+<因子>
+<项>
+PLUS +
+INTCON 21
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+IDENFR a11
+ASSIGN =
+IDENFR a1
+<因子>
+<项>
+PLUS +
+IDENFR a10
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+CHARCON a
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a1
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a1
+<因子>
+<项>
+PLUS +
+CHARCON a
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+MINU -
+INTCON 5
+<无符号整数>
+<整数>
+<因子>
+MULT *
+LPARENT (
+MINU -
+INTCON 5
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+STRCON a4
+<字符串>
+COMMA ,
+IDENFR a4
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+INTCON 3
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+STRCON 18231217
+<字符串>
+COMMA ,
+INTCON 18231217
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR d1
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR d2
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+MINU -
+IDENFR d1
+<因子>
+<项>
+MINU -
+IDENFR d2
+<因子>
+MULT *
+IDENFR a3
+<因子>
+<项>
+PLUS +
+IDENFR b1
+<因子>
+MULT *
+LPARENT (
+MINU -
+INTCON 3
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+PLUS +
+LPARENT (
+INTCON 3
+<无符号整数>
+<整数>
+<因子>
+<项>
+MINU -
+INTCON 4
+<无符号整数>
+<整数>
+<因子>
+<项>
+PLUS +
+INTCON 2
+<无符号整数>
+<整数>
+<因子>
+<项>
+MINU -
+CHARCON 4
+<因子>
+<项>
+PLUS +
+INTCON 60
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+MULT *
+INTCON 4
+<无符号整数>
+<整数>
+<因子>
+DIV /
+INTCON 1
+<无符号整数>
+<整数>
+<因子>
+DIV /
+INTCON 1
+<无符号整数>
+<整数>
+<因子>
+DIV /
+INTCON 1
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a1
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a2
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a3
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a8
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a9
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a10
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a11
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+STRCON 134214321432143214321
+<字符串>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+MINU -
+IDENFR a11
+<因子>
+MULT *
+LPARENT (
+IDENFR a3
+<因子>
+<项>
+MINU -
+IDENFR a1
+<因子>
+MULT *
+LPARENT (
+MINU -
+IDENFR a2
+<因子>
+<项>
+PLUS +
+IDENFR a5
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+DIV /
+LPARENT (
+IDENFR a2
+<因子>
+<项>
+PLUS +
+IDENFR a1
+<因子>
+<项>
+PLUS +
+INTCON 2
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+MINU -
+IDENFR a1
+<因子>
+MULT *
+LPARENT (
+MINU -
+IDENFR a1
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+PLUS +
+INTCON 3
+<无符号整数>
+<整数>
+<因子>
+MULT *
+INTCON 5
+<无符号整数>
+<整数>
+<因子>
+<项>
+PLUS +
+IDENFR a6
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+PLUS +
+IDENFR a3
+<因子>
+MULT *
+LPARENT (
+MINU -
+IDENFR a4
+<因子>
+<项>
+PLUS +
+IDENFR a2
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+PLUS +
+IDENFR a7
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+IDENFR a1
+ASSIGN =
+MINU -
+LPARENT (
+CHARCON a
+<因子>
+MULT *
+LPARENT (
+IDENFR a4
+<因子>
+<项>
+PLUS +
+LPARENT (
+IDENFR d5
+<因子>
+<项>
+PLUS +
+IDENFR c9
+<因子>
+MULT *
+IDENFR a6
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+MINU -
+INTCON 3
+<无符号整数>
+<整数>
+<因子>
+MULT *
+LPARENT (
+IDENFR a9
+<因子>
+MULT *
+CHARCON 2
+<因子>
+<项>
+MINU -
+INTCON 10
+<无符号整数>
+<整数>
+<因子>
+MULT *
+LPARENT (
+IDENFR b2
+<因子>
+MULT *
+IDENFR d1
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+DIV /
 INTCON 4
 <无符号整数>
 <整数>
 <因子>
 <项>
 <表达式>
-<赋值语句>
-SEMICN ;
-<语句>
-IDENFR b
-ASSIGN =
-CHARCON b
-<因子>
-<项>
-<表达式>
-<赋值语句>
-SEMICN ;
-<语句>
-IDENFR d
-ASSIGN =
-CHARCON d
-<因子>
-<项>
-<表达式>
-<赋值语句>
-SEMICN ;
-<语句>
-IDENFR num2
-ASSIGN =
-PLUS +
-IDENFR num4
-<因子>
-MULT *
-LPARENT (
-INTCON 1882
-<无符号整数>
-<整数>
-<因子>
-DIV /
-INTCON 1212208
-<无符号整数>
-<整数>
-<因子>
-DIV /
-CHARCON /
-<因子>
-<项>
-PLUS +
-INTCON 160
-<无符号整数>
-<整数>
-<因子>
-<项>
-MINU -
-CHARCON *
-<因子>
-MULT *
-IDENFR num3
-<因子>
-DIV /
-IDENFR c
-<因子>
-DIV /
-INTCON 13214
-<无符号整数>
-<整数>
-<因子>
-<项>
-MINU -
-INTCON 14951
-<无符号整数>
-<整数>
-<因子>
-<项>
-PLUS +
-CHARCON q
-<因子>
-<项>
-PLUS +
-IDENFR num3
-<因子>
-MULT *
-CHARCON /
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-MULT *
-IDENFR num1
-<因子>
-<项>
-PLUS +
-CHARCON /
-<因子>
-DIV /
-IDENFR d
-<因子>
-DIV /
-CHARCON F
-<因子>
-<项>
-MINU -
-LPARENT (
-MINU -
-INTCON 1577016
-<无符号整数>
-<整数>
-<因子>
-<项>
-MINU -
-CHARCON /
-<因子>
-<项>
-MINU -
-CHARCON 1
-<因子>
-<项>
-PLUS +
-INTCON 1430165
-<无符号整数>
-<整数>
-<因子>
-<项>
-MINU -
-LPARENT (
-INTCON 188150
-<无符号整数>
-<整数>
-<因子>
-DIV /
-CHARCON f
-<因子>
-<项>
-PLUS +
-CHARCON 0
-<因子>
-DIV /
-CHARCON -
-<因子>
-<项>
-PLUS +
-CHARCON -
-<因子>
-MULT *
-INTCON 175
-<无符号整数>
-<整数>
-<因子>
-DIV /
-IDENFR num1
-<因子>
-<项>
-MINU -
-CHARCON q
-<因子>
-<项>
-PLUS +
-INTCON 1087438
-<无符号整数>
-<整数>
-<因子>
-DIV /
-LPARENT (
-IDENFR num3
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-MULT *
-IDENFR num2
-<因子>
-<项>
-PLUS +
-CHARCON +
-<因子>
-<项>
-<表达式>
 RPARENT )
 <因子>
 MULT *
 LPARENT (
-IDENFR num2
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-DIV /
-INTCON 1176908
-<无符号整数>
-<整数>
-<因子>
-<项>
-MINU -
-IDENFR num2
-<因子>
-DIV /
-INTCON 1642441
-<无符号整数>
-<整数>
-<因子>
-DIV /
-CHARCON 0
-<因子>
-DIV /
-CHARCON _
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-DIV /
-CHARCON 9
-<因子>
-MULT *
-IDENFR num2
-<因子>
-<项>
-MINU -
-CHARCON -
-<因子>
-<项>
-PLUS +
-INTCON 14538
-<无符号整数>
-<整数>
-<因子>
-DIV /
-LPARENT (
-IDENFR num3
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-MULT *
-IDENFR num1
-<因子>
-DIV /
-CHARCON *
-<因子>
-<项>
-PLUS +
-IDENFR num4
-<因子>
-MULT *
-INTCON 1087
-<无符号整数>
-<整数>
-<因子>
-DIV /
-CHARCON +
-<因子>
-MULT *
-LPARENT (
-IDENFR num3
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-<项>
-<表达式>
-<赋值语句>
-SEMICN ;
-<语句>
-PRINTFTK printf
-LPARENT (
-STRCON %d\n
-<字符串>
-COMMA ,
-IDENFR num2
-<因子>
-<项>
-<表达式>
-RPARENT )
-<写语句>
-SEMICN ;
-<语句>
-IDENFR num2
-ASSIGN =
-PLUS +
-INTCON 195289
-<无符号整数>
-<整数>
-<因子>
-MULT *
-LPARENT (
-PLUS +
-INTCON 185
-<无符号整数>
-<整数>
-<因子>
-DIV /
-INTCON 1951359
-<无符号整数>
-<整数>
-<因子>
-DIV /
-CHARCON t
-<因子>
-DIV /
-CHARCON /
-<因子>
-<项>
-PLUS +
-CHARCON 5
-<因子>
-DIV /
-INTCON 1417
-<无符号整数>
-<整数>
-<因子>
-DIV /
-IDENFR num3
-<因子>
-MULT *
-IDENFR num1
-<因子>
-<项>
-PLUS +
-LPARENT (
-PLUS +
-IDENFR b
-<因子>
-DIV /
-IDENFR num1
-<因子>
-DIV /
-LPARENT (
-IDENFR c
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-<项>
-MINU -
-IDENFR num3
-<因子>
-<项>
-MINU -
-INTCON 1954
-<无符号整数>
-<整数>
-<因子>
-<项>
-MINU -
-LPARENT (
-IDENFR a
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-DIV /
-CHARCON *
-<因子>
-MULT *
-INTCON 1737
-<无符号整数>
-<整数>
-<因子>
-MULT *
-INTCON 113268
-<无符号整数>
-<整数>
-<因子>
-<项>
-PLUS +
-LPARENT (
-IDENFR num1
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-DIV /
-INTCON 185
-<无符号整数>
-<整数>
-<因子>
-<项>
-PLUS +
-INTCON 1546732
-<无符号整数>
-<整数>
-<因子>
-MULT *
-INTCON 1403
-<无符号整数>
-<整数>
-<因子>
-MULT *
-CHARCON F
-<因子>
-DIV /
-CHARCON 4
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-DIV /
-IDENFR a
-<因子>
-MULT *
-CHARCON _
-<因子>
-MULT *
-CHARCON _
-<因子>
-<项>
-PLUS +
-CHARCON *
-<因子>
-<项>
-PLUS +
-IDENFR num2
-<因子>
-MULT *
-CHARCON _
-<因子>
-DIV /
-LPARENT (
-IDENFR c
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-MULT *
-CHARCON /
-<因子>
-<项>
-PLUS +
-IDENFR num2
-<因子>
-DIV /
-INTCON 186
-<无符号整数>
-<整数>
-<因子>
-DIV /
-CHARCON -
-<因子>
-MULT *
-INTCON 175
-<无符号整数>
-<整数>
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-DIV /
-IDENFR num3
-<因子>
-DIV /
-INTCON 156406
-<无符号整数>
-<整数>
-<因子>
-<项>
-MINU -
-LPARENT (
-IDENFR num2
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-DIV /
-LPARENT (
-IDENFR num4
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-DIV /
-CHARCON -
-<因子>
-MULT *
-LPARENT (
-IDENFR num2
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-<项>
-MINU -
-INTCON 12
-<无符号整数>
-<整数>
-<因子>
-MULT *
-INTCON 12372
-<无符号整数>
-<整数>
-<因子>
-DIV /
-INTCON 10
-<无符号整数>
-<整数>
-<因子>
-MULT *
-LPARENT (
-IDENFR num1
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-<项>
-MINU -
-LPARENT (
-IDENFR c
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-MULT *
-LPARENT (
-IDENFR b
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-<项>
-MINU -
-INTCON 198
-<无符号整数>
-<整数>
-<因子>
-DIV /
-IDENFR num1
-<因子>
-DIV /
-INTCON 10
-<无符号整数>
-<整数>
-<因子>
-DIV /
-IDENFR num1
-<因子>
-<项>
-PLUS +
-LPARENT (
-IDENFR num4
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-<项>
-<表达式>
-<赋值语句>
-SEMICN ;
-<语句>
-PRINTFTK printf
-LPARENT (
-STRCON %d\n
-<字符串>
-COMMA ,
-IDENFR num2
-<因子>
-<项>
-<表达式>
-RPARENT )
-<写语句>
-SEMICN ;
-<语句>
-IDENFR num2
-ASSIGN =
-PLUS +
-IDENFR d
-<因子>
-<项>
-PLUS +
-IDENFR num3
-<因子>
-DIV /
-INTCON 138
-<无符号整数>
-<整数>
-<因子>
-<项>
-MINU -
-IDENFR a
-<因子>
-DIV /
-LPARENT (
-PLUS +
-LPARENT (
-CHARCON 8
-<因子>
-DIV /
-IDENFR num1
-<因子>
-MULT *
-CHARCON 8
-<因子>
-<项>
-PLUS +
-CHARCON 0
-<因子>
-MULT *
-IDENFR a
-<因子>
-<项>
-PLUS +
-IDENFR c
-<因子>
-<项>
-MINU -
-CHARCON c
-<因子>
-MULT *
-CHARCON M
-<因子>
-DIV /
-IDENFR num1
-<因子>
-<项>
-PLUS +
-CHARCON +
-<因子>
-<项>
-PLUS +
-INTCON 18561
-<无符号整数>
-<整数>
-<因子>
-DIV /
-IDENFR c
-<因子>
-MULT *
-INTCON 16063
-<无符号整数>
-<整数>
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-DIV /
-INTCON 13
-<无符号整数>
-<整数>
-<因子>
-MULT *
-CHARCON *
-<因子>
-<项>
-PLUS +
-CHARCON *
-<因子>
-MULT *
-LPARENT (
-MINU -
-INTCON 15047
-<无符号整数>
-<整数>
-<因子>
-DIV /
-LPARENT (
-IDENFR num2
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-<项>
-MINU -
-CHARCON -
-<因子>
-DIV /
-CHARCON 0
-<因子>
-MULT *
-LPARENT (
-IDENFR a
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-<项>
-PLUS +
-INTCON 127224
-<无符号整数>
-<整数>
-<因子>
-MULT *
-CHARCON +
-<因子>
-DIV /
-LPARENT (
-IDENFR d
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-DIV /
-IDENFR c
-<因子>
-<项>
-PLUS +
-INTCON 1659606
-<无符号整数>
-<整数>
-<因子>
-<项>
-MINU -
-LPARENT (
-IDENFR b
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-DIV /
-IDENFR num3
-<因子>
-DIV /
-CHARCON +
-<因子>
-<项>
-PLUS +
-INTCON 121
-<无符号整数>
-<整数>
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-MULT *
-LPARENT (
-IDENFR a
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-DIV /
-LPARENT (
-IDENFR num1
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-<项>
-PLUS +
-CHARCON 4
-<因子>
-MULT *
-INTCON 17733
-<无符号整数>
-<整数>
-<因子>
-DIV /
-LPARENT (
-IDENFR c
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-<项>
-PLUS +
-IDENFR b
-<因子>
-<项>
-MINU -
-CHARCON _
-<因子>
-MULT *
-INTCON 18134
-<无符号整数>
-<整数>
-<因子>
-DIV /
-LPARENT (
-IDENFR c
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-MULT *
-LPARENT (
-IDENFR a
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-<项>
-PLUS +
-CHARCON +
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-<项>
-PLUS +
-IDENFR num4
-<因子>
-<项>
-MINU -
-INTCON 1659238
-<无符号整数>
-<整数>
-<因子>
-<项>
-MINU -
-LPARENT (
-IDENFR num2
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-MULT *
-CHARCON _
-<因子>
-MULT *
-IDENFR num1
-<因子>
-DIV /
-IDENFR num1
-<因子>
-<项>
-<表达式>
-<赋值语句>
-SEMICN ;
-<语句>
-PRINTFTK printf
-LPARENT (
-STRCON %d\n
-<字符串>
-COMMA ,
-IDENFR num2
-<因子>
-<项>
-<表达式>
-RPARENT )
-<写语句>
-SEMICN ;
-<语句>
-IDENFR d
-ASSIGN =
-MINU -
-LPARENT (
-INTCON 12
-<无符号整数>
-<整数>
-<因子>
-DIV /
-CHARCON /
-<因子>
-MULT *
-LPARENT (
-MINU -
-CHARCON /
-<因子>
-MULT *
-CHARCON r
-<因子>
-DIV /
-INTCON 1796
-<无符号整数>
-<整数>
-<因子>
-<项>
-MINU -
-CHARCON -
-<因子>
-MULT *
-CHARCON s
-<因子>
-<项>
-MINU -
-INTCON 1948722
-<无符号整数>
-<整数>
-<因子>
-<项>
-PLUS +
-IDENFR num3
-<因子>
-<项>
-PLUS +
-INTCON 1466156
-<无符号整数>
-<整数>
-<因子>
-DIV /
-IDENFR num2
-<因子>
-MULT *
-CHARCON 2
-<因子>
-<项>
-MINU -
-IDENFR num1
-<因子>
-DIV /
-LPARENT (
-IDENFR num1
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-MULT *
-LPARENT (
-IDENFR num2
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-DIV /
-CHARCON 0
-<因子>
-<项>
-MINU -
-IDENFR d
-<因子>
-MULT *
-INTCON 15
-<无符号整数>
-<整数>
-<因子>
-DIV /
-INTCON 1260
-<无符号整数>
-<整数>
-<因子>
-<项>
-MINU -
-IDENFR c
-<因子>
-MULT *
-INTCON 174598
-<无符号整数>
-<整数>
-<因子>
-DIV /
-IDENFR num4
-<因子>
-<项>
-MINU -
-LPARENT (
-IDENFR a
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-DIV /
-INTCON 14603
-<无符号整数>
-<整数>
-<因子>
-DIV /
-CHARCON f
-<因子>
-DIV /
-CHARCON 1
-<因子>
-<项>
-MINU -
-LPARENT (
-IDENFR a
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-<项>
-PLUS +
-LPARENT (
-IDENFR num4
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-MULT *
-LPARENT (
-IDENFR num1
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-MULT *
-CHARCON *
-<因子>
-<项>
-MINU -
-IDENFR b
-<因子>
-MULT *
-LPARENT (
-IDENFR num2
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-MULT *
-INTCON 12405
-<无符号整数>
-<整数>
-<因子>
-<项>
-PLUS +
-LPARENT (
-IDENFR b
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-DIV /
-IDENFR num2
-<因子>
-<项>
-MINU -
-LPARENT (
-IDENFR d
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-MULT *
-IDENFR num4
-<因子>
-MULT *
-CHARCON *
-<因子>
-MULT *
-CHARCON 2
-<因子>
-<项>
-MINU -
-IDENFR c
-<因子>
-MULT *
-LPARENT (
-IDENFR num3
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-MULT *
-IDENFR a
-<因子>
-MULT *
-LPARENT (
-IDENFR b
-<因子>
-<项>
-<表达式>
-RPARENT )
-<因子>
-<项>
-MINU -
-INTCON 1868
-<无符号整数>
-<整数>
-<因子>
-MULT *
-INTCON 1775
-<无符号整数>
-<整数>
-<因子>
-DIV /
-IDENFR num2
-<因子>
-<项>
-<表达式>
-<赋值语句>
-SEMICN ;
-<语句>
-PRINTFTK printf
-LPARENT (
-STRCON %d\n
-<字符串>
-COMMA ,
-IDENFR d
-<因子>
-<项>
-<表达式>
-RPARENT )
-<写语句>
-SEMICN ;
-<语句>
-IDENFR result
-ASSIGN =
-IDENFR num1
-<因子>
-<项>
-PLUS +
-MINU -
-INTCON 2
-<无符号整数>
-<整数>
-<因子>
-<项>
-<表达式>
-<赋值语句>
-SEMICN ;
-<语句>
-PRINTFTK printf
-LPARENT (
-IDENFR result
-<因子>
-<项>
-PLUS +
 MINU -
 INTCON 1
 <无符号整数>
 <整数>
 <因子>
 MULT *
+INTCON 45
+<无符号整数>
+<整数>
+<因子>
+<项>
+MINU -
+LPARENT (
+IDENFR a1
+<因子>
+<项>
+PLUS +
+IDENFR a2
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+MINU -
+LPARENT (
+INTCON 23
+<无符号整数>
+<整数>
+<因子>
+MULT *
+INTCON 3
+<无符号整数>
+<整数>
+<因子>
+<项>
+MINU -
+LPARENT (
+IDENFR c1
+<因子>
+<项>
+PLUS +
+IDENFR a4
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+MULT *
+LPARENT (
+IDENFR c3
+<因子>
+<项>
+PLUS +
+IDENFR a9
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+DIV /
+INTCON 100
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+MULT *
+LPARENT (
+PLUS +
+INTCON 342
+<无符号整数>
+<整数>
+<因子>
+<项>
+MINU -
+IDENFR a6
+<因子>
+MULT *
+LPARENT (
+IDENFR a9
+<因子>
+<项>
+MINU -
+IDENFR b1
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+DIV /
+INTCON 4
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+PLUS +
+INTCON 42
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+MINU -
+INTCON 0
+<无符号整数>
+<整数>
+<因子>
+<项>
+PLUS +
+INTCON 4
+<无符号整数>
+<整数>
+<因子>
+MULT *
+IDENFR a1
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a1
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a4
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a8
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR c1
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+IDENFR a2
+ASSIGN =
+IDENFR a1
+<因子>
+<项>
+PLUS +
+IDENFR a1
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+IDENFR a3
+ASSIGN =
+PLUS +
+MINU -
+INTCON 36000
+<无符号整数>
+<整数>
+<因子>
+DIV /
+LPARENT (
+IDENFR a10
+<因子>
+<项>
+PLUS +
+IDENFR c3
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+DIV /
+LPARENT (
+PLUS +
+MINU -
+INTCON 4
+<无符号整数>
+<整数>
+<因子>
+MULT *
+LPARENT (
+IDENFR a6
+<因子>
+<项>
+PLUS +
+LPARENT (
+IDENFR b3
+<因子>
+MULT *
+LPARENT (
+IDENFR b2
+<因子>
+MULT *
+LPARENT (
+IDENFR a2
+<因子>
+<项>
+MINU -
+INTCON 4
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+PLUS +
+IDENFR a4
+<因子>
+MULT *
+LPARENT (
+IDENFR a6
+<因子>
+<项>
+PLUS +
+INTCON 24
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+DIV /
+CHARCON 1
+<因子>
+MULT *
+INTCON 10
+<无符号整数>
+<整数>
+<因子>
+<项>
+MINU -
+INTCON 14
+<无符号整数>
+<整数>
+<因子>
+<项>
+PLUS +
+INTCON 42
+<无符号整数>
+<整数>
+<因子>
+MULT *
+IDENFR a2
+<因子>
+<项>
+MINU -
+IDENFR b1
+<因子>
+MULT *
+IDENFR a9
+<因子>
+<项>
+PLUS +
+IDENFR c1
+<因子>
+<项>
+PLUS +
+IDENFR c2
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+PLUS +
+LPARENT (
+IDENFR a1
+<因子>
+<项>
+MINU -
+IDENFR a3
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+MULT *
+LPARENT (
+IDENFR a3
+<因子>
+<项>
+PLUS +
+LPARENT (
+IDENFR a5
+<因子>
+<项>
+MINU -
+IDENFR a2
+<因子>
+MULT *
+LPARENT (
+IDENFR b2
+<因子>
+<项>
+PLUS +
+IDENFR d1
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+DIV /
+INTCON 12
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+PLUS +
+INTCON 42
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+PLUS +
+INTCON 0
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+PLUS +
+INTCON 24
+<无符号整数>
+<整数>
+<因子>
+MULT *
+IDENFR b2
+<因子>
+<项>
+PLUS +
+LPARENT (
+IDENFR a3
+<因子>
+MULT *
+IDENFR a5
+<因子>
+<项>
+PLUS +
+IDENFR c1
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+MULT *
 INTCON 2
 <无符号整数>
 <整数>
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+PLUS +
+IDENFR a3
+<因子>
+MULT *
+LPARENT (
+IDENFR a4
+<因子>
+<项>
+MINU -
+IDENFR b2
+<因子>
+<项>
+PLUS +
+IDENFR a5
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+DIV /
+LPARENT (
+INTCON 2
+<无符号整数>
+<整数>
+<因子>
+<项>
+PLUS +
+IDENFR a2
+<因子>
+<项>
+<表达式>
+RPARENT )
+<因子>
+<项>
+<表达式>
+<赋值语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a3
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+STRCON yes
+<字符串>
+COMMA ,
+IDENFR a2
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR a4
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+PRINTFTK printf
+LPARENT (
+IDENFR xxx
 <因子>
 <项>
 <表达式>

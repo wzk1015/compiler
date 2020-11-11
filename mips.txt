@@ -1,281 +1,905 @@
 .data
-s_0: .asciiz "%d\\n"
-s_1: .asciiz "%d\\n"
-s_2: .asciiz "%d\\n"
-s_3: .asciiz "%d\\n"
-nextLine: .asciiz "\n"
+str__0: .asciiz "a4"
+str__1: .asciiz "18231217"
+str__2: .asciiz "134214321432143214321"
+str__3: .asciiz "yes"
+newline__: .asciiz "\n"
 .text
-j main
+# === a1 = 1 ===
+li $s0, 1
+# === a2 = 2 ===
+li $s1, 2
+# === a3 = 3 ===
+li $s2, 3
+# === a4 = 4 ===
+li $s3, 4
+# === a5 = 5 ===
+li $s4, 5
+# === c1 = 97 ===
+li $s5, 97
+# === c2 = 97 ===
+li $s6, 97
+# === c3 = 97 ===
+li $s7, 97
+# === c4 = 97 ===
+li $k0, 97
+sw $k0, 44($gp)
+# === c5 = 88 ===
+li $k0, 88
+sw $k0, 48($gp)
+# === c6 = 52 ===
+li $k0, 52
+sw $k0, 52($gp)
+# === FUNC void main ===
+jal main
+li $v0, 10
+syscall
 main:
-move $fp,$sp
-addi $sp,$sp,-484
-li $t0,2
-sw $t0,0($gp)
-li $s0,4
-li $t0,98
-sw $t0,4($gp)
-li $s1,100
-li $t1,-14537
-mul $t3,$s0,$t1
-move $t3,$t3
-li $t0,47
-div $t0,$s1
-mflo $t4
-li $t1,70
-div $t4,$t1
-mflo $t4
-add $t3,$t3,$t4
-lw $t1,0($gp)
-li $t0,362479
-mul $t4,$t0,$t1
-addi $t4,$t4,9607
-addi $t4,$t4,43
-lw $t1,0($gp)
-mul $t4,$t4,$t1
-li $t1,1176908
-div $t4,$t1
-mflo $t4
-addi $t4,$t4,146947
-sub $t4,$0,$t4
-lw $t0,0($gp)
-li $t1,1642441
-div $t0,$t1
-mflo $t5
-li $t1,48
-div $t5,$t1
-mflo $t5
-li $t1,95
-div $t5,$t1
-mflo $t5
-sub $t4,$t4,$t5
-li $t1,57
-div $t4,$t1
-mflo $t4
-lw $t1,0($gp)
-mul $t4,$t4,$t1
-sub $t3,$t3,$t4
-addi $t3,$t3,-45
-addi $t3,$t3,115
-li $t1,1087
-mul $t4,$s0,$t1
-li $t1,43
-div $t4,$t1
-mflo $t4
-li $t1,3
-mul $t4,$t4,$t1
-add $t2,$t3,$t4
-sw $t2,0($gp)
-la $a0,s_0
-li $v0,4
+addi $sp, $sp, -644
+# === c9 = 101 ===
+li $s0, 101
+# === c10 = 49 ===
+li $s1, 49
+# === a6 = 6 ===
+li $s2, 6
+# === a7 = 7 ===
+li $s3, 7
+# === a8 = 8 ===
+li $s4, 8
+# === a9 = 9 ===
+li $s5, 9
+# === a10 = 10 ===
+li $s6, 10
+# === a11 = 11 ===
+li $s7, 11
+# === SCANF a3 ===
+li $v0, 5
 syscall
-lw $a0,0($gp)
-li $v0,1
+sw $v0, 0($sp)
+# === PRINT a3 int ===
+lw $a0, 0($sp)
+li $v0, 1
 syscall
-la $a0,nextLine
-li $v0,4
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
 syscall
-lw $t0,4($gp)
-move $t3,$t0
-li $t1,99
-div $t3,$t1
-mflo $t3
-addi $t3,$t3,-3
-addi $t3,$t3,-1954
-addi $t3,$t3,-393493032
-addi $t3,$t3,0
-addi $t3,$t3,30397968
-li $t1,97
-div $t3,$t1
-mflo $t3
-li $t1,95
-mul $t3,$t3,$t1
-li $t1,95
-mul $t3,$t3,$t1
-addi $t3,$t3,0
-addi $t3,$t3,42
-lw $t0,0($gp)
-li $t1,95
-mul $t4,$t0,$t1
-li $t1,99
-div $t4,$t1
-mflo $t4
-li $t1,47
-mul $t4,$t4,$t1
-add $t3,$t3,$t4
-lw $t0,0($gp)
-li $t1,186
-div $t0,$t1
-mflo $t4
-li $t1,45
-div $t4,$t1
-mflo $t4
-li $t1,175
-mul $t4,$t4,$t1
-add $t3,$t3,$t4
-li $t0,195289
-mul $t3,$t0,$t3
-li $t1,3
-div $t3,$t1
-mflo $t3
-li $t1,156406
-div $t3,$t1
-mflo $t3
-lw $t0,0($gp)
-div $t0,$s0
-mflo $t4
-li $t1,45
-div $t4,$t1
-mflo $t4
-lw $t1,0($gp)
-mul $t4,$t4,$t1
-sub $t3,$t3,$t4
-addi $t3,$t3,-14846
-lw $t1,4($gp)
-li $t0,99
-mul $t4,$t0,$t1
-sub $t3,$t3,$t4
-addi $t3,$t3,-19
-add $t2,$t3,$s0
-sw $t2,0($gp)
-la $a0,s_0
-li $v0,4
+# === #T1 = -51 ===
+li $t0, -51
+# === #T2 = #T1 * 3 ===
+mul $t1, $t0, 3
+# RELEASE $t0
+# === #T3 = a3 * #T2 ===
+lw $k0, 0($sp)
+mul $t0, $k0, $t1
+# RELEASE $t1
+# === a3 = #T3 ===
+sw $t0, 0($sp)
+# RELEASE $t0
+# === PRINT a3 int ===
+lw $a0, 0($sp)
+li $v0, 1
 syscall
-lw $a0,0($gp)
-li $v0,1
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
 syscall
-la $a0,nextLine
-li $v0,4
+# === SCANF a6 ===
+li $v0, 5
 syscall
-addi $t3,$s1,0
-lw $t1,0($gp)
-li $t0,15047
-div $t0,$t1
-mflo $t4
-sub $t4,$0,$t4
-addi $t4,$t4,0
-li $t0,5470632
-div $t0,$s1
-mflo $t5
-li $t1,99
-div $t5,$t1
-mflo $t5
-add $t4,$t4,$t5
-addi $t4,$t4,1659606
-lw $t0,4($gp)
-li $t1,3
-div $t0,$t1
-mflo $t5
-li $t1,43
-div $t5,$t1
-mflo $t5
-sub $t4,$t4,$t5
-addi $t4,$t4,121
-li $t0,42
-mul $t4,$t0,$t4
-li $t1,97
-mul $t4,$t4,$t1
-move $t4,$t4
-addi $t4,$t4,9705528
-addi $t4,$t4,9314
-lw $t1,4($gp)
-add $t4,$t4,$t1
-addi $t4,$t4,-1687897
-addi $t4,$t4,43
-li $t0,97
-div $t0,$t4
-mflo $t4
-sub $t3,$t3,$t4
-add $t3,$t3,$s0
-addi $t3,$t3,-1659238
-lw $t0,0($gp)
-li $t1,95
-mul $t4,$t0,$t1
-move $t4,$t4
-move $t4,$t4
-sub $t2,$t3,$t4
-sw $t2,0($gp)
-la $a0,s_0
-li $v0,4
+move $s2, $v0
+# === a7 = 18 ===
+li $s3, 18
+# === SCANF a7 ===
+li $v0, 5
 syscall
-lw $a0,0($gp)
-li $v0,1
+move $s3, $v0
+# === SCANF c1 ===
+li $v0, 12
 syscall
-la $a0,nextLine
-li $v0,4
+sw $v0, 32($gp)
+li $v0, 12
 syscall
-lw $t1,0($gp)
-li $t0,1466156
-div $t0,$t1
-mflo $t3
-li $t1,50
-mul $t3,$t3,$t1
-addi $t3,$t3,-1953896
-lw $t1,0($gp)
-move $t4,$t1
-sub $t3,$t3,$t4
-li $t3,0
-li $t1,48
-div $t3,$t1
-mflo $t3
-li $t1,15
-mul $t4,$s1,$t1
-li $t1,1260
-div $t4,$t1
-mflo $t4
-sub $t3,$t3,$t4
-li $t0,17285202
-div $t0,$s0
-mflo $t4
-sub $t3,$t3,$t4
-addi $t3,$t3,0
-addi $t3,$t3,-97
-add $t3,$t3,$s0
-move $t3,$t3
-li $t1,42
-mul $t3,$t3,$t1
-sub $t3,$0,$t3
-lw $t0,4($gp)
-lw $t1,0($gp)
-mul $t4,$t0,$t1
-li $t1,12405
-mul $t4,$t4,$t1
-sub $t3,$t3,$t4
-lw $t0,4($gp)
-lw $t1,0($gp)
-div $t0,$t1
-mflo $t4
-add $t3,$t3,$t4
-mul $t4,$s1,$s0
-li $t1,42
-mul $t4,$t4,$t1
-li $t1,50
-mul $t4,$t4,$t1
-sub $t3,$t3,$t4
-lw $t1,4($gp)
-li $t0,28809
-mul $t4,$t0,$t1
-sub $t3,$t3,$t4
-lw $t1,0($gp)
-li $t0,3315700
-div $t0,$t1
-mflo $t4
-sub $s1,$t3,$t4
-la $a0,s_0
-li $v0,4
+# === SCANF c7 ===
+li $v0, 12
 syscall
-move $a0,$s1
-li $v0,11
+sw $v0, 8($sp)
+li $v0, 12
 syscall
-la $a0,nextLine
-li $v0,4
+# === #T4 = 0 - a2 ===
+lw $k1, 4($gp)
+subu $t0, $zero, $k1
+# === a3 = #T4 ===
+sw $t0, 0($sp)
+# RELEASE $t0
+# === PRINT a3 int ===
+lw $a0, 0($sp)
+li $v0, 1
 syscall
-li $s2,-1
-addi $t3,$s2,-2
-move $a0,$t3
-li $v0,1
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
 syscall
-la $a0,nextLine
-li $v0,4
+# === #T5 = a3 * a3 ===
+lw $k0, 0($sp)
+lw $k1, 0($sp)
+mul $t0, $k0, $k1
+# === a3 = #T5 ===
+sw $t0, 0($sp)
+# RELEASE $t0
+# === PRINT a3 int ===
+lw $a0, 0($sp)
+li $v0, 1
 syscall
-li $v0,10
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
 syscall
+# === a3 = a3 ===
+lw $k0, 0($sp)
+sw $k0, 0($sp)
+# === PRINT a3 int ===
+lw $a0, 0($sp)
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === #T6 = -97 ===
+li $t0, -97
+# === #T7 = -97 ===
+li $t1, -97
+# === #T8 = -97 ===
+li $t2, -97
+# === #T9 = #T7 - #T8 ===
+subu $t3, $t1, $t2
+# RELEASE $t1
+# RELEASE $t2
+# === #T10 = #T6 - #T9 ===
+subu $t1, $t0, $t3
+# RELEASE $t0
+# RELEASE $t3
+# === #T11 = 6 ===
+li $t0, 6
+# === #T12 = #T11 * 43 ===
+mul $t2, $t0, 43
+# RELEASE $t0
+# === #T13 = #T10 - #T12 ===
+subu $t0, $t1, $t2
+# RELEASE $t1
+# RELEASE $t2
+# === #T14 = a1 + 14 ===
+lw $k0, 0($gp)
+addu $t1, $k0, 14
+# === #T15 = #T14 * 13 ===
+mul $t2, $t1, 13
+# RELEASE $t1
+# === #T16 = #T13 + #T15 ===
+addu $t1, $t0, $t2
+# RELEASE $t0
+# RELEASE $t2
+# === a3 = #T16 ===
+sw $t1, 0($sp)
+# RELEASE $t1
+# === PRINT a3 int ===
+lw $a0, 0($sp)
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === #T17 = 7 ===
+li $t0, 7
+# === #T18 = #T17 + 5 ===
+addu $t1, $t0, 5
+# RELEASE $t0
+# === #T19 = #T18 + 6 ===
+addu $t0, $t1, 6
+# RELEASE $t1
+# === #T20 = #T19 - 7 ===
+subu $t1, $t0, 7
+# RELEASE $t0
+# === #T21 = #T20 - 8 ===
+subu $t0, $t1, 8
+# RELEASE $t1
+# === #T22 = 36 ===
+li $t1, 36
+# === #T23 = #T22 * 4 ===
+mul $t2, $t1, 4
+# RELEASE $t1
+# === #T24 = #T23 / 3 ===
+div $t1, $t2, 3
+# RELEASE $t2
+# === #T25 = #T24 / 2 ===
+div $t2, $t1, 2
+# RELEASE $t1
+# === #T26 = 5 ===
+li $t1, 5
+# === #T27 = #T25 * #T26 ===
+mul $t3, $t2, $t1
+# RELEASE $t2
+# RELEASE $t1
+# === #T28 = #T21 - #T27 ===
+subu $t1, $t0, $t3
+# RELEASE $t0
+# RELEASE $t3
+# === PRINT #T28 int ===
+move $a0, $t1
+# RELEASE $t1
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === c8 = c10 ===
+sw $s1, 16($sp)
+# === c4 = c1 ===
+lw $k0, 32($gp)
+sw $k0, 12($sp)
+# === a1 = 12 ===
+li $k0, 12
+sw $k0, 0($gp)
+# === a2 = 13 ===
+li $k0, 13
+sw $k0, 4($gp)
+# === a3 = 14 ===
+li $k0, 14
+sw $k0, 0($sp)
+# === a4 = 15 ===
+li $k0, 15
+sw $k0, 4($sp)
+# === a5 = 16 ===
+li $k0, 16
+sw $k0, 16($gp)
+# === a6 = 17 ===
+li $s2, 17
+# === a8 = 19 ===
+li $s4, 19
+# === #T29 = a9 + 20 ===
+addu $t0, $s5, 20
+# === a9 = #T29 ===
+move $s5, $t0
+# RELEASE $t0
+# === #T30 = a1 + 21 ===
+lw $k0, 0($gp)
+addu $t0, $k0, 21
+# === a10 = #T30 ===
+move $s6, $t0
+# RELEASE $t0
+# === #T31 = a1 + a10 ===
+lw $k0, 0($gp)
+addu $t0, $k0, $s6
+# === a11 = #T31 ===
+move $s7, $t0
+# RELEASE $t0
+# === PRINT 97 char ===
+li $a0, 97
+li $v0, 11
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT a1 int ===
+lw $a0, 0($gp)
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === #T32 = a1 + 97 ===
+lw $k0, 0($gp)
+addu $t0, $k0, 97
+# === PRINT #T32 int ===
+move $a0, $t0
+# RELEASE $t0
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === #T33 = -5 ===
+li $t0, -5
+# === #T34 = #T33 * 5 ===
+mul $t1, $t0, 5
+# RELEASE $t0
+# === #T35 = 0 - #T34 ===
+subu $t0, $zero, $t1
+# RELEASE $t1
+# === PRINT #T35 int ===
+move $a0, $t0
+# RELEASE $t0
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT 0 strcon ===
+la $a0, str__0
+li $v0, 4
+syscall
+# === PRINT a4 int ===
+lw $a0, 4($sp)
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT 3 int ===
+li $a0, 3
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT 1 strcon ===
+la $a0, str__1
+li $v0, 4
+syscall
+# === PRINT 18231217 int ===
+li $a0, 18231217
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT 49 char ===
+li $a0, 49
+li $v0, 11
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT 57 char ===
+li $a0, 57
+li $v0, 11
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === #T36 = -49 ===
+li $t0, -49
+# === #T37 = a3 * 57 ===
+lw $k0, 0($sp)
+mul $t1, $k0, 57
+# === #T38 = #T36 - #T37 ===
+subu $t2, $t0, $t1
+# RELEASE $t0
+# RELEASE $t1
+# === #T39 = -3 ===
+li $t0, -3
+# === #T40 = #T39 * 14 ===
+mul $t1, $t0, 14
+# RELEASE $t0
+# === #T41 = #T38 + #T40 ===
+addu $t0, $t2, $t1
+# RELEASE $t2
+# RELEASE $t1
+# === #T42 = -1 ===
+li $t1, -1
+# === #T43 = #T42 + 2 ===
+addu $t2, $t1, 2
+# RELEASE $t1
+# === #T44 = #T43 - 52 ===
+subu $t1, $t2, 52
+# RELEASE $t2
+# === #T45 = #T44 + 60 ===
+addu $t2, $t1, 60
+# RELEASE $t1
+# === #T46 = #T45 * 4 ===
+mul $t1, $t2, 4
+# RELEASE $t2
+# === #T47 = #T46 / 1 ===
+div $t2, $t1, 1
+# RELEASE $t1
+# === #T48 = #T47 / 1 ===
+div $t1, $t2, 1
+# RELEASE $t2
+# === #T49 = #T48 / 1 ===
+div $t2, $t1, 1
+# RELEASE $t1
+# === #T50 = #T41 + #T49 ===
+addu $t1, $t0, $t2
+# RELEASE $t0
+# RELEASE $t2
+# === PRINT #T50 int ===
+move $a0, $t1
+# RELEASE $t1
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT a1 int ===
+lw $a0, 0($gp)
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT a2 int ===
+lw $a0, 4($gp)
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT a3 int ===
+lw $a0, 0($sp)
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT a8 int ===
+move $a0, $s4
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT a9 int ===
+move $a0, $s5
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT a10 int ===
+move $a0, $s6
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT a11 int ===
+move $a0, $s7
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT 2 strcon ===
+la $a0, str__2
+li $v0, 4
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === #T51 = 0 - a2 ===
+lw $k1, 4($gp)
+subu $t0, $zero, $k1
+# === #T52 = #T51 + a5 ===
+lw $k1, 16($gp)
+addu $t1, $t0, $k1
+# RELEASE $t0
+# === #T53 = a1 * #T52 ===
+lw $k0, 0($gp)
+mul $t0, $k0, $t1
+# RELEASE $t1
+# === #T54 = a2 + a1 ===
+lw $k0, 4($gp)
+lw $k1, 0($gp)
+addu $t1, $k0, $k1
+# === #T55 = #T54 + 2 ===
+addu $t2, $t1, 2
+# RELEASE $t1
+# === #T56 = #T53 / #T55 ===
+div $t1, $t0, $t2
+# RELEASE $t0
+# RELEASE $t2
+# === #T57 = a3 - #T56 ===
+lw $k0, 0($sp)
+subu $t0, $k0, $t1
+# RELEASE $t1
+# === #T58 = 0 - a1 ===
+lw $k1, 0($gp)
+subu $t1, $zero, $k1
+# === #T59 = a1 * #T58 ===
+lw $k0, 0($gp)
+mul $t2, $k0, $t1
+# RELEASE $t1
+# === #T60 = #T57 - #T59 ===
+subu $t1, $t0, $t2
+# RELEASE $t0
+# RELEASE $t2
+# === #T61 = 15 ===
+li $t0, 15
+# === #T62 = #T60 + #T61 ===
+addu $t2, $t1, $t0
+# RELEASE $t1
+# RELEASE $t0
+# === #T63 = #T62 + a6 ===
+addu $t0, $t2, $s2
+# RELEASE $t2
+# === #T64 = a11 * #T63 ===
+mul $t1, $s7, $t0
+# RELEASE $t0
+# === #T65 = 0 - #T64 ===
+subu $t0, $zero, $t1
+# RELEASE $t1
+# === #T66 = 0 - a4 ===
+lw $k1, 4($sp)
+subu $t1, $zero, $k1
+# === #T67 = #T66 + a2 ===
+lw $k1, 4($gp)
+addu $t2, $t1, $k1
+# RELEASE $t1
+# === #T68 = a3 * #T67 ===
+lw $k0, 0($sp)
+mul $t1, $k0, $t2
+# RELEASE $t2
+# === #T69 = #T65 + #T68 ===
+addu $t2, $t0, $t1
+# RELEASE $t0
+# RELEASE $t1
+# === #T70 = #T69 + a7 ===
+addu $t0, $t2, $s3
+# RELEASE $t2
+# === PRINT #T70 int ===
+move $a0, $t0
+# RELEASE $t0
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === #T71 = c9 * a6 ===
+mul $t0, $s0, $s2
+# === #T72 = #T71 + 47 ===
+addu $t1, $t0, 47
+# RELEASE $t0
+# === #T73 = a4 + #T72 ===
+lw $k0, 4($sp)
+addu $t0, $k0, $t1
+# RELEASE $t1
+# === #T74 = a9 * 50 ===
+mul $t1, $s5, 50
+# === #T75 = 588 ===
+li $t2, 588
+# === #T76 = #T75 * 10 ===
+mul $t3, $t2, 10
+# RELEASE $t2
+# === #T77 = #T76 / 4 ===
+div $t2, $t3, 4
+# RELEASE $t3
+# === #T78 = #T74 - #T77 ===
+subu $t3, $t1, $t2
+# RELEASE $t1
+# RELEASE $t2
+# === #T79 = #T78 * 3 ===
+mul $t1, $t3, 3
+# RELEASE $t3
+# === #T80 = 45 ===
+li $t2, 45
+# === #T81 = 0 - #T80 ===
+subu $t3, $zero, $t2
+# RELEASE $t2
+# === #T82 = a1 + a2 ===
+lw $k0, 0($gp)
+lw $k1, 4($gp)
+addu $t2, $k0, $k1
+# === #T83 = #T81 - #T82 ===
+subu $t4, $t3, $t2
+# RELEASE $t3
+# RELEASE $t2
+# === #T84 = 69 ===
+li $t2, 69
+# === #T85 = c1 + a4 ===
+lw $k0, 32($gp)
+lw $k1, 4($sp)
+addu $t3, $k0, $k1
+# === #T86 = c3 + a9 ===
+lw $k0, 40($gp)
+addu $t5, $k0, $s5
+# === #T87 = #T85 * #T86 ===
+mul $t6, $t3, $t5
+# RELEASE $t3
+# RELEASE $t5
+# === #T88 = #T87 / 100 ===
+div $t3, $t6, 100
+# RELEASE $t6
+# === #T89 = #T84 - #T88 ===
+subu $t5, $t2, $t3
+# RELEASE $t2
+# RELEASE $t3
+# === #T90 = a9 - 14 ===
+subu $t2, $s5, 14
+# === #T91 = a6 * #T90 ===
+mul $t3, $s2, $t2
+# RELEASE $t2
+# === #T92 = #T91 - 342 ===
+subu $t2, $t3, 342
+# RELEASE $t3
+# === #T93 = 0 - #T92 ===
+subu $t3, $zero, $t2
+# RELEASE $t2
+# === #T94 = #T89 * #T93 ===
+mul $t2, $t5, $t3
+# RELEASE $t5
+# RELEASE $t3
+# === #T95 = #T94 / 4 ===
+div $t3, $t2, 4
+# RELEASE $t2
+# === #T96 = #T83 - #T95 ===
+subu $t2, $t4, $t3
+# RELEASE $t4
+# RELEASE $t3
+# === #T97 = #T79 * #T96 ===
+mul $t3, $t1, $t2
+# RELEASE $t1
+# RELEASE $t2
+# === #T98 = #T73 - #T97 ===
+subu $t1, $t0, $t3
+# RELEASE $t0
+# RELEASE $t3
+# === #T99 = #T98 * 97 ===
+mul $t0, $t1, 97
+# RELEASE $t1
+# === #T100 = #T99 + 42 ===
+addu $t1, $t0, 42
+# RELEASE $t0
+# === #T101 = 0 - #T100 ===
+subu $t0, $zero, $t1
+# RELEASE $t1
+# === #T102 = #T101 - 0 ===
+subu $t1, $t0, $zero
+# RELEASE $t0
+# === #T103 = a1 * 4 ===
+lw $k0, 0($gp)
+mul $t0, $k0, 4
+# === #T104 = #T102 + #T103 ===
+addu $t2, $t1, $t0
+# RELEASE $t1
+# RELEASE $t0
+# === a1 = #T104 ===
+sw $t2, 0($gp)
+# RELEASE $t2
+# === PRINT a1 int ===
+lw $a0, 0($gp)
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT a4 int ===
+lw $a0, 4($sp)
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT a8 int ===
+move $a0, $s4
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT c1 char ===
+lw $a0, 32($gp)
+li $v0, 11
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === #T105 = a1 + a1 ===
+lw $k0, 0($gp)
+lw $k1, 0($gp)
+addu $t0, $k0, $k1
+# === a2 = #T105 ===
+sw $t0, 4($gp)
+# RELEASE $t0
+# === #T106 = a10 + c3 ===
+lw $k1, 40($gp)
+addu $t0, $s6, $k1
+# === #T107 = -36000 ===
+li $t1, -36000
+# === #T108 = #T107 / #T106 ===
+div $t2, $t1, $t0
+# RELEASE $t1
+# RELEASE $t0
+# === #T109 = a2 - 4 ===
+lw $k0, 4($gp)
+subu $t0, $k0, 4
+# === #T110 = #T109 * 12 ===
+mul $t1, $t0, 12
+# RELEASE $t0
+# === #T111 = #T110 * 13 ===
+mul $t0, $t1, 13
+# RELEASE $t1
+# === #T112 = a6 + 24 ===
+addu $t1, $s2, 24
+# === #T113 = a4 * #T112 ===
+lw $k0, 4($sp)
+mul $t3, $k0, $t1
+# RELEASE $t1
+# === #T114 = #T113 / 49 ===
+div $t1, $t3, 49
+# RELEASE $t3
+# === #T115 = #T114 * 10 ===
+mul $t3, $t1, 10
+# RELEASE $t1
+# === #T116 = #T111 + #T115 ===
+addu $t1, $t0, $t3
+# RELEASE $t0
+# RELEASE $t3
+# === #T117 = #T116 - 14 ===
+subu $t0, $t1, 14
+# RELEASE $t1
+# === #T118 = a2 * 42 ===
+lw $k0, 4($gp)
+mul $t1, $k0, 42
+# === #T119 = #T117 + #T118 ===
+addu $t3, $t0, $t1
+# RELEASE $t0
+# RELEASE $t1
+# === #T120 = a9 * 14 ===
+mul $t0, $s5, 14
+# === #T121 = #T119 - #T120 ===
+subu $t1, $t3, $t0
+# RELEASE $t3
+# RELEASE $t0
+# === #T122 = #T121 + c1 ===
+lw $k1, 32($gp)
+addu $t0, $t1, $k1
+# RELEASE $t1
+# === #T123 = #T122 + c2 ===
+lw $k1, 36($gp)
+addu $t1, $t0, $k1
+# RELEASE $t0
+# === #T124 = a6 + #T123 ===
+addu $t0, $s2, $t1
+# RELEASE $t1
+# === #T125 = a1 - a3 ===
+lw $k0, 0($gp)
+lw $k1, 0($sp)
+subu $t1, $k0, $k1
+# === #T126 = 61 ===
+li $t3, 61
+# === #T127 = a2 * #T126 ===
+lw $k0, 4($gp)
+mul $t4, $k0, $t3
+# RELEASE $t3
+# === #T128 = #T127 / 12 ===
+div $t3, $t4, 12
+# RELEASE $t4
+# === #T129 = a5 - #T128 ===
+lw $k0, 16($gp)
+subu $t4, $k0, $t3
+# RELEASE $t3
+# === #T130 = a3 + #T129 ===
+lw $k0, 0($sp)
+addu $t3, $k0, $t4
+# RELEASE $t4
+# === #T131 = #T130 + 42 ===
+addu $t4, $t3, 42
+# RELEASE $t3
+# === #T132 = #T125 * #T131 ===
+mul $t3, $t1, $t4
+# RELEASE $t1
+# RELEASE $t4
+# === #T133 = #T124 + #T132 ===
+addu $t1, $t0, $t3
+# RELEASE $t0
+# RELEASE $t3
+# === #T134 = #T133 + 0 ===
+addu $t0, $t1, $zero
+# RELEASE $t1
+# === #T135 = #T134 * -4 ===
+mul $t1, $t0, -4
+# RELEASE $t0
+# === #T136 = 288 ===
+li $t0, 288
+# === #T137 = #T135 + #T136 ===
+addu $t3, $t1, $t0
+# RELEASE $t1
+# RELEASE $t0
+# === #T138 = a3 * a5 ===
+lw $k0, 0($sp)
+lw $k1, 16($gp)
+mul $t0, $k0, $k1
+# === #T139 = #T138 + c1 ===
+lw $k1, 32($gp)
+addu $t1, $t0, $k1
+# RELEASE $t0
+# === #T140 = #T139 * 2 ===
+mul $t0, $t1, 2
+# RELEASE $t1
+# === #T141 = #T137 + #T140 ===
+addu $t1, $t3, $t0
+# RELEASE $t3
+# RELEASE $t0
+# === #T142 = #T108 / #T141 ===
+div $t0, $t2, $t1
+# RELEASE $t2
+# RELEASE $t1
+# === #T143 = a4 - 12 ===
+lw $k0, 4($sp)
+subu $t1, $k0, 12
+# === #T144 = #T143 + a5 ===
+lw $k1, 16($gp)
+addu $t2, $t1, $k1
+# RELEASE $t1
+# === #T145 = a3 * #T144 ===
+lw $k0, 0($sp)
+mul $t1, $k0, $t2
+# RELEASE $t2
+# === #T146 = a2 + 2 ===
+lw $k0, 4($gp)
+addu $t2, $k0, 2
+# === #T147 = #T145 / #T146 ===
+div $t3, $t1, $t2
+# RELEASE $t1
+# RELEASE $t2
+# === #T148 = #T142 + #T147 ===
+addu $t1, $t0, $t3
+# RELEASE $t0
+# RELEASE $t3
+# === a3 = #T148 ===
+sw $t1, 0($sp)
+# RELEASE $t1
+# === PRINT a3 int ===
+lw $a0, 0($sp)
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT 3 strcon ===
+la $a0, str__3
+li $v0, 4
+syscall
+# === PRINT a2 int ===
+lw $a0, 4($gp)
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT a4 int ===
+lw $a0, 4($sp)
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT -1 int ===
+li $a0, -1
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === END_FUNC void main ===
+addi $sp, $sp, 644
+jr $ra

@@ -8,8 +8,6 @@
 
 #include <utility>
 
-//TODO：分配st寄存器
-
 void MipsGenerator::generate(const string &code) {
     mips.push_back(code);
     if (DEBUG) {
@@ -45,7 +43,11 @@ void MipsGenerator::release(string addr) {
 void MipsGenerator::translate() {
     generate(".data");
     for (int i = 0; i < strcons.size(); i++) {
-        generate("str__" + to_string(i) + ": .asciiz \"" + strcons[i] + "\"");
+        if (strcons[i][0] != '@') {
+            generate("str__" + to_string(i) + ": .asciiz \"" + strcons[i] + "\"");
+        } else {
+            generate("str__" + to_string(i) + ": .ascii \"" + strcons[i].substr(1) + "\"");
+        }
     }
     generate(R"(newline__: .asciiz "\n")");
 
@@ -62,20 +64,13 @@ void MipsGenerator::translate() {
             for (int i = 0; i < 8; i++) {
                 s_reg_table[i] = VACANT;
             }
-            if (sp_size != 0) {
-                generate("addi $sp, $sp, " + to_string(sp_size));
-            }
             if (init) {
                 //此前为全局变量初始化
                 generate("jal main");
                 generate("li $v0, 10");
                 generate("syscall");
                 init = false;
-            } else {
-                show_reg_status();
-                generate("jr $ra");
             }
-
             cur_func = code.num2;
             generate(code.num2 + ":");
             if (!SymTable::local[code.num2].empty()) {
@@ -84,6 +79,12 @@ void MipsGenerator::translate() {
             } else {
                 sp_size = 0;
             }
+        } else if (op == OP_END_FUNC) {
+            if (sp_size != 0) {
+                generate("addi $sp, $sp, " + to_string(sp_size));
+            }
+            generate("jr $ra");
+            show_reg_status();
         } else if (op == OP_PRINT) {
             if (code.num2 == "strcon") {
                 generate("la $a0, str__" + code.num1);
@@ -95,10 +96,9 @@ void MipsGenerator::translate() {
                 generate("syscall");
             } else {
                 //PRINT 表达式
-                SymTableItem it = SymTable::try_search(cur_func, code.num1, true);
                 load_value(code.num1, "$a0");//TODO
 
-                if (begins_num(code.num1) || (it.valid && it.dataType == integer)) {
+                if (code.num2 == "int") {
                     generate("li $v0, 1");
                 } else {
                     generate("li $v0, 11");
@@ -225,8 +225,6 @@ void MipsGenerator::translate() {
 //            } else {
         }
     }
-    generate("jr $ra");
-    show_reg_status();
 }
 
 //将symbol的值读到对应寄存器
@@ -248,7 +246,7 @@ void MipsGenerator::save_value(const string &reg, const string &symbol) {
     string addr = symbol_to_addr(symbol);
     if (in_reg(symbol)) {
         generate("move " + addr + ", " + reg);
-    } else if (is_const(symbol)) {
+    } else if (!is_const(symbol)) {
         generate("sw " + reg + ", " + addr);
     } else {
         panic(symbol + "not in memory or reg");

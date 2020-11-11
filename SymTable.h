@@ -14,6 +14,7 @@
 #define GLOBAL "global"
 #define size_of(dt)  (4)
 //(dt == integer ? 4 : 1)
+#define type_to_str(dt) (dt == integer? "int" : "char")
 
 using namespace std;
 
@@ -43,6 +44,7 @@ public:
     int addr{};
     int size{};
     string const_value{};
+    bool modified = false;
 
     SymTableItem(string name, STIType stiType1, DataType dataType1, int addr) :
             name(std::move(name)), stiType(stiType1), dataType(dataType1), addr(addr) {};
@@ -59,6 +61,7 @@ public:
     static vector<SymTableItem> global;
     static map<string, vector<SymTableItem>> local;
     static unsigned int max_name_length;
+    static SymTableItem invalid;
 
     static void add(const string &func, const string &name, STIType stiType, DataType dataType, int addr);
 
@@ -79,6 +82,8 @@ public:
     static bool search_func(const string &func_name);
 
     static void show();
+
+    static SymTableItem &ref_search(const string &func, const string &str);
 };
 
 

@@ -20,6 +20,8 @@ int main() {
 //    }
 
     MidCodeList::refactor();
+    MidCodeList::save_to_file("midCode.txt");
+    MidCodeList::interpret();
     //MidCodeList::show();
     MidCodeList::save_to_file("midCode.txt");
 
@@ -27,7 +29,7 @@ int main() {
     mips.translate();
     mips.save_to_file("mips.txt");
 
-    //SymTable::show();
+//    SymTable::show();
     Errors::terminate();
     return 0;
 }
