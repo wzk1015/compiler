@@ -1,21 +1,31 @@
-str0: fuck
+str0: good
 ===============
 k = 99
 FUNC void main
-SCANF x
-x = 666
-#T1 = a / e
-#T2 = x + y
-#T3 = d * #T2
-#T4 = c + #T3
-#T5 = b * #T4
-i = #T1 + #T5
-e = c + 4
-i = k + 67
-i = i * 112
-SCANF x
+c[0] = 1
+c[1] = 2
+c[2] = 3
+d[0][0] = 'a'
+d[0][1] = 'b'
+d[0][2] = 'c'
+d[1][0] = 'd'
+d[1][1] = 'e'
+d[1][2] = 'f'
+#T1 = c[1]
+#T2 = c[2]
+k = #T1 + #T2
+#T4 = d[1][2]
+#T5 = d[0][2]
+k = #T4 * #T5
+d[1] = 'g'
+k = 0
+LABEL label_1
+JUMP_IFNOT k <= 3 : label_2
+PRINT k int
+PRINT #ENDL
+k = k + 1
+JUMP label_1
+LABEL label_2
 PRINT 0 strcon
-#T10 = a * 8
-PRINT #T10 int
 PRINT #ENDL
 END_FUNC void main

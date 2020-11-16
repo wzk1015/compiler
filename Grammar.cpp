@@ -243,20 +243,20 @@ string Grammar::Identifier() {
     return tk.str;
 }
 
-string Grammar::Const() {
+pair<DataType, string> Grammar::Const() {
     string ret;
+    DataType dt = integer;
     if (sym == "PLUS" || sym == "MINU" || sym == "INTCON") {
         ret = Int();
-        tmp_const_data_type = integer;
     } else if (sym == "CHARCON") {
         ret = "'" + tk.str + "'";
-        tmp_const_data_type = character;
+        dt = character;
     } else {
         error("char");
     }
 
     output("<常量>");
-    return ret;
+    return make_pair(dt, ret);
 }
 
 void Grammar::VariableDeclare() {
@@ -305,17 +305,15 @@ void Grammar::VariableDef() {
     next_sym();
     if (sym == "ASSIGN") {  //int a=1;
         next_sym();
-        value = Const();
-        if (tmp_const_data_type != dataType) {
+        pair<DataType, string> con = Const();
+        if (con.first != dataType) {
             error("const type");
         }
-        tmp_const_data_type = invalid;
         init = true;
         SymTable::add(cur_func, tk2, var, dataType, local_addr);
         local_addr += size_of(dataType);
-        add_midcode(OP_ASSIGN, id, value, VACANT);
+        add_midcode(OP_ASSIGN, id, con.second, VACANT);
     } else if (sym == "LBRACK") {
-        //TODO
         next_sym();
         UnsignedInt();
         tmp_dim1 = tk.v_int;
@@ -337,11 +335,11 @@ void Grammar::VariableDef() {
                     error("array init");
                 }
                 next_sym();
-                Const();
-                if (tmp_const_data_type != dataType) {
+                pair<DataType, string> con = Const();
+                add_midcode(OP_ARR_SAVE, id, to_string(count - 1), con.second);
+                if (con.first != dataType) {
                     error("const type");
                 }
-                tmp_const_data_type = invalid;
                 next_sym();
             } while (sym == "COMMA");
             if (count < tmp_dim1) {
@@ -353,7 +351,7 @@ void Grammar::VariableDef() {
             }
             init = true;
             SymTable::add(cur_func, tk2, var, dataType, local_addr, tmp_dim1, 0);
-            local_addr += size_of(dataType) * tmp_dim1; //TODO
+            local_addr += size_of(dataType) * tmp_dim1;
         } else if (sym == "LBRACK") {
             next_sym();
             UnsignedInt();
@@ -388,11 +386,12 @@ void Grammar::VariableDef() {
                             error("array init");
                         }
                         next_sym();
-                        Const();
-                        if (tmp_const_data_type != dataType) {
+                        pair<DataType, string> con = Const();
+                        add_midcode(OP_ARR_SAVE, id, to_string(dim1_count - 1),
+                                    to_string(dim2_count - 1), con.second);
+                        if (con.first != dataType) {
                             error("const type");
                         }
-                        tmp_const_data_type = invalid;
                         next_sym();
                     } while (sym == "COMMA");
                     //已预读
@@ -413,12 +412,12 @@ void Grammar::VariableDef() {
                 }
                 init = true;
                 SymTable::add(cur_func, tk2, var, dataType, local_addr, tmp_dim1, tmp_dim2);
-                local_addr += size_of(dataType) * tmp_dim1 * tmp_dim2;//TODO
+                local_addr += size_of(dataType) * tmp_dim1 * tmp_dim2;
             } else {    //int a[3][3];
                 retract();
                 init = false;
                 SymTable::add(cur_func, tk2, var, dataType, local_addr, tmp_dim1, tmp_dim2);
-                local_addr += size_of(dataType) * tmp_dim1 * tmp_dim2;//TODO
+                local_addr += size_of(dataType) * tmp_dim1 * tmp_dim2;
             }
         } else {  //int a[3];
             retract();
@@ -746,7 +745,8 @@ pair<DataType, string> Grammar::Factor() {
     DataType ret_type = integer;
     string ret_str;
     if (sym == "IDENFR") {
-        if (SymTable::search(cur_func, tk).dataType == character) {
+        SymTableItem item = SymTable::search(cur_func, tk);
+        if (item.dataType == character) {
             ret_type = character;
         } else {
             ret_type = integer;
@@ -759,8 +759,8 @@ pair<DataType, string> Grammar::Factor() {
             RetFuncCall();
         } else if (sym == "LBRACK") {
             next_sym();
-            //TODO
-            if (Expr().first != integer) {
+            pair<DataType, string> index1 = Expr();
+            if (index1.first != integer) {
                 error("array index type");
             }
             next_sym();
@@ -769,17 +769,24 @@ pair<DataType, string> Grammar::Factor() {
             }
             next_sym();
             if (sym == "LBRACK") {
-                //TODO
+                //a[2][2]
                 next_sym();
-                if (Expr().first != integer) {
+                pair<DataType, string> index2 = Expr();
+                if (index2.first != integer) {
                     error("array index type");
                 }
                 next_sym();
                 if (sym != "RBRACK") {
                     error("']'");
                 }
+                ret_str = add_midcode(OP_ARR_LOAD, ret_str, index1.second, index2.second, AUTO);
+                SymTable::add(cur_func, ret_str, tmp, ret_type, local_addr);
+                local_addr += 4;
             } else {
+                //a[2]
                 retract();
+                ret_str = add_midcode(OP_ARR_LOAD, ret_str, index1.second, AUTO);
+                SymTable::add(cur_func, ret_str, tmp, ret_type, local_addr);
             }
         } else {
             retract();
@@ -886,9 +893,9 @@ void Grammar::AssignStmt() {
         value = Expr().second;
         add_midcode(OP_ASSIGN, id, value, VACANT);
     } else if (sym == "LBRACK") {
-        //TODO
         next_sym();
-        if (Expr().first != integer) {
+        pair<DataType, string> index1 = Expr();
+        if (index1.first != integer) {
             error("array index type");
         }
         next_sym();
@@ -897,11 +904,15 @@ void Grammar::AssignStmt() {
         }
         next_sym();
         if (sym == "ASSIGN") {
+            //a[2]=3
             next_sym();
-            Expr();
+            value = Expr().second;
+            add_midcode(OP_ARR_SAVE, id, index1.second, value);
         } else if (sym == "LBRACK") {
+            //a[2][2]=3
             next_sym();
-            if (Expr().first != integer) {
+            pair<DataType, string> index2 = Expr();
+            if (index2.first != integer) {
                 error("array index type");
             }
             next_sym();
@@ -913,7 +924,8 @@ void Grammar::AssignStmt() {
                 error("'='");
             }
             next_sym();
-            Expr();
+            value = Expr().second;
+            add_midcode(OP_ARR_SAVE, id, index1.second, index2.second, value);
         } else {
             error("array assign statement");
         }
@@ -933,7 +945,8 @@ void Grammar::ConditionStmt() {
         error("'('");
     }
     next_sym();
-    Condition();
+    pair<string, pair<string, string>> cond = Condition();
+    string label_else = add_midcode(OP_JUMP_IFNOT, cond.second.first, cond.first, cond.second.second, AUTO_LABEL);
     next_sym();
     if (sym != "RPARENT") {
         error("')'");
@@ -942,29 +955,41 @@ void Grammar::ConditionStmt() {
     Stmt();
     next_sym();
     if (sym == "ELSETK") {
+        string label_end = MidCodeList::assign_label();
+        add_midcode(OP_JUMP_UNCOND, label_end, VACANT, VACANT);
+        add_midcode(OP_LABEL, label_else, VACANT, VACANT);
         next_sym();
         Stmt();
         next_sym();
+        add_midcode(OP_LABEL, label_end, VACANT, VACANT);
+    } else {
+        add_midcode(OP_LABEL, label_else, VACANT, VACANT);
     }
 
     output("<条件语句>");
     retract();
 }
 
-void Grammar::Condition() {
-    if (Expr().first != integer) {
+pair<string, pair<string, string>> Grammar::Condition() {
+    pair<string, pair<string, string>> ans;
+    pair<DataType, string> it = Expr();
+    if (it.first != integer) {
         error("condition type");
     }
+    ans.second.first = it.second;
     next_sym();
     if (sym != "LSS" && sym != "LEQ" && sym != "GRE" && sym != "GEQ" && sym != "EQL" && sym != "NEQ") {
         error("relation operator");
     }
+    ans.first = tk.str;
     next_sym();
-    if (Expr().first != integer) {
+    it = Expr();
+    if (it.first != integer) {
         error("condition type");
     }
-
+    ans.second.second = it.second;
     output("<条件>");
+    return ans;
 }
 
 void Grammar::LoopStmt() {
@@ -975,69 +1000,84 @@ void Grammar::LoopStmt() {
             error("'('");
         }
         next_sym();
-        Condition();
+        string label_begin = MidCodeList::assign_label();
+        add_midcode(OP_LABEL, label_begin, VACANT, VACANT);
+        pair<string, pair<string, string>> cond = Condition();
+        string label_end = add_midcode(OP_JUMP_IFNOT, cond.second.first, cond.first, cond.second.second, AUTO_LABEL);
         next_sym();
         if (sym != "RPARENT") {
             error("')'");
         }
         next_sym();
         Stmt();
-    } else if (sym == "FORTK") {
+        add_midcode(OP_JUMP_UNCOND, label_begin, VACANT, VACANT);
+        add_midcode(OP_LABEL, label_end, VACANT, VACANT);
+    }
+
+    else if (sym == "FORTK") {
         next_sym();
         if (sym != "LPARENT") {
             error("'('");
         }
         next_sym();
-        Identifier();
+        string id = Identifier();
+        SymTable::search(cur_func, tk);
+
+        next_sym();
+        if (sym != "ASSIGN") {
+            error("'='");
+        }
+        next_sym();
+        string value = Expr().second;
+        add_midcode(OP_ASSIGN, id, value, VACANT);
+        next_sym();
+        if (sym != "SEMICN") {
+            error("';'");
+        }
+        next_sym();
+        string label_begin = MidCodeList::assign_label();
+        add_midcode(OP_LABEL, label_begin, VACANT, VACANT);
+        pair<string, pair<string, string>> cond = Condition();
+        string label_end = add_midcode(OP_JUMP_IFNOT, cond.second.first, cond.first, cond.second.second, AUTO_LABEL);
+        next_sym();
+        if (sym != "SEMICN") {
+            error("';'");
+        }
+
+        next_sym();
+        id = Identifier();
         SymTable::search(cur_func, tk);
         next_sym();
         if (sym != "ASSIGN") {
             error("'='");
         }
         next_sym();
-        Expr();
-        next_sym();
-        if (sym != "SEMICN") {
-            error("';'");
-        }
-        next_sym();
-        Condition();
-        next_sym();
-        if (sym != "SEMICN") {
-            error("';'");
-        }
-        next_sym();
-        Identifier();
+        string id2 = Identifier();
         SymTable::search(cur_func, tk);
         next_sym();
-        if (sym != "ASSIGN") {
-            error("'='");
-        }
-        next_sym();
-        Identifier();
-        SymTable::search(cur_func, tk);
-        next_sym();
+        string op = sym == "PLUS" ? OP_ADD : OP_SUB;
         if (sym != "PLUS" && sym != "MINU") {
             error("'+' or '-'");
         }
         next_sym();
-        PaceLength();
+        UnsignedInt();
+        string pace_length = tk.str;
+        output("<步长>");
+
         next_sym();
         if (sym != "RPARENT") {
             error("')'");
         }
         next_sym();
         Stmt();
+        add_midcode(op, id2, pace_length, id);
+        add_midcode(OP_JUMP_UNCOND, label_begin, VACANT, VACANT);
+        add_midcode(OP_LABEL, label_end, VACANT, VACANT);
     } else {
         error("'while' or 'for'");
     }
 
     output("<循环语句>");
-}
-
-void Grammar::PaceLength() {
-    UnsignedInt();
-    output("<步长>");
 }
 
 void Grammar::CaseStmt() {
@@ -1049,7 +1089,7 @@ void Grammar::CaseStmt() {
         error("'('");
     }
     next_sym();
-    tmp_switch_data_type = Expr().first;
+    pair<DataType, string> expr = Expr();
     next_sym();
     if (sym != "RPARENT") {
         error("')'");
@@ -1059,51 +1099,51 @@ void Grammar::CaseStmt() {
         error("'{'");
     }
     next_sym();
-    CaseList();
-    next_sym();
-    Default();
-    next_sym();
-    if (sym != "RBRACE") {
-        error("'}'");
-    }
-    tmp_switch_data_type = invalid;
-    output("<情况语句>");
-}
+    string label_end = MidCodeList::assign_label();
 
-void Grammar::CaseList() {
-    CaseSubStmt();
-    next_sym();
-    while (sym == "CASETK") {
-        CaseSubStmt();
-        next_sym();
-    }
 
-    output("<情况表>");
-    retract();
-}
-
-void Grammar::CaseSubStmt() {
     if (sym != "CASETK") {
         error("'case'");
     }
     next_sym();
-    Const();
-    if (tmp_const_data_type != tmp_switch_data_type) {
+    pair<DataType, string> con = Const();
+    if (con.first != expr.first) {
         error("const type");
-        tmp_switch_data_type = invalid;
-        tmp_const_data_type = invalid;
     }
+    string label_next = add_midcode(OP_JUMP_IFNOT, expr.second, "==", con.second, AUTO_LABEL);
     next_sym();
     if (sym != "COLON") {
         error("':'");
     }
     next_sym();
     Stmt();
-
+    add_midcode(OP_JUMP_UNCOND, label_end, VACANT, VACANT);
     output("<情况子语句>");
-}
+    next_sym();
+    while (sym == "CASETK") {
+        if (sym != "CASETK") {
+            error("'case'");
+        }
+        next_sym();
+        con = Const();
+        if (con.first != expr.first) {
+            error("const type");
+        }
+        add_midcode(OP_LABEL, label_next, VACANT, VACANT);
+        label_next = add_midcode(OP_JUMP_IFNOT, expr.second, "==", con.second, AUTO_LABEL);
+        next_sym();
+        if (sym != "COLON") {
+            error("':'");
+        }
+        next_sym();
+        Stmt();
+        add_midcode(OP_JUMP_UNCOND, label_end, VACANT, VACANT);
+        output("<情况子语句>");
+        next_sym();
+    }
+    output("<情况表>");
 
-void Grammar::Default() {
+
     if (sym != "DEFAULTTK") {
         error("'default'");
         retract();
@@ -1114,9 +1154,15 @@ void Grammar::Default() {
         error("':'");
     }
     next_sym();
+    add_midcode(OP_LABEL, label_next, VACANT, VACANT);
     Stmt();
-
     output("<缺省>");
+    next_sym();
+    if (sym != "RBRACE") {
+        error("'}'");
+    }
+    add_midcode(OP_LABEL, label_end, VACANT, VACANT);
+    output("<情况语句>");
 }
 
 void Grammar::SharedFuncCall() {
@@ -1228,7 +1274,7 @@ void Grammar::WriteStmt() {
     next_sym();
     if (sym == "STRCON") {
         MidCodeList::strcons.push_back(tk.str);
-        add_midcode(OP_PRINT, to_string(MidCodeList::strcons.size()-1), "strcon", VACANT);
+        add_midcode(OP_PRINT, to_string(MidCodeList::strcons.size() - 1), "strcon", VACANT);
         output("<字符串>");
         next_sym();
         if (sym == "COMMA") {
@@ -1293,7 +1339,15 @@ string Grammar::add_midcode(const string &op, const string &n1, const string &n2
     return MidCodeList::add(op, num1, num2, r);
 }
 
-string Grammar::const_replace(string symbol) const{
+string Grammar::add_midcode(const string &op, const string &n1, const string &n2, const string &n3,
+                            const string &r) const {
+    string num1 = const_replace(n1);
+    string num2 = const_replace(n2);
+    string num3 = const_replace(n3);
+    return MidCodeList::add(op, num1, num2, num3, r);
+}
+
+string Grammar::const_replace(string symbol) const {
     SymTableItem item = SymTable::try_search(cur_func, symbol, true);
     if (item.valid && item.stiType == constant) {
         return item.const_value;

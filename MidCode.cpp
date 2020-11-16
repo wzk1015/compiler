@@ -7,15 +7,30 @@
 vector<MidCode> MidCodeList::codes;
 int MidCodeList::code_index = 1;
 vector<string> MidCodeList::strcons;
-int MidCodeList::strcon_index = 1;
+int MidCodeList::label_index = 1;
 
 
 string MidCode::to_str() const {
-    if (result != VACANT) {
-        return result + " = " + num1 + " " + op + " " + num2;
-    }
     if (op == OP_ASSIGN) {
         return num1 + " = " + num2;
+    }
+    if (op == OP_ARR_LOAD) {
+        if (num3 == VACANT) {
+            return result + " = " + num1 + "[" + num2 + "]";
+        }
+        return result + " = " + num1 + "[" + num2 + "][" + num3 + "]";
+    }
+    if (op == OP_ARR_SAVE) {
+        if (num3 == VACANT) {
+            return num1 + "[" + num2 + "] = " + result;
+        }
+        return num1 + "[" + num2 + "][" + num3 + "] = " + result;
+    }
+    if (op == OP_JUMP_IF || op == OP_JUMP_IFNOT) {
+        return op + " " + num1 + " " + num2 + " " + num3 + " : " + result;
+    }
+    if (result != VACANT) {
+        return result + " = " + num1 + " " + op + " " + num2;
     }
     if (num2 == VACANT) {
         return op + " " + num1;
@@ -102,6 +117,7 @@ void MidCodeList::remove_redundant_assign() {
 }
 
 void MidCodeList::interpret() {
+    //TODO: array
     vector<MidCode> new_codes;
     int i = 0;
     while (codes[i].op != OP_FUNC) {

@@ -43,6 +43,8 @@ public:
     vector<DataType> types;
     int addr{};
     int size{};
+    int dim1_size{};
+    int dim2_size{};
     string const_value{};
     bool modified = false;
 

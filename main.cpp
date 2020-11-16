@@ -15,15 +15,12 @@ int main() {
 
     Errors::save_to_file("error.txt");
 
-//    if (DEBUG) {
-//        SymTable::show();
-//    }
 
     MidCodeList::refactor();
     //MidCodeList::save_to_file("midCode_old.txt");
     MidCodeList::remove_redundant_assign();
     //MidCodeList::save_to_file("midCode_new.txt");
-    MidCodeList::interpret();
+    //MidCodeList::interpret();
     //MidCodeList::show();
     MidCodeList::save_to_file("midCode.txt");
 

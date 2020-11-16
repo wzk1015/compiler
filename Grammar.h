@@ -22,8 +22,6 @@ public:
     string sym = "";
     int local_addr = 0;
 
-    DataType tmp_const_data_type = invalid;
-    DataType tmp_switch_data_type = invalid;
     vector<DataType> tmp_para_types;
     int tmp_dim1{};
     int tmp_dim2{};
@@ -47,6 +45,9 @@ public:
 
     string add_midcode(const string &op, const string &n1, const string &n2, const string &r) const;
 
+    string add_midcode(const string &op, const string &n1, const string &n2, const string &n3,
+        const string &r) const;
+
     string const_replace(string symbol) const;
 
     void output(const string &name);
@@ -63,7 +64,7 @@ public:
 
     string Identifier();
 
-    string Const();
+    pair<DataType, string> Const();
 
     void VariableDeclare();
 
@@ -97,19 +98,13 @@ public:
 
     void ConditionStmt();
 
-    void Condition();
+    pair<string, pair<string, string>> Condition();
 
     void LoopStmt();
 
     void PaceLength();
 
     void CaseStmt();
-
-    void CaseList();
-
-    void CaseSubStmt();
-
-    void Default();
 
     void SharedFuncCall();
 

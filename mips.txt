@@ -1,5 +1,5 @@
 .data
-str__0: .asciiz "fuck"
+str__0: .asciiz "good"
 newline__: .asciiz "\n"
 .text
 # === k = 99 ===
@@ -9,56 +9,53 @@ jal main
 li $v0, 10
 syscall
 main:
-addi $sp, $sp, -80
-# === SCANF x ===
-li $v0, 5
-syscall
-move $s0, $v0
-# === x = 666 ===
-li $s0, 666
-# === #T1 = a / e ===
-div $t0, $s1, $s2
-# === #T2 = x + y ===
-addu $t1, $s0, $s3
-# === #T3 = d * #T2 ===
-mul $t2, $s4, $t1
-# RELEASE $t1
-# === #T4 = c + #T3 ===
-addu $t1, $s5, $t2
-# RELEASE $t2
-# === #T5 = b * #T4 ===
-mul $t2, $s6, $t1
-# RELEASE $t1
-# === i = #T1 + #T5 ===
-addu $s7, $t0, $t2
+addi $sp, $sp, -212
+# === c[0] = 1 ===
+# === c[1] = 2 ===
+# === c[2] = 3 ===
+# === d[0][0] = 'a' ===
+# === d[0][1] = 'b' ===
+# === d[0][2] = 'c' ===
+# === d[1][0] = 'd' ===
+# === d[1][1] = 'e' ===
+# === d[1][2] = 'f' ===
+# === #T1 = c[1] ===
+# === #T2 = c[2] ===
+# === k = #T1 + #T2 ===
+addu $s0, $t0, $t1
 # RELEASE $t0
-# RELEASE $t2
-# === e = c + 4 ===
-addu $s2, $s5, 4
-# === i = k + 67 ===
-lw $k0, 0($gp)
-addu $s7, $k0, 67
-# === i = i * 112 ===
-mul $s7, $s7, 112
-# === SCANF x ===
-li $v0, 5
-syscall
-move $s0, $v0
-# === PRINT 0 strcon ===
-la $a0, str__0
-li $v0, 4
-syscall
-# === #T10 = a * 8 ===
-mul $t0, $s1, 8
-# === PRINT #T10 int ===
-move $a0, $t0
+# RELEASE $t1
+# === #T4 = d[1][2] ===
+# === #T5 = d[0][2] ===
+# === k = #T4 * #T5 ===
+mul $s0, $t0, $t1
 # RELEASE $t0
+# RELEASE $t1
+# === d[1] = 'g' ===
+# === k = 0 ===
+move $s0, $zero
+# === LABEL label_1 ===
+# === JUMP_IFNOT k <= 3 : label_2 ===
+# === PRINT k int ===
+move $a0, $s0
 li $v0, 1
 syscall
 # === PRINT #ENDL ===
 la $a0, newline__
 li $v0, 4
 syscall
+# === k = k + 1 ===
+addu $s0, $s0, 1
+# === JUMP label_1 ===
+# === LABEL label_2 ===
+# === PRINT 0 strcon ===
+la $a0, str__0
+li $v0, 4
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
 # === END_FUNC void main ===
-addi $sp, $sp, 80
+addi $sp, $sp, 212
 jr $ra

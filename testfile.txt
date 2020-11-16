@@ -3,15 +3,14 @@ const char fc='p';
 int k=99;
 
 void main() {
-    int a,b,c,d,e,i,x,y;
-    char m;
-    int f;
-    scanf(x);
-    x = 666;
-    i = a/e + b*(c+d*(x+y));
-    e = 4 + c;
-    i = k + w;
-    i = i * fc;
-    scanf(x);
-    printf("fuck",8*a);
+    int a[5], b[5][7];
+    int c[3]={1,2,3};
+    char d[2][3]={{'a','b','c'},{'d','e','f'}};
+    k = c[1] + c[2];
+    k = d[1][2] * d[0][2];
+    d[1] = 'g';
+    for (k=0; k<=3; k=k+1) {
+        printf(k);
+    }
+    printf("good");
 }
