@@ -208,6 +208,10 @@ void SymTable::show() {
     cout << sep1 << endl;
 }
 
+bool SymTable::in_global(const string &func, const string &str) {
+    return !try_search(func, str, false).valid;
+}
+
 string SymTableItem::to_str() const {
     map<STIType, string> stitype_str = {
             {constant, "const"},

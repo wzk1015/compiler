@@ -15,7 +15,11 @@ int main() {
 
     Errors::save_to_file("error.txt");
 
+    if (Errors::terminate()) {
+        return 0;
+    }
 
+    MidCodeList::save_to_file("midCode_old.txt");
     MidCodeList::refactor();
     //MidCodeList::save_to_file("midCode_old.txt");
     MidCodeList::remove_redundant_assign();
@@ -28,7 +32,8 @@ int main() {
     mips.translate();
     mips.save_to_file("mips.txt");
 
-//    SymTable::show();
+    SymTable::show();
     Errors::terminate();
+
     return 0;
 }

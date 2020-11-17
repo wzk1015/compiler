@@ -4,7 +4,6 @@
 #include <vector>
 #include <map>
 #include <fstream>
-#include "Token.h"
 #include "Lexer.h"
 #include "Error.h"
 #include "SymTable.h"
@@ -98,11 +97,9 @@ public:
 
     void ConditionStmt();
 
-    pair<string, pair<string, string>> Condition();
+    pair<string, string> Condition();
 
     void LoopStmt();
-
-    void PaceLength();
 
     void CaseStmt();
 
@@ -119,6 +116,14 @@ public:
     void WriteStmt();
 
     void ReturnStmt();
+
+    string add_sub(const string& num1, const string& num2);
+
+    string add_2d_array(const string &op, const string &n1, const string &n2, const string &n3, const string &r);
+
+    string
+    add_2d_array(const string &op, const string &n1, const string &n2, const string &n3, const string &r,
+                 int dim2_size);
 };
 
 

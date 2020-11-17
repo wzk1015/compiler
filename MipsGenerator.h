@@ -101,7 +101,7 @@ public:
 
     bool in_memory(const string& symbol);
 
-    bool is_const(const string& symbol) const;
+    static bool is_const(const string& symbol) ;
 
     void show_reg_status();
 

@@ -1,53 +1,16 @@
 .data
-str__0: .asciiz "good"
+str__0: .asciiz "18231169"
+str__1: .asciiz "error!"
+str__2: .asciiz "a is not 1!"
+str__3: .asciiz "file3 over!"
 newline__: .asciiz "\n"
 .text
-# === k = 99 ===
-li $s0, 99
 # === FUNC void main ===
 jal main
 li $v0, 10
 syscall
 main:
-addi $sp, $sp, -212
-# === c[0] = 1 ===
-# === c[1] = 2 ===
-# === c[2] = 3 ===
-# === d[0][0] = 'a' ===
-# === d[0][1] = 'b' ===
-# === d[0][2] = 'c' ===
-# === d[1][0] = 'd' ===
-# === d[1][1] = 'e' ===
-# === d[1][2] = 'f' ===
-# === #T1 = c[1] ===
-# === #T2 = c[2] ===
-# === k = #T1 + #T2 ===
-addu $s0, $t0, $t1
-# RELEASE $t0
-# RELEASE $t1
-# === #T4 = d[1][2] ===
-# === #T5 = d[0][2] ===
-# === k = #T4 * #T5 ===
-mul $s0, $t0, $t1
-# RELEASE $t0
-# RELEASE $t1
-# === d[1] = 'g' ===
-# === k = 0 ===
-move $s0, $zero
-# === LABEL label_1 ===
-# === JUMP_IFNOT k <= 3 : label_2 ===
-# === PRINT k int ===
-move $a0, $s0
-li $v0, 1
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
-# === k = k + 1 ===
-addu $s0, $s0, 1
-# === JUMP label_1 ===
-# === LABEL label_2 ===
+addi $sp, $sp, -52
 # === PRINT 0 strcon ===
 la $a0, str__0
 li $v0, 4
@@ -56,6 +19,172 @@ syscall
 la $a0, newline__
 li $v0, 4
 syscall
+# === SCANF a ===
+li $v0, 5
+syscall
+move $s0, $v0
+# === SCANF c ===
+li $v0, 12
+syscall
+move $s1, $v0
+li $v0, 12
+syscall
+# === SCANF b ===
+li $v0, 5
+syscall
+move $s2, $v0
+# === #T1 = c - 43 ===
+subu $t0, $s1, 43
+# === JUMP_IF #T1!=0 label_2 ===
+bne $t0, $zero, label_2
+# RELEASE $t0
+# === #T2 = a + b ===
+addu $t0, $s0, $s2
+# === PRINT #T2 int ===
+move $a0, $t0
+# RELEASE $t0
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === JUMP label_1 ===
+j label_1
+# === LABEL label_2 ===
+label_2:
+# === #T3 = c - 45 ===
+subu $t0, $s1, 45
+# === JUMP_IF #T3!=0 label_3 ===
+bne $t0, $zero, label_3
+# RELEASE $t0
+# === #T4 = a - b ===
+subu $t0, $s0, $s2
+# === PRINT #T4 int ===
+move $a0, $t0
+# RELEASE $t0
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === JUMP label_1 ===
+j label_1
+# === LABEL label_3 ===
+label_3:
+# === #T5 = c - 42 ===
+subu $t0, $s1, 42
+# === JUMP_IF #T5!=0 label_4 ===
+bne $t0, $zero, label_4
+# RELEASE $t0
+# === #T6 = a * b ===
+mul $t0, $s0, $s2
+# === PRINT #T6 int ===
+move $a0, $t0
+# RELEASE $t0
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === JUMP label_1 ===
+j label_1
+# === LABEL label_4 ===
+label_4:
+# === #T7 = c - 47 ===
+subu $t0, $s1, 47
+# === JUMP_IF #T7!=0 label_5 ===
+bne $t0, $zero, label_5
+# RELEASE $t0
+# === #T8 = a / b ===
+div $t0, $s0, $s2
+# === PRINT #T8 int ===
+move $a0, $t0
+# RELEASE $t0
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === JUMP label_1 ===
+j label_1
+# === LABEL label_5 ===
+label_5:
+# === PRINT 1 strcon ===
+la $a0, str__1
+li $v0, 4
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === LABEL label_1 ===
+label_1:
+# === #T9 = a - 1 ===
+subu $t0, $s0, 1
+# === JUMP_IF #T9!=0 label_7 ===
+bne $t0, $zero, label_7
+# RELEASE $t0
+# === PRINT 1 int ===
+li $a0, 1
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === JUMP label_6 ===
+j label_6
+# === LABEL label_7 ===
+label_7:
+# === PRINT 2 strcon ===
+la $a0, str__2
+li $v0, 4
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === LABEL label_6 ===
+label_6:
+# === a = 0 ===
+move $s0, $zero
+# === LABEL label_8 ===
+label_8:
+# === #T10 = a - 6 ===
+subu $t0, $s0, 6
+# === JUMP_IF #T10>=0 label_9 ===
+bgez $t0, label_9
+# RELEASE $t0
+# === SCANF b ===
+li $v0, 5
+syscall
+move $s2, $v0
+# === PRINT b int ===
+move $a0, $s2
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === a = a + 1 ===
+addu $s0, $s0, 1
+# === JUMP label_8 ===
+j label_8
+# === LABEL label_9 ===
+label_9:
+# === PRINT 3 strcon ===
+la $a0, str__3
+li $v0, 4
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
 # === END_FUNC void main ===
-addi $sp, $sp, 212
+addi $sp, $sp, 52
 jr $ra

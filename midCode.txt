@@ -1,31 +1,64 @@
-str0: good
+str0: 18231169
+str1: error!
+str2: a is not 1!
+str3: file3 over!
 ===============
-k = 99
 FUNC void main
-c[0] = 1
-c[1] = 2
-c[2] = 3
-d[0][0] = 'a'
-d[0][1] = 'b'
-d[0][2] = 'c'
-d[1][0] = 'd'
-d[1][1] = 'e'
-d[1][2] = 'f'
-#T1 = c[1]
-#T2 = c[2]
-k = #T1 + #T2
-#T4 = d[1][2]
-#T5 = d[0][2]
-k = #T4 * #T5
-d[1] = 'g'
-k = 0
-LABEL label_1
-JUMP_IFNOT k <= 3 : label_2
-PRINT k int
+PRINT 0 strcon
 PRINT #ENDL
-k = k + 1
+SCANF a
+SCANF c
+SCANF b
+#T1 = c - 43
+JUMP_IF #T1!=0 label_2
+#T2 = a + b
+PRINT #T2 int
+PRINT #ENDL
 JUMP label_1
 LABEL label_2
-PRINT 0 strcon
+#T3 = c - 45
+JUMP_IF #T3!=0 label_3
+#T4 = a - b
+PRINT #T4 int
+PRINT #ENDL
+JUMP label_1
+LABEL label_3
+#T5 = c - 42
+JUMP_IF #T5!=0 label_4
+#T6 = a * b
+PRINT #T6 int
+PRINT #ENDL
+JUMP label_1
+LABEL label_4
+#T7 = c - 47
+JUMP_IF #T7!=0 label_5
+#T8 = a / b
+PRINT #T8 int
+PRINT #ENDL
+JUMP label_1
+LABEL label_5
+PRINT 1 strcon
+PRINT #ENDL
+LABEL label_1
+#T9 = a - 1
+JUMP_IF #T9!=0 label_7
+PRINT 1 int
+PRINT #ENDL
+JUMP label_6
+LABEL label_7
+PRINT 2 strcon
+PRINT #ENDL
+LABEL label_6
+a = 0
+LABEL label_8
+#T10 = a - 6
+JUMP_IF #T10>=0 label_9
+SCANF b
+PRINT b int
+PRINT #ENDL
+a = a + 1
+JUMP label_8
+LABEL label_9
+PRINT 3 strcon
 PRINT #ENDL
 END_FUNC void main

@@ -26,8 +26,8 @@ string MidCode::to_str() const {
         }
         return num1 + "[" + num2 + "][" + num3 + "] = " + result;
     }
-    if (op == OP_JUMP_IF || op == OP_JUMP_IFNOT) {
-        return op + " " + num1 + " " + num2 + " " + num3 + " : " + result;
+    if (op == OP_JUMP_IF) {
+        return op + " " + num1 + num2 + " " + result;
     }
     if (result != VACANT) {
         return result + " = " + num1 + " " + op + " " + num2;
@@ -49,13 +49,14 @@ string MidCode::to_standard_format() const {
 }
 
 void MidCodeList::refactor() {
+    string cur_func = GLOBAL;
     for (auto &code : codes) {
         string n1 = code.num1;
         string n2 = code.num2;
         string op = code.op;
         string r = code.result;
-        if (r == "#T4") {
-
+        if (op == OP_FUNC) {
+            cur_func = code.num2;
         }
         if (n1[0] == '\'') {
             code.num1 = to_string(n1[1]); //char
@@ -64,6 +65,13 @@ void MidCodeList::refactor() {
         if (n2[0] == '\'') {
             code.num2 = to_string(n2[1]); //char
             n2 = code.num2;
+        }
+        if (code.num3[0] == '\'') {
+            code.num3 = to_string(code.num3[1]); //char
+        }
+        if (r[0] == '\'') {
+            code.result = to_string(r[1]); //char
+            r = code.result;
         }
         if (op == OP_ADD || op == OP_MUL) {
             if (begins_num(n1) && begins_num(n2)) {

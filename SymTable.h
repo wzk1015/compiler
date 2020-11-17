@@ -9,7 +9,7 @@
 #include <map>
 #include <utility>
 #include "Error.h"
-#include "Token.h"
+#include "Lexer.h"
 
 #define GLOBAL "global"
 #define size_of(dt)  (4)
@@ -80,6 +80,8 @@ public:
     static SymTableItem search(const string &func, const string &str);
 
     static SymTableItem try_search(const string &func, const string &str, bool include_global);
+
+    static bool in_global(const string &func, const string &str);
 
     static bool search_func(const string &func_name);
 

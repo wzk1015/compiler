@@ -22,15 +22,23 @@ void MipsGenerator::generate(const string &op, const string &num1) {
 void MipsGenerator::generate(const string &op, const string &num1, const string &num2) {
     generate(op + " " + num1 + ", " + num2);
     release(num2);
-    if (op == "sw") {
+    if (op == "sw" || op == "bltz" || op == "blez" || op == "bgtz" || op == "bgez") {
         release(num1);
     }
 }
 
 void MipsGenerator::generate(const string &op, const string &num1, const string &num2, const string &num3) {
     generate(op + " " + num1 + ", " + num2 + ", " + num3);
-    release(num2);
-    release(num3);
+    if (op == "addu" || op == "subu" || op == "mul" || op == "div") {
+        if (num1 != num2) {
+            release(num2);
+        }
+        if (num1 != num3) {
+            release(num3);
+        }
+    } else if (op == "beq" || op == "bne") {
+        release(num1);
+    }
 }
 
 void MipsGenerator::release(string addr) {
@@ -42,6 +50,11 @@ void MipsGenerator::release(string addr) {
 
 void MipsGenerator::translate() {
     generate(".data");
+    for (auto &item: SymTable::global) {
+        if (item.dim >= 1) {
+            generate(item.name + ": .space " + to_string(item.size));
+        }
+    }
     for (int i = 0; i < strcons.size(); i++) {
         if (strcons[i][0] != '@') {
             generate("str__" + to_string(i) + ": .asciiz \"" + strcons[i] + "\"");
@@ -79,13 +92,21 @@ void MipsGenerator::translate() {
             } else {
                 sp_size = 0;
             }
-        } else if (op == OP_END_FUNC) {
+        }
+
+        else if (op == OP_END_FUNC) {
             if (sp_size != 0) {
                 generate("addi $sp, $sp, " + to_string(sp_size));
             }
             generate("jr $ra");
             show_reg_status();
-        } else if (op == OP_PRINT) {
+        }
+
+        else if (op == OP_LABEL) {
+            generate(code.num1 + ":");
+        }
+
+        else if (op == OP_PRINT) {
             if (code.num2 == "strcon") {
                 generate("la $a0, str__" + code.num1);
                 generate("li $v0, 4");
@@ -96,7 +117,7 @@ void MipsGenerator::translate() {
                 generate("syscall");
             } else {
                 //PRINT 表达式
-                load_value(code.num1, "$a0");//TODO
+                load_value(code.num1, "$a0");
 
                 if (code.num2 == "int") {
                     generate("li $v0, 1");
@@ -106,7 +127,9 @@ void MipsGenerator::translate() {
                 generate("syscall");
             }
 
-        } else if (op == OP_SCANF) {
+        }
+
+        else if (op == OP_SCANF) {
             SymTableItem it = SymTable::search(cur_func, code.num1);
             if (it.dataType == integer) {
                 generate("li $v0, 5");
@@ -114,13 +137,15 @@ void MipsGenerator::translate() {
                 generate("li $v0, 12");
             }
             generate("syscall");
-            save_value("$v0", code.num1);//TODO
+            save_value("$v0", code.num1);
             if (it.dataType == character) {
                 //读换行符
                 generate("li $v0, 12");
                 generate("syscall");
             }
-        } else if (op == OP_ASSIGN) {
+        }
+
+        else if (op == OP_ASSIGN) {
             /* 对于a=b:
              * a在寄存器，b在寄存器：move a,b
              * a在寄存器，b在内存：lw a,b
@@ -156,7 +181,9 @@ void MipsGenerator::translate() {
                 }
             }
 
-        } else if (op == OP_ADD || op == OP_SUB || op == OP_MUL || op == OP_DIV) {
+        }
+
+        else if (op == OP_ADD || op == OP_SUB || op == OP_MUL || op == OP_DIV) {
             /* 对于a=b+c:
              * abc都在寄存器/常量：                add a,b,c
              * ab在寄存器/常量，c在内存（或反过来）： lw reg2,c  add a,b,reg2
@@ -224,6 +251,107 @@ void MipsGenerator::translate() {
 //                generate( "srl " + addr3 + ", " + addr1 + ", " + to_string(int(log2(stoi(code.num2)))));
 //            } else {
         }
+
+        else if (op == OP_ARR_LOAD) {
+            /* 对于a=b[c]:
+             * load c到reg  sll reg,reg,2
+             * a在寄存器，c为全局数组：lw a,b(reg)
+             * a在内存，c为全局数组： lw reg2,b(reg)  sw reg2, a
+             * a在寄存器，c为局部数组：add reg,reg,offset  add reg,reg,$sp  lw a,0(reg)
+             * a在内存，c为局部数组： add reg,reg,offset  add reg,reg,$sp  lw reg2,reg($sp)  sw reg2, a
+             */
+            bool a_in_reg = in_reg(code.result);
+            string a = symbol_to_addr(code.result);
+            string reg = "$k0";
+            string reg2 = "$k1";
+
+            load_value(code.num2, reg);
+            generate("sll", reg, reg, "2");
+            string item_addr;
+            if (SymTable::in_global(cur_func, code.num1)) {
+                item_addr = lower(code.num1) + "(" + reg + ")";
+            } else {
+                generate("addu", reg, reg, to_string(SymTable::search(cur_func, code.num1).addr));
+                generate("addu", reg, reg, "$sp");
+                item_addr =  "0(" + reg + ")";
+            }
+            if (a_in_reg) {
+                generate("lw", a, item_addr);
+            } else {
+                generate("lw", reg2, item_addr);
+                generate("sw", reg2, a);
+            }
+        }
+
+        else if (op == OP_ARR_SAVE) {
+            /* 对于b[c]=a:
+             * load c到reg  sll reg,reg,2
+             * a在寄存器，b为全局数组：sw a,b(reg)
+             * a在内存，b为全局数组： lw reg2,a  sw reg2,b(reg)
+             * a在寄存器，b为局部数组：add reg,reg,offset  sw a,b(reg)
+             * a在内存，b为局部数组： add reg,reg,offset  lw reg2,a  sw reg2,reg($sp)
+             * a为常量，b为全局数组：li reg2,a  sw a,b(reg)
+             * a为常量，b为局部数组：add reg,reg,offset  li reg2,a  sw reg2,reg($sp)
+             */
+            bool a_in_reg = in_reg(code.result);
+            string a = symbol_to_addr(code.result);
+            string reg = "$k0";
+            string reg2 = "$k1";
+
+            load_value(code.num2, reg);
+            generate("sll", reg, reg, "2");
+            string item_addr;
+            if (SymTable::in_global(cur_func, code.num1)) {
+                item_addr = lower(code.num1) + "(" + reg + ")";
+            } else {
+                generate("addu", reg, reg, to_string(SymTable::search(cur_func, code.num1).addr));
+                generate("addu", reg, reg, "$sp");
+                item_addr =  "0(" + reg + ")";
+            }
+            if (a_in_reg) {
+                generate("sw", a, item_addr);
+            } else if (is_const(code.result)) {
+                generate("li", reg2, a);
+                generate("sw", reg2, item_addr);
+            } else {
+                generate("lw", reg2, a);
+                generate("sw", reg2, item_addr);
+            }
+        }
+
+        else if (op == OP_JUMP_UNCOND) {
+            generate("j", code.num1);
+        }
+
+        else if (op == OP_JUMP_IF) {
+            bool a_in_reg = in_reg(code.num1);
+            string a = symbol_to_addr(code.num1);
+            string reg = "$k0";
+            if (a_in_reg) {
+                reg = a;
+            } else if (is_const(code.num1)) {
+                generate("li", reg, a);
+            } else {
+                generate("lw", reg, a);
+            }
+            if (code.num2 == "<0") {
+                generate("bltz", reg, code.result);
+            } else if (code.num2 == "<=0") {
+                generate("blez", reg, code.result);
+            } else if (code.num2 == ">0") {
+                generate("bgtz", reg, code.result);
+            } else if (code.num2 == ">=0") {
+                generate("bgez", reg, code.result);
+            } else if (code.num2 == "==0") {
+                generate("beq", reg, "$zero", code.result);
+            } else if (code.num2 == "!=0") {
+                generate("bne", reg, "$zero", code.result);
+            } else {
+                panic("unknown operator in jump_if: " + code.num2);
+            }
+        }
+
+
     }
 }
 
@@ -291,7 +419,7 @@ bool MipsGenerator::in_memory(const string &symbol) {
     return !is_const(symbol) && !in_reg(symbol);
 }
 
-bool MipsGenerator::is_const(const string &symbol) const {
+bool MipsGenerator::is_const(const string &symbol) {
     return begins_num(symbol) && symbol != "0";
 }
 
@@ -319,13 +447,12 @@ string MipsGenerator::symbol_to_addr(const string &symbol) {
     }
 
     SymTableItem item = SymTable::search(cur_func, symbol);
-    if (!SymTable::try_search(cur_func, symbol, false).valid) { //symbol不是局部变量
+    if (SymTable::in_global(cur_func, symbol)) { //symbol不是局部变量
         SymTableItem global = SymTable::try_search(cur_func, symbol, true);
         if (global.valid && global.stiType == var) {
             return to_string(item.addr) + "($gp)";
         }
     }
-    //TODO: 超过gp大小时数据存放？
     return to_string(item.addr) + "($sp)";
 }
 

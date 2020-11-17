@@ -99,7 +99,7 @@ public:
     static void save_to_file(const string &out_path) {
         ofstream out(out_path);
         for (auto &err: errors) {
-            if (err.eid > 1000) {
+            if (err.eid > 1000 && err.line != 0) {
                 out << err.line << " " << err.err_code << endl;
 //                if (err.err_code == 'j') {
 //                    out << err.msg << endl;

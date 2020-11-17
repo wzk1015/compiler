@@ -19,4 +19,8 @@ bool num_or_char(string);
 
 void panic(const string&);
 
+string str_replace(string str, const string& from, const string& to);
+
+void assertion(bool);
+
 #endif //COMPILER_UTILS_H

@@ -28,12 +28,18 @@
 #define OP_DIV "/"
 #define OP_FUNC "FUNC"
 #define OP_END_FUNC "END_FUNC"
+
 #define OP_ARR_LOAD "ARR_LOAD"
 #define OP_ARR_SAVE "ARR_SAVE"
 #define OP_LABEL "LABEL"
 #define OP_JUMP_IF "JUMP_IF"
-#define OP_JUMP_IFNOT "JUMP_IFNOT"
 #define OP_JUMP_UNCOND "JUMP"
+
+#define OP_CALL "CALL"
+#define OP_PUSH_PARA "PUSH_PARA"
+#define OP_RETURN "RETURN"
+
+
 
 
 #define OP_PARA "PARA"
@@ -51,8 +57,6 @@
 #define OP_GOTO "GOTO"
 #define OP_BNZ "BNZ"
 #define OP_BZ "BZ"
-#define OP_ARR_LOAD "ARR_LOAD"
-#define OP_ARR_SAVE "ARR_SAVE"
 
 using namespace std;
 
