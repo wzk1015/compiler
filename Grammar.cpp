@@ -130,10 +130,10 @@ void Grammar::Program() {
             retract();
             retract();
             VariableDeclare();
-            local_addr = 0;
         } else {
             retract();
             retract();
+            local_addr = LOCAL_ADDR_INIT;
             while (sym == "INTTK" || sym == "CHARTK" || sym == "VOIDTK") {
                 if (sym == "INTTK" || sym == "CHARTK") {
                     RetFuncDef();
@@ -351,7 +351,9 @@ void Grammar::VariableDef() {
             }
             init = true;
             SymTable::add(cur_func, tk2, var, dataType, local_addr, tmp_dim1, 0);
-            local_addr += size_of(dataType) * tmp_dim1;
+            if (cur_func != GLOBAL) {
+                local_addr += size_of(dataType) * tmp_dim1;
+            }
         } else if (sym == "LBRACK") {
             next_sym();
             UnsignedInt();
@@ -411,18 +413,24 @@ void Grammar::VariableDef() {
                 }
                 init = true;
                 SymTable::add(cur_func, tk2, var, dataType, local_addr, tmp_dim1, tmp_dim2);
-                local_addr += size_of(dataType) * tmp_dim1 * tmp_dim2;
+                if (cur_func != GLOBAL) {
+                    local_addr += size_of(dataType) * tmp_dim1 * tmp_dim2;
+                }
             } else {    //int a[3][3];
                 retract();
                 init = false;
                 SymTable::add(cur_func, tk2, var, dataType, local_addr, tmp_dim1, tmp_dim2);
-                local_addr += size_of(dataType) * tmp_dim1 * tmp_dim2;
+                if (cur_func != GLOBAL) {
+                    local_addr += size_of(dataType) * tmp_dim1 * tmp_dim2;
+                }
             }
         } else {  //int a[3];
             retract();
             init = false;
             SymTable::add(cur_func, tk2, var, dataType, local_addr, tmp_dim1, 0);
-            local_addr += size_of(dataType) * tmp_dim1;
+            if (cur_func != GLOBAL) {
+                local_addr += size_of(dataType) * tmp_dim1;
+            }
         }
     } else {  //int a;
         retract();
@@ -458,11 +466,15 @@ void Grammar::VariableDef() {
                         error("']'");
                     }
                     SymTable::add(cur_func, tk3, var, dataType, local_addr, tmp_dim1, tmp_dim2);
-                    local_addr += size_of(dataType) * tmp_dim1 * tmp_dim2;
+                    if (cur_func != GLOBAL) {
+                        local_addr += size_of(dataType) * tmp_dim1 * tmp_dim2;
+                    }
                 } else {
                     retract();
                     SymTable::add(cur_func, tk3, var, dataType, local_addr, tmp_dim1, 0);
-                    local_addr += size_of(dataType) * tmp_dim1;
+                    if (cur_func != GLOBAL) {
+                        local_addr += size_of(dataType) * tmp_dim1;
+                    }
                 }
             } else {
                 SymTable::add(cur_func, tk3, var, dataType, local_addr);
@@ -495,7 +507,7 @@ void Grammar::SharedFuncDefBody() {
     if (sym != "RBRACE") {
         error("'}'");
     }
-    local_addr = 0;
+    local_addr = LOCAL_ADDR_INIT;
 }
 
 void Grammar::SharedFuncDefHead() {
@@ -582,6 +594,7 @@ void Grammar::NonRetFuncDef() {
     funcdef_ret = invalid;
     has_returned = false;
 
+    add_midcode(OP_RETURN, VACANT, VACANT, VACANT); //无返回值函数结尾补充return
     add_midcode(OP_END_FUNC, "void", cur_func, VACANT);
 
     output("<无返回值函数定义>");
@@ -658,10 +671,11 @@ void Grammar::Main() {
     if (sym != "RBRACE") {
         error("'}'");
     }
+    add_midcode(OP_RETURN, VACANT, VACANT, VACANT); //无返回值函数结尾补充return
     add_midcode(OP_END_FUNC, "void", "main", VACANT);
 
     output("<主函数>");
-    local_addr = 0;
+    local_addr = LOCAL_ADDR_INIT;
     funcdef_ret = invalid;
 }
 
@@ -750,9 +764,11 @@ pair<DataType, string> Grammar::Factor() {
         ret_str = tk.str;
         next_sym(); // func(
         if (sym == "LPARENT") {
-            //TODO:function return value
             retract(); //func
             RetFuncCall();
+            ret_str = add_midcode(OP_ADD, "%RET", "0", AUTO);
+            SymTable::add(cur_func, ret_str, tmp, ret_type, local_addr);
+            local_addr += 4;
         } else if (sym == "LBRACK") {
             next_sym();
             pair<DataType, string> index1 = Expr();
@@ -1100,6 +1116,11 @@ void Grammar::CaseStmt() {
     }
     next_sym();
     pair<DataType, string> expr = Expr();
+    SymTableItem it = SymTable::ref_search(cur_func, expr.second);
+    if (it.stiType == tmp) {
+        it.stiType = var; //switch的表达式不能被放在t寄存器
+    }
+
     next_sym();
     if (sym != "RPARENT") {
         error("')'");
@@ -1182,8 +1203,10 @@ void Grammar::CaseStmt() {
 
 void Grammar::SharedFuncCall() {
     bool para_count_err = false;
-    Identifier();
+    string func_name = Identifier();
+    add_midcode(OP_PREPARE_CALL, func_name, VACANT, VACANT);
     vector<DataType> types = SymTable::search(cur_func, tk).types;
+    pair<DataType, string> expr;
     next_sym();
     if (sym != "LPARENT") {
         error("'('");
@@ -1196,24 +1219,30 @@ void Grammar::SharedFuncCall() {
         if (types.begin() == types.end()) {
 //            error("para count");
             para_count_err = true;
-            Expr();
+            expr = Expr();
+            add_midcode(OP_PUSH_PARA, expr.second, VACANT, VACANT);
         } else {
-            if (*(types.begin()) != Expr().first) {
+            expr = Expr();
+            if (*(types.begin()) != expr.first) {
                 error("para type");
             }
             types.erase(types.begin());
+            add_midcode(OP_PUSH_PARA, expr.second, VACANT, VACANT);
         }
         next_sym();
         while (sym == "COMMA") {
             next_sym();
             if (types.begin() == types.end()) {
                 para_count_err = true;
-                Expr();
+                expr = Expr();
+                add_midcode(OP_PUSH_PARA, expr.second, VACANT, VACANT);
             } else {
-                if (*(types.begin()) != Expr().first) {
+                expr = Expr();
+                if (*(types.begin()) != expr.first) {
                     error("para type");
                 }
                 types.erase(types.begin());
+                add_midcode(OP_PUSH_PARA, expr.second, VACANT, VACANT);
             }
             next_sym();
         }
@@ -1230,6 +1259,8 @@ void Grammar::SharedFuncCall() {
     } else if (para_count_err) {
         error("para count");
     }
+
+    add_midcode(OP_CALL, func_name, VACANT, VACANT);
 }
 
 void Grammar::RetFuncCall() {
@@ -1329,9 +1360,12 @@ void Grammar::ReturnStmt() {
         if (sym == "RPARENT" && funcdef_ret != void_ret) {
             error("ret return");
         }
-        if (Expr().first != funcdef_ret && funcdef_ret != void_ret) {
+        pair<DataType, string> expr = Expr();
+        if (expr.first != funcdef_ret && funcdef_ret != void_ret) {
             error("ret return");
         }
+        add_midcode(OP_RETURN, expr.second, VACANT, VACANT);
+        MidCodeList::ret_value = expr.second;
         next_sym();
         if (sym != "RPARENT") {
             error("')'");
@@ -1341,6 +1375,7 @@ void Grammar::ReturnStmt() {
         if (funcdef_ret != void_ret) {
             error("ret return");
         }
+        add_midcode(OP_RETURN, VACANT, VACANT, VACANT);
     }
     has_returned = true;
 
@@ -1351,7 +1386,11 @@ void Grammar::ReturnStmt() {
 string Grammar::add_midcode(const string &op, const string &n1, const string &n2, const string &r) const {
     string num1 = const_replace(n1);
     string num2 = const_replace(n2);
-    return MidCodeList::add(op, num1, num2, r);
+    string result = r;
+    if (op == OP_ARR_SAVE) {
+        result = const_replace(r);
+    }
+    return MidCodeList::add(op, num1, num2, result);
 }
 
 string Grammar::add_midcode(const string &op, const string &n1, const string &n2, const string &n3,
@@ -1363,6 +1402,9 @@ string Grammar::add_midcode(const string &op, const string &n1, const string &n2
 }
 
 string Grammar::const_replace(string symbol) const {
+    if (symbol == VACANT) {
+        return symbol;
+    }
     SymTableItem item = SymTable::try_search(cur_func, symbol, true);
     if (item.valid && item.stiType == constant) {
         return item.const_value;

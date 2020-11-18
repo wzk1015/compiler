@@ -6,6 +6,7 @@
 #define COMPILER_UTILS_H
 
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -22,5 +23,7 @@ void panic(const string&);
 string str_replace(string str, const string& from, const string& to);
 
 void assertion(bool);
+
+int sum(const vector<int>& arr);
 
 #endif //COMPILER_UTILS_H

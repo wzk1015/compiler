@@ -19,7 +19,7 @@ public:
 
     Token tk{INVALID};
     string sym = "";
-    int local_addr = 0;
+    int local_addr = LOCAL_ADDR_INIT;
 
     vector<DataType> tmp_para_types;
     int tmp_dim1{};

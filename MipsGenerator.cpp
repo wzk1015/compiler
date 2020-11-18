@@ -8,6 +8,8 @@
 
 #include <utility>
 
+//TODO：函数调用时保护S寄存器、T寄存器
+
 void MipsGenerator::generate(const string &code) {
     mips.push_back(code);
     if (DEBUG) {
@@ -65,7 +67,6 @@ void MipsGenerator::translate() {
     generate(R"(newline__: .asciiz "\n")");
 
     generate(".text");
-//    generate("lui $gp, 0x1001");
 
     bool init = true;
 
@@ -75,10 +76,11 @@ void MipsGenerator::translate() {
         if (op == OP_FUNC) {
             //进入新函数
             for (int i = 0; i < 8; i++) {
-                s_reg_table[i] = VACANT;
+                s_reg_table[i] = VACANT;    //TODO
             }
             if (init) {
                 //此前为全局变量初始化
+                generate("addi $sp, $sp, -" + to_string(LOCAL_ADDR_INIT + SymTable::func_size("main")));
                 generate("jal main");
                 generate("li $v0, 10");
                 generate("syscall");
@@ -86,20 +88,63 @@ void MipsGenerator::translate() {
             }
             cur_func = code.num2;
             generate(code.num2 + ":");
-            if (!SymTable::local[code.num2].empty()) {
-                sp_size = SymTable::local[code.num2].back().addr + SymTable::local[code.num2].back().size;
-                generate("addi $sp, $sp, -" + to_string(sp_size));
+            call_func_sp_offset = 0;
+            generate("sw $ra, 0($sp)"); //函数开始，保存现场
+        }
+
+        else if (op == OP_RETURN) {
+            generate("lw $ra, 0($sp)");
+            if (code.num1 != VACANT) {
+                load_value(code.num1, "$v0");
+            }
+            generate("jr $ra");
+        }
+
+        else if (op == OP_PREPARE_CALL) {
+            string call_func = code.num1;
+            sp_size.push_back(LOCAL_ADDR_INIT + SymTable::func_size(call_func));
+            call_func_sp_offset = sum(sp_size);
+            generate("addi $sp, $sp, -" + to_string(sp_size.back()));
+            call_func_paras.push_back(SymTable::local[call_func]);
+        }
+
+        else if (op == OP_PUSH_PARA) {
+            /*
+             * a在内存，b在寄存器：sw b,a
+             * a在内存，b在内存：lw reg,b  sw reg,a
+             * a在内存，b为常量 li reg,b sw reg,a
+             */
+            bool b_in_reg = in_reg(code.num1);
+            string b = symbol_to_addr(code.num1);
+            string para_addr = to_string(call_func_paras.back().begin()->addr)+"($sp)";
+            assertion(call_func_paras.back().begin()->stiType == para);
+            call_func_paras.back().erase(call_func_paras.back().begin());
+            string reg = "$k0";
+
+            if (b_in_reg) {
+                generate("sw", b, para_addr);
+            } else if (is_const(code.num1)) {
+                generate("li", reg, b);
+                generate("sw", reg, para_addr);
             } else {
-                sp_size = 0;
+                generate("lw", reg, b);
+                generate("sw", reg, para_addr);
             }
         }
 
-        else if (op == OP_END_FUNC) {
-            if (sp_size != 0) {
-                generate("addi $sp, $sp, " + to_string(sp_size));
+        else if (op == OP_CALL) {
+            assertion(call_func_paras.back().empty() || call_func_paras.back().begin()->stiType != para);
+            generate("jal", code.num1);
+            if (sp_size.back() != 0) {
+                generate("addi $sp, $sp, " + to_string(sp_size.back()));
+                sp_size.pop_back();
             }
-            generate("jr $ra");
-            show_reg_status();
+            call_func_sp_offset = sum(sp_size);
+            call_func_paras.pop_back();
+        }
+
+        else if (op == OP_END_FUNC) {
+//            show_reg_status();
         }
 
         else if (op == OP_LABEL) {
@@ -138,11 +183,11 @@ void MipsGenerator::translate() {
             }
             generate("syscall");
             save_value("$v0", code.num1);
-            if (it.dataType == character) {
-                //读换行符
-                generate("li $v0, 12");
-                generate("syscall");
-            }
+//            if (it.dataType == character) {
+//                //读换行符
+//                generate("li $v0, 12");
+//                generate("syscall");
+//            }
         }
 
         else if (op == OP_ASSIGN) {
@@ -273,6 +318,9 @@ void MipsGenerator::translate() {
             } else {
                 generate("addu", reg, reg, to_string(SymTable::search(cur_func, code.num1).addr));
                 generate("addu", reg, reg, "$sp");
+                if (call_func_sp_offset != 0) {
+                    generate("addu", reg, reg, to_string(call_func_sp_offset));
+                }
                 item_addr =  "0(" + reg + ")";
             }
             if (a_in_reg) {
@@ -306,6 +354,9 @@ void MipsGenerator::translate() {
             } else {
                 generate("addu", reg, reg, to_string(SymTable::search(cur_func, code.num1).addr));
                 generate("addu", reg, reg, "$sp");
+                if (call_func_sp_offset != 0) {
+                    generate("addu", reg, reg, to_string(call_func_sp_offset));
+                }
                 item_addr =  "0(" + reg + ")";
             }
             if (a_in_reg) {
@@ -350,8 +401,6 @@ void MipsGenerator::translate() {
                 panic("unknown operator in jump_if: " + code.num2);
             }
         }
-
-
     }
 }
 
@@ -382,7 +431,7 @@ void MipsGenerator::save_value(const string &reg, const string &symbol) {
 }
 
 bool MipsGenerator::in_reg(const string &symbol) {
-    if (symbol == "0") {
+    if (symbol == "0" || symbol == "%RET") {
         return true;
     }
     if (is_const(symbol)) {
@@ -400,18 +449,21 @@ bool MipsGenerator::in_reg(const string &symbol) {
     }
 
     //分配寄存器
-    SymTableItem item = SymTable::search(cur_func, symbol);
-    if (item.stiType == var) { //TODO:参数para
-        string sreg = assign_s_reg(symbol);
-        if (sreg != INVALID) {
-            return true;
-        }
-    } else if (item.stiType == tmp) {
-        string treg = assign_t_reg(symbol);
-        if (treg != INVALID) {
-            return true;
-        }
-    }
+//    if (!SymTable::in_global(cur_func, symbol)) {
+//        SymTableItem item = SymTable::search(cur_func, symbol);
+//        if (item.stiType == var) { //TODO:参数para
+//            string sreg = assign_s_reg(symbol);
+//            if (sreg != INVALID) {
+//                return true;
+//            }
+//        } else if (item.stiType == tmp) {
+//            string treg = assign_t_reg(symbol);
+//            if (treg != INVALID) {
+//                return true;
+//            }
+//        }
+//    }
+
     return false;
 }
 
@@ -432,6 +484,10 @@ string MipsGenerator::symbol_to_addr(const string &symbol) {
         return symbol; //int
     }
 
+    if (symbol == "%RET") {
+        return "$v0";
+    }
+
     for (int i = 0; i < 10; i++) {
         if (t_reg_table[i] == symbol) {
             string t_reg = "$t" + to_string(i);
@@ -449,11 +505,11 @@ string MipsGenerator::symbol_to_addr(const string &symbol) {
     SymTableItem item = SymTable::search(cur_func, symbol);
     if (SymTable::in_global(cur_func, symbol)) { //symbol不是局部变量
         SymTableItem global = SymTable::try_search(cur_func, symbol, true);
-        if (global.valid && global.stiType == var) {
-            return to_string(item.addr) + "($gp)";
+        if (global.valid && (global.stiType == var || global.stiType == tmp)) {
+            return to_string(item.addr - LOCAL_ADDR_INIT) + "($gp)";
         }
     }
-    return to_string(item.addr) + "($sp)";
+    return to_string(item.addr + call_func_sp_offset) + "($sp)";
 }
 
 string MipsGenerator::assign_t_reg(const string &name) {

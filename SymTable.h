@@ -11,10 +11,12 @@
 #include "Error.h"
 #include "Lexer.h"
 
-#define GLOBAL "global"
+#define GLOBAL "#GLOBAL"
 #define size_of(dt)  (4)
 //(dt == integer ? 4 : 1)
 #define type_to_str(dt) (dt == integer? "int" : "char")
+
+#define LOCAL_ADDR_INIT 4
 
 using namespace std;
 
@@ -88,6 +90,8 @@ public:
     static void show();
 
     static SymTableItem &ref_search(const string &func, const string &str);
+
+    static int func_size(const string &func);
 };
 
 

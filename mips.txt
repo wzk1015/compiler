@@ -1,190 +1,150 @@
 .data
-str__0: .asciiz "18231169"
-str__1: .asciiz "error!"
-str__2: .asciiz "a is not 1!"
-str__3: .asciiz "file3 over!"
+barray: .space 24
+carrays: .space 4000
+earray: .space 12
+farray: .space 40
 newline__: .asciiz "\n"
 .text
+# === d = 1 ===
+li $k0, 1
+sw $k0, 0($gp)
+# === eArray[0] = 6 ===
+move $k0, $zero
+sll $k0, $k0, 2
+li $k1, 6
+sw $k1, earray($k0)
+# === eArray[1] = 7 ===
+li $k0, 1
+sll $k0, $k0, 2
+li $k1, 7
+sw $k1, earray($k0)
+# === eArray[2] = 8 ===
+li $k0, 2
+sll $k0, $k0, 2
+li $k1, 8
+sw $k1, earray($k0)
+# === #T1 = 0 ===
+sw $zero, 4($gp)
+# === #T2 = #T1 + 0 ===
+lw $k0, 4($gp)
+addu $k0, $k0, $zero
+sw $k0, 8($gp)
+# === fArray[#T2] = 0 ===
+lw $k0, 8($gp)
+sll $k0, $k0, 2
+sw $zero, farray($k0)
+# === #T3 = 0 ===
+sw $zero, 12($gp)
+# === #T4 = #T3 + 1 ===
+lw $k0, 12($gp)
+addu $k0, $k0, 1
+sw $k0, 16($gp)
+# === fArray[#T4] = 1 ===
+lw $k0, 16($gp)
+sll $k0, $k0, 2
+li $k1, 1
+sw $k1, farray($k0)
+# === #T5 = 0 ===
+sw $zero, 20($gp)
+# === #T6 = #T5 + 2 ===
+lw $k0, 20($gp)
+addu $k0, $k0, 2
+sw $k0, 24($gp)
+# === fArray[#T6] = 2 ===
+lw $k0, 24($gp)
+sll $k0, $k0, 2
+li $k1, 2
+sw $k1, farray($k0)
+# === #T7 = 0 ===
+sw $zero, 28($gp)
+# === #T8 = #T7 + 3 ===
+lw $k0, 28($gp)
+addu $k0, $k0, 3
+sw $k0, 32($gp)
+# === fArray[#T8] = 3 ===
+lw $k0, 32($gp)
+sll $k0, $k0, 2
+li $k1, 3
+sw $k1, farray($k0)
+# === #T9 = 0 ===
+sw $zero, 36($gp)
+# === #T10 = #T9 + 4 ===
+lw $k0, 36($gp)
+addu $k0, $k0, 4
+sw $k0, 40($gp)
+# === fArray[#T10] = 4 ===
+lw $k0, 40($gp)
+sll $k0, $k0, 2
+li $k1, 4
+sw $k1, farray($k0)
+# === #T11 = 5 ===
+li $k0, 5
+sw $k0, 44($gp)
+# === #T12 = #T11 + 0 ===
+lw $k0, 44($gp)
+addu $k0, $k0, $zero
+sw $k0, 48($gp)
+# === fArray[#T12] = 9 ===
+lw $k0, 48($gp)
+sll $k0, $k0, 2
+li $k1, 9
+sw $k1, farray($k0)
+# === #T13 = 5 ===
+li $k0, 5
+sw $k0, 52($gp)
+# === #T14 = #T13 + 1 ===
+lw $k0, 52($gp)
+addu $k0, $k0, 1
+sw $k0, 56($gp)
+# === fArray[#T14] = 8 ===
+lw $k0, 56($gp)
+sll $k0, $k0, 2
+li $k1, 8
+sw $k1, farray($k0)
+# === #T15 = 5 ===
+li $k0, 5
+sw $k0, 60($gp)
+# === #T16 = #T15 + 2 ===
+lw $k0, 60($gp)
+addu $k0, $k0, 2
+sw $k0, 64($gp)
+# === fArray[#T16] = 7 ===
+lw $k0, 64($gp)
+sll $k0, $k0, 2
+li $k1, 7
+sw $k1, farray($k0)
+# === #T17 = 5 ===
+li $k0, 5
+sw $k0, 68($gp)
+# === #T18 = #T17 + 3 ===
+lw $k0, 68($gp)
+addu $k0, $k0, 3
+sw $k0, 72($gp)
+# === fArray[#T18] = 6 ===
+lw $k0, 72($gp)
+sll $k0, $k0, 2
+li $k1, 6
+sw $k1, farray($k0)
+# === #T19 = 5 ===
+li $k0, 5
+sw $k0, 76($gp)
+# === #T20 = #T19 + 4 ===
+lw $k0, 76($gp)
+addu $k0, $k0, 4
+sw $k0, 80($gp)
+# === fArray[#T20] = 5 ===
+lw $k0, 80($gp)
+sll $k0, $k0, 2
+li $k1, 5
+sw $k1, farray($k0)
 # === FUNC void main ===
+addi $sp, $sp, -4
 jal main
 li $v0, 10
 syscall
 main:
-addi $sp, $sp, -52
-# === PRINT 0 strcon ===
-la $a0, str__0
-li $v0, 4
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
-# === SCANF a ===
-li $v0, 5
-syscall
-move $s0, $v0
-# === SCANF c ===
-li $v0, 12
-syscall
-move $s1, $v0
-li $v0, 12
-syscall
-# === SCANF b ===
-li $v0, 5
-syscall
-move $s2, $v0
-# === #T1 = c - 43 ===
-subu $t0, $s1, 43
-# === JUMP_IF #T1!=0 label_2 ===
-bne $t0, $zero, label_2
-# RELEASE $t0
-# === #T2 = a + b ===
-addu $t0, $s0, $s2
-# === PRINT #T2 int ===
-move $a0, $t0
-# RELEASE $t0
-li $v0, 1
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
-# === JUMP label_1 ===
-j label_1
-# === LABEL label_2 ===
-label_2:
-# === #T3 = c - 45 ===
-subu $t0, $s1, 45
-# === JUMP_IF #T3!=0 label_3 ===
-bne $t0, $zero, label_3
-# RELEASE $t0
-# === #T4 = a - b ===
-subu $t0, $s0, $s2
-# === PRINT #T4 int ===
-move $a0, $t0
-# RELEASE $t0
-li $v0, 1
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
-# === JUMP label_1 ===
-j label_1
-# === LABEL label_3 ===
-label_3:
-# === #T5 = c - 42 ===
-subu $t0, $s1, 42
-# === JUMP_IF #T5!=0 label_4 ===
-bne $t0, $zero, label_4
-# RELEASE $t0
-# === #T6 = a * b ===
-mul $t0, $s0, $s2
-# === PRINT #T6 int ===
-move $a0, $t0
-# RELEASE $t0
-li $v0, 1
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
-# === JUMP label_1 ===
-j label_1
-# === LABEL label_4 ===
-label_4:
-# === #T7 = c - 47 ===
-subu $t0, $s1, 47
-# === JUMP_IF #T7!=0 label_5 ===
-bne $t0, $zero, label_5
-# RELEASE $t0
-# === #T8 = a / b ===
-div $t0, $s0, $s2
-# === PRINT #T8 int ===
-move $a0, $t0
-# RELEASE $t0
-li $v0, 1
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
-# === JUMP label_1 ===
-j label_1
-# === LABEL label_5 ===
-label_5:
-# === PRINT 1 strcon ===
-la $a0, str__1
-li $v0, 4
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
-# === LABEL label_1 ===
-label_1:
-# === #T9 = a - 1 ===
-subu $t0, $s0, 1
-# === JUMP_IF #T9!=0 label_7 ===
-bne $t0, $zero, label_7
-# RELEASE $t0
-# === PRINT 1 int ===
-li $a0, 1
-li $v0, 1
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
-# === JUMP label_6 ===
-j label_6
-# === LABEL label_7 ===
-label_7:
-# === PRINT 2 strcon ===
-la $a0, str__2
-li $v0, 4
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
-# === LABEL label_6 ===
-label_6:
-# === a = 0 ===
-move $s0, $zero
-# === LABEL label_8 ===
-label_8:
-# === #T10 = a - 6 ===
-subu $t0, $s0, 6
-# === JUMP_IF #T10>=0 label_9 ===
-bgez $t0, label_9
-# RELEASE $t0
-# === SCANF b ===
-li $v0, 5
-syscall
-move $s2, $v0
-# === PRINT b int ===
-move $a0, $s2
-li $v0, 1
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
-# === a = a + 1 ===
-addu $s0, $s0, 1
-# === JUMP label_8 ===
-j label_8
-# === LABEL label_9 ===
-label_9:
-# === PRINT 3 strcon ===
-la $a0, str__3
-li $v0, 4
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
-# === END_FUNC void main ===
-addi $sp, $sp, 52
+sw $ra, 0($sp)
+# === RETURN #VACANT ===
+lw $ra, 0($sp)
 jr $ra
+# === END_FUNC void main ===

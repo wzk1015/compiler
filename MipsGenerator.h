@@ -57,7 +57,9 @@ public:
             {OP_DIV, "div"},
     };
     string cur_func = GLOBAL;
-    int sp_size = 0;
+    vector<vector<SymTableItem>> call_func_paras;
+    vector<int> sp_size = {0};
+    int call_func_sp_offset = 0;
 
     explicit MipsGenerator(vector<MidCode> codes, vector<string> strcons) :
             mid(std::move(codes)), strcons(std::move(strcons)) {};

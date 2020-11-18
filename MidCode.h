@@ -35,6 +35,7 @@
 #define OP_JUMP_IF "JUMP_IF"
 #define OP_JUMP_UNCOND "JUMP"
 
+#define OP_PREPARE_CALL "PREPARE_CALL"
 #define OP_CALL "CALL"
 #define OP_PUSH_PARA "PUSH_PARA"
 #define OP_RETURN "RETURN"
@@ -42,10 +43,6 @@
 
 
 
-#define OP_PARA "PARA"
-#define OP_PUSH "PUSH"
-#define OP_CALL "CALL"
-#define OP_RET "RET"
 #define OP_VAR "VAR"
 #define OP_CONST "CONST"
 #define OP_EQL "EQL"
@@ -88,6 +85,8 @@ public:
     static int code_index;
     static int label_index;
     static vector<string> strcons;
+    static vector<string> paras;
+    static string ret_value;
 
     static string add(const string &op, const string &n1, const string &n2, const string &r) {
         string result = r;

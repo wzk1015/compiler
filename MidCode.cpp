@@ -8,6 +8,8 @@ vector<MidCode> MidCodeList::codes;
 int MidCodeList::code_index = 1;
 vector<string> MidCodeList::strcons;
 int MidCodeList::label_index = 1;
+vector<string> MidCodeList::paras;
+string MidCodeList::ret_value;
 
 
 string MidCode::to_str() const {
@@ -41,9 +43,6 @@ string MidCode::to_str() const {
 string MidCode::to_standard_format() const {
     if (op == OP_FUNC) {
         return num1 + " " + num2 + "()";
-    }
-    if (op == OP_PARA) {
-        return "para " + num1 + " " + num2;
     }
     return INVALID;
 }
@@ -109,9 +108,9 @@ void MidCodeList::remove_redundant_assign() {
         if (c2.op == OP_ASSIGN && c2.num1[0] != '#' && c1.result == c2.num2 &&
                 (c1.op == OP_ADD || c1.op == OP_SUB || c1.op == OP_MUL || c1.op == OP_DIV)) {
                     // #T1 = x + y; a = #T1
-                    cout << "before: " << c1.to_str() << "  " << c2.to_str() << endl;
+//                    cout << "before: " << c1.to_str() << "  " << c2.to_str() << endl;
                     new_codes.emplace_back(c1.op, c1.num1, c1.num2, c2.num1);
-                    cout << "after:  " << new_codes.back().to_str() << endl;
+//                    cout << "after:  " << new_codes.back().to_str() << endl;
                     i++;
         }
         else if (i == codes.size() - 2){

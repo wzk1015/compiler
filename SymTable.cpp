@@ -11,19 +11,23 @@ map<string, vector<SymTableItem>> SymTable::local;
 unsigned int SymTable::max_name_length = 5;
 SymTableItem SymTable::invalid  = SymTableItem(false);
 
+void symtable_check() {
+}
+
 void SymTable::add(const string &func, const string &name, STIType stiType, DataType dataType, int addr) {
     if (try_search(func, name, false).valid) {
         Errors::add("redefined identifier '" + name + "'", ERR_REDEFINED);
         return;
     }
     SymTableItem a(lower(name), stiType, dataType, addr);
-    a.size = dataType == integer ? 4 : 1;
+    a.size = size_of(dataType);
     if (func == GLOBAL) {
         global.push_back(a);
     } else {
         local[func].push_back(a);
     }
     max_name_length = max_name_length > name.length() ? max_name_length : name.length();
+    symtable_check();
 }
 
 void SymTable::add(const string &func, const Token &tk, STIType stiType, DataType dataType, int addr) {
@@ -55,6 +59,7 @@ SymTable::add(const string &func, const Token &tk, STIType stiType, DataType dat
         local[func].push_back(a);
     }
     max_name_length = max_name_length > tk.str.length() ? max_name_length : tk.str.length();
+    symtable_check();
 }
 
 void SymTable::add_const(const string &func, const Token &tk, DataType dataType, string const_value) {
@@ -70,6 +75,7 @@ void SymTable::add_const(const string &func, const Token &tk, DataType dataType,
         local[func].push_back(a);
     }
     max_name_length = max_name_length > tk.str.length() ? max_name_length : tk.str.length();
+    symtable_check();
 }
 
 int SymTable::add_func(const Token &tk, DataType dataType, vector<DataType> types) {
@@ -85,6 +91,7 @@ int SymTable::add_func(const Token &tk, DataType dataType, vector<DataType> type
     a.types = std::move(types);
     global.push_back(a);
     max_name_length = max_name_length > tk.str.length() ? max_name_length : tk.str.length();
+    symtable_check();
     return int(global.size() - 1);
 }
 
@@ -107,6 +114,7 @@ SymTableItem SymTable::search(const string &func, const Token &tk) {
     }
 //        Errors::add("undefined identifier '" + tk.str + "'", tk.line, tk.column, E_UNDEFINED_IDENTF);
     Errors::add("undefined identifier '" + tk.str + "'", tk.line, tk.column, ERR_UNDEFINED);
+    symtable_check();
     return SymTableItem(false);
 }
 
@@ -128,6 +136,7 @@ SymTableItem SymTable::search(const string &func, const string &str) {
         }
     }
     Errors::add("undefined identifier '" + str + "'", ERR_UNDEFINED);
+    symtable_check();
     return SymTableItem(false);
 }
 
@@ -148,6 +157,7 @@ SymTableItem &SymTable::ref_search(const string &func, const string &str) {
         }
     }
     //Errors::add("undefined identifier '" + str + "'", ERR_UNDEFINED);
+    symtable_check();
     return invalid;
 }
 
@@ -170,6 +180,7 @@ SymTableItem SymTable::try_search(const string &func, const string &str, bool in
             }
         }
     }
+    symtable_check();
     return SymTableItem(false);
 }
 
@@ -180,6 +191,7 @@ bool SymTable::search_func(const string &func_name) {
         }
     }
     Errors::add("undefined function '" + func_name + "'", ERR_UNDEFINED);
+    symtable_check();
     return false;
 }
 
@@ -209,7 +221,20 @@ void SymTable::show() {
 }
 
 bool SymTable::in_global(const string &func, const string &str) {
+    symtable_check();
     return !try_search(func, str, false).valid;
+}
+
+int SymTable::func_size(const string &func) {
+    vector<SymTableItem> vec = func == GLOBAL ? global : local[func];
+    if (!vec.empty()) {
+        for (auto it = vec.end() - 1; it >= vec.begin(); it--) {
+            if (it->stiType != constant) {
+                return it->addr + it->size;
+            }
+        }
+    }
+    return 0;
 }
 
 string SymTableItem::to_str() const {

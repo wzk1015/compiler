@@ -31,7 +31,7 @@ bool num_or_char(string symbol) {
 
 void panic(const string &msg) {
     cerr << msg << endl;
-    exit(1);
+    //exit(1);
 }
 
 void assertion(bool flag) {
@@ -52,4 +52,12 @@ string str_replace(string str, const string &from, const string &to) {
         }
     }
     return s;
+}
+
+int sum(const vector<int>& arr) {
+    int v = 0;
+    for (int i : arr) {
+        v += i;
+    }
+    return v;
 }
