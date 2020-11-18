@@ -47,11 +47,13 @@ SymTable::add(const string &func, const Token &tk, STIType stiType, DataType dat
         a.dim = 1;
         a.dim1_size = dim1;
         a.size = size_of(dataType) * dim1;
+        a.arr_value = vector<string>(dim1);
     } else {
         a.dim = 2;
         a.dim1_size = dim1;
         a.dim2_size = dim2;
         a.size = size_of(dataType) * dim1 * dim2;
+        a.arr_value = vector<string>(dim1 * dim2);
     }
     if (func == GLOBAL) {
         global.push_back(a);

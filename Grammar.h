@@ -44,9 +44,6 @@ public:
 
     string add_midcode(const string &op, const string &n1, const string &n2, const string &r) const;
 
-    string add_midcode(const string &op, const string &n1, const string &n2, const string &n3,
-        const string &r) const;
-
     string const_replace(string symbol) const;
 
     void output(const string &name);

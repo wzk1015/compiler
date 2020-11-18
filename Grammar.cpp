@@ -1393,14 +1393,6 @@ string Grammar::add_midcode(const string &op, const string &n1, const string &n2
     return MidCodeList::add(op, num1, num2, result);
 }
 
-string Grammar::add_midcode(const string &op, const string &n1, const string &n2, const string &n3,
-                            const string &r) const {
-    string num1 = const_replace(n1);
-    string num2 = const_replace(n2);
-    string num3 = const_replace(n3);
-    return MidCodeList::add(op, num1, num2, num3, r);
-}
-
 string Grammar::const_replace(string symbol) const {
     if (symbol == VACANT) {
         return symbol;

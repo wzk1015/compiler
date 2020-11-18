@@ -62,15 +62,10 @@ public:
     string op;
     string num1;
     string num2;
-    string num3 = VACANT; //二维数组的第二维
     string result;
 
     MidCode(string op, string n1, string n2, string r) :
             op(std::move(op)), num1(std::move(n1)), num2(std::move(n2)), result(std::move(r)) {};
-
-    MidCode(string op, string n1, string n2, string n3, string r) :
-            op(std::move(op)), num1(std::move(n1)), num2(std::move(n2)), num3(std::move(n3)),
-            result(std::move(r)) {};
 
     MidCode() = default;
 
@@ -101,19 +96,6 @@ public:
         return result;
     }
 
-    static string add(const string &op, const string &n1, const string &n2, const string &n3, const string &r) {
-        string result = r;
-        if (result == AUTO) {
-            result = "#T" + to_string(code_index);
-            code_index++;
-        }
-        else if (result == AUTO_LABEL) {
-            result = assign_label();
-        }
-        codes.emplace_back(op, n1, n2, n3, result);
-        return result;
-    }
-
     static string assign_label() {
         label_index++;
         return "label_" + to_string(label_index-1);
@@ -122,6 +104,8 @@ public:
     static void refactor();
 
     static void remove_redundant_assign();
+
+    static void const_broadcast();
 
     static void interpret();
 

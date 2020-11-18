@@ -17,16 +17,10 @@ string MidCode::to_str() const {
         return num1 + " = " + num2;
     }
     if (op == OP_ARR_LOAD) {
-        if (num3 == VACANT) {
-            return result + " = " + num1 + "[" + num2 + "]";
-        }
-        return result + " = " + num1 + "[" + num2 + "][" + num3 + "]";
+        return result + " = " + num1 + "[" + num2 + "]";
     }
     if (op == OP_ARR_SAVE) {
-        if (num3 == VACANT) {
-            return num1 + "[" + num2 + "] = " + result;
-        }
-        return num1 + "[" + num2 + "][" + num3 + "] = " + result;
+        return num1 + "[" + num2 + "] = " + result;
     }
     if (op == OP_JUMP_IF) {
         return op + " " + num1 + num2 + " " + result;
@@ -65,9 +59,6 @@ void MidCodeList::refactor() {
             code.num2 = to_string(n2[1]); //char
             n2 = code.num2;
         }
-        if (code.num3[0] == '\'') {
-            code.num3 = to_string(code.num3[1]); //char
-        }
         if (r[0] == '\'') {
             code.result = to_string(r[1]); //char
             r = code.result;
@@ -104,20 +95,81 @@ void MidCodeList::remove_redundant_assign() {
     vector<MidCode> new_codes;
     for (int i = 0; i < codes.size() - 1; i++) {
         MidCode c1 = codes[i];
-        MidCode c2 = codes[i+1];
-        if (c2.op == OP_ASSIGN && c2.num1[0] != '#' && c1.result == c2.num2 &&
-                (c1.op == OP_ADD || c1.op == OP_SUB || c1.op == OP_MUL || c1.op == OP_DIV)) {
-                    // #T1 = x + y; a = #T1
+        MidCode c2 = codes[i + 1];
+        if (c2.op == OP_ASSIGN && c2.num1[0] != '#' && c1.result[0] == '#' && c1.result == c2.num2 &&
+            (c1.op == OP_ADD || c1.op == OP_SUB || c1.op == OP_MUL || c1.op == OP_DIV)) {
+            // #T1 = x + y; a = #T1
 //                    cout << "before: " << c1.to_str() << "  " << c2.to_str() << endl;
-                    new_codes.emplace_back(c1.op, c1.num1, c1.num2, c2.num1);
+            new_codes.emplace_back(c1.op, c1.num1, c1.num2, c2.num1);
 //                    cout << "after:  " << new_codes.back().to_str() << endl;
-                    i++;
-        }
-        else if (i == codes.size() - 2){
+            i++;
+        } else if (i == codes.size() - 2) {
             new_codes.push_back(c1);
             new_codes.push_back(c2);
         } else {
             new_codes.push_back(c1);
+        }
+    }
+    codes = new_codes;
+}
+
+void MidCodeList::const_broadcast() {
+    string cur_func = GLOBAL;
+    vector<MidCode> new_codes;
+    for (int i = 0; i < codes.size() - 1; i++) {
+        MidCode c = codes[i];
+        SymTableItem *it1, *it2, *itr;
+        if (!begins_num(c.num1)) {
+            it1 = &SymTable::ref_search(cur_func, c.num1);
+        }
+        if (!begins_num(c.num2)) {
+            it2 = &SymTable::ref_search(cur_func, c.num2);
+        }
+        if (!begins_num(c.result) && c.result != VACANT) {
+            itr = &SymTable::ref_search(cur_func, c.result);
+        }
+        bool num1_can_cal = begins_num(c.num1) || !it1->const_value.empty();
+        bool num2_can_cal = begins_num(c.num2) || !it2->const_value.empty();
+        bool op_arithmetic = (c.op == OP_ADD || c.op == OP_SUB || c.op == OP_MUL || c.op == OP_DIV);
+
+        if (c.op == OP_ASSIGN && num2_can_cal && it1->stiType == tmp) {
+            it1->const_value = begins_num(c.num2) ? c.num2 : it2->const_value;
+        } else if (op_arithmetic && num1_can_cal && num2_can_cal) {
+            int v1 = stoi(begins_num(c.num1) ? c.num1 : it1->const_value);
+            int v2 = stoi(begins_num(c.num2) ? c.num2 : it2->const_value);
+            int r = c.op == OP_ADD ? v1 + v2 : c.op == OP_SUB ? v1 - v2 :
+                                               c.op == OP_MUL ? v1 * v2 : c.op == OP_DIV ? v1 / v2 : 23333;
+            if (itr->stiType == tmp) {
+                itr->const_value = to_string(r);
+            } else {
+                 new_codes.emplace_back(OP_ASSIGN, c.result, to_string(r), VACANT);
+            }
+
+        } else if (num1_can_cal && num2_can_cal) {
+            int v1 = stoi(begins_num(c.num1) ? c.num1 : it1->const_value);
+            int v2 = stoi(begins_num(c.num2) ? c.num2 : it2->const_value);
+            new_codes.emplace_back(c.op, to_string(v1), to_string(v2), c.result);
+
+        } else if (num1_can_cal) {
+            int v1 = stoi(begins_num(c.num1) ? c.num1 : it1->const_value);
+            if (c.op == OP_SUB || c.op == OP_DIV) {
+                // y=5-x  y=5/x
+                new_codes.emplace_back(OP_ASSIGN, c.num1, to_string(v1), c.result);
+                new_codes.push_back(c);
+            } else if (c.op == OP_ADD || c.op == OP_MUL) {
+                new_codes.emplace_back(c.op, c.num2, to_string(v1), c.result);
+            } else {
+                new_codes.emplace_back(c.op, to_string(v1), c.num2, c.result);
+            }
+
+        } else if (num2_can_cal) {
+            int v2 = stoi(begins_num(c.num2) ? c.num2 : it2->const_value);
+            new_codes.emplace_back(c.op, c.num1, to_string(v2), c.result);
+        } else if (c.op == OP_FUNC) {
+            cur_func = c.num2;
+            new_codes.push_back(c);
+        } else {
+            new_codes.push_back(c);
         }
     }
     codes = new_codes;
@@ -186,7 +238,7 @@ void MidCodeList::interpret() {
                 } else {
                     MidCodeList::strcons.push_back(c.num1);
                 }
-                new_codes.emplace_back(OP_PRINT, to_string(MidCodeList::strcons.size()-1), "strcon", VACANT);
+                new_codes.emplace_back(OP_PRINT, to_string(MidCodeList::strcons.size() - 1), "strcon", VACANT);
             } else {
                 new_codes.push_back(codes[i]);
             }

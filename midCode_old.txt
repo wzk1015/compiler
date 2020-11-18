@@ -1,38 +1,108 @@
+str0: The magic happens at 
+str1: Too young, too simple, sometimes 
+str2: Oh 
+str3: 18373444
 ===============
-d = 1
-eArray[0] = 6
-eArray[1] = 7
-eArray[2] = 8
-#T1 = 0 * 5
-#T2 = #T1 + 0
-fArray[#T2] = 0
-#T3 = 0 * 5
-#T4 = #T3 + 1
-fArray[#T4] = 1
-#T5 = 0 * 5
-#T6 = #T5 + 2
-fArray[#T6] = 2
-#T7 = 0 * 5
-#T8 = #T7 + 3
-fArray[#T8] = 3
-#T9 = 0 * 5
-#T10 = #T9 + 4
-fArray[#T10] = 4
-#T11 = 1 * 5
+FUNC void a1d
+arr[0] = 817
+arr[1] = 1109
+#T1 = arr[0]
+#T2 = arr[1]
+#T3 = #T1 + #T2
+arr[2] = #T3
+arr[4] = 9193
+arr[3] = 1284
+PRINT 0 strcon
+#T4 = arr[x]
+PRINT #T4 int
+PRINT #ENDL
+RETURN #VACANT
+END_FUNC void a1d
+FUNC void b1d
+arr[0] = 45
+arr[1] = 97
+arr[2] = 105
+arr[3] = 118
+arr[4] = 101
+#T5 = 110
+i = #T5
+arr[0] = 110
+#T6 = -5
+i = #T6 + 5
+LABEL label_1
+#T8 = i - 5
+JUMP_IF #T8>=0 label_2
+PRINT 1 strcon
+#T9 = arr[i]
+PRINT #T9 char
+PRINT #ENDL
+i = i + 1
+JUMP label_1
+LABEL label_2
+RETURN #VACANT
+END_FUNC void b1d
+FUNC void a2d
+#T11 = 0
 #T12 = #T11 + 0
-fArray[#T12] = 9
-#T13 = 1 * 5
+arr2d[#T12] = 97
+#T13 = 0
 #T14 = #T13 + 1
-fArray[#T14] = 8
-#T15 = 1 * 5
+arr2d[#T14] = 102
+#T15 = 0
 #T16 = #T15 + 2
-fArray[#T16] = 7
-#T17 = 1 * 5
-#T18 = #T17 + 3
-fArray[#T18] = 6
-#T19 = 1 * 5
-#T20 = #T19 + 4
-fArray[#T20] = 5
+arr2d[#T16] = 99
+#T17 = 3
+#T18 = #T17 + 0
+arr2d[#T18] = 49
+#T19 = 3
+#T20 = #T19 + 1
+arr2d[#T20] = 50
+#T21 = 3
+#T22 = #T21 + 2
+arr2d[#T22] = 114
+#T23 = 6
+#T24 = #T23 + 0
+arr2d[#T24] = 43
+#T25 = 6
+#T26 = #T25 + 1
+arr2d[#T26] = 45
+#T27 = 6
+#T28 = #T27 + 2
+arr2d[#T28] = 103
+#T29 = 3
+#T30 = #T29 + 1
+arr2d[#T30] = 111
+PRINT 2 strcon
+#T31 = x * 3
+#T32 = #T31 + y
+#T33 = arr2d[#T32]
+PRINT #T33 char
+PRINT #ENDL
+RETURN #VACANT
+END_FUNC void a2d
 FUNC void main
+PRINT 3 strcon
+PRINT #ENDL
+SCANF a
+PREPARE_CALL a1d
+PUSH_PARA a
+CALL a1d
+PREPARE_CALL a1d
+#T34 = a - 2
+PUSH_PARA #T34
+CALL a1d
+PREPARE_CALL b1d
+CALL b1d
+SCANF b
+PREPARE_CALL a2d
+#T35 = a - 2
+PUSH_PARA #T35
+#T36 = b - 1
+PUSH_PARA #T36
+CALL a2d
+PREPARE_CALL a2d
+PUSH_PARA 1
+PUSH_PARA 1
+CALL a2d
 RETURN #VACANT
 END_FUNC void main

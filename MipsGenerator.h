@@ -61,8 +61,7 @@ public:
     vector<int> sp_size = {0};
     int call_func_sp_offset = 0;
 
-    explicit MipsGenerator(vector<MidCode> codes, vector<string> strcons) :
-            mid(std::move(codes)), strcons(std::move(strcons)) {};
+    MipsGenerator(): mid(MidCodeList::codes), strcons(MidCodeList::strcons) {};
 
     void generate(const string &code);
 
@@ -98,6 +97,8 @@ public:
     string assign_t_reg(const string &);
 
     string assign_s_reg(const string &);
+
+    bool assign_reg(const string& symbol);
 
     bool in_reg(const string& symbol);
 

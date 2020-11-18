@@ -47,8 +47,9 @@ public:
     int size{};
     int dim1_size{};
     int dim2_size{};
-    string const_value{};
+    string const_value;
     bool modified = false;
+    vector<string> arr_value;
 
     SymTableItem(string name, STIType stiType1, DataType dataType1, int addr) :
             name(std::move(name)), stiType(stiType1), dataType(dataType1), addr(addr) {};
