@@ -16,7 +16,7 @@
 //(dt == integer ? 4 : 1)
 #define type_to_str(dt) (dt == integer? "int" : "char")
 
-#define LOCAL_ADDR_INIT 4
+#define LOCAL_ADDR_INIT 100
 
 using namespace std;
 

@@ -12,6 +12,17 @@
 #include "Error.h"
 #include "SymTable.h"
 
+#define STACK_RA "0($sp)"
+#define STACK_V0 "4($sp)" //unused
+#define STACK_A0 "8($sp)"
+#define STACK_A1 "12($sp)"
+#define STACK_A2 "16($sp)"
+#define STACK_A3 "20($sp)"
+#define STACK_S_BEGIN 24
+#define STACK_T_BEGIN 56
+#define STACK_RESERVED "96($sp)"
+
+
 class MipsGenerator {
 public:
     vector<MidCode> mid;
@@ -60,6 +71,7 @@ public:
     vector<vector<SymTableItem>> call_func_paras;
     vector<int> sp_size = {0};
     int call_func_sp_offset = 0;
+    vector<int> saved_s;
 
     MipsGenerator(): mid(MidCodeList::codes), strcons(MidCodeList::strcons) {};
 
@@ -116,23 +128,6 @@ public:
 bool in_reg(string);
 
 bool in_memory(string);
-
-//const string op[] = {
-//    ".data", ".text",
-//    ".space", ".asciiz",
-//    ":",
-//    "syscall",
-//    "addu", "subu", "addiu", "subiu",
-//    "mult", "mul", "div",
-//    "sll", "srl",
-//    "move", "lui",
-//    "li", "la",
-//    "lw", "sw",
-//    "mfhi", "mflo",
-//    "j", "jr", "jal",
-//    "beq", "bne", "blt", "ble", "bgt", "bge"
-//};
-
 
 
 

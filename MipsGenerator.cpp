@@ -8,7 +8,9 @@
 
 #include <utility>
 
-//TODO：函数调用时保护S寄存器、T寄存器
+//TODO：s寄存器保存数组元素；$a0-a3传参；函数inline
+
+int f_count = 0;
 
 void MipsGenerator::generate(const string &code) {
     mips.push_back(code);
@@ -70,14 +72,14 @@ void MipsGenerator::translate() {
 
     bool init = true;
 
+    vector<string> s_old;
+
     for (auto &code:mid) {
         generate("# === " + code.to_str() + " ===");
         string op = code.op, num1 = code.num1, num2 = code.num2, result = code.result;
         if (op == OP_FUNC) {
             //进入新函数
-            for (int i = 0; i < 8; i++) {
-                s_reg_table[i] = VACANT;    //TODO
-            }
+
             if (init) {
                 //此前为全局变量初始化
                 generate("addi $sp, $sp, -" + to_string(LOCAL_ADDR_INIT + SymTable::func_size("main")));
@@ -86,17 +88,40 @@ void MipsGenerator::translate() {
                 generate("syscall");
                 init = false;
             }
+
             cur_func = num2;
-            generate(num2 + ":");
             call_func_sp_offset = 0;
-            generate("sw $ra, 0($sp)"); //函数开始，保存现场
+            generate(num2 + ":");
+            //被调用者保护s
+            if (cur_func != "main") {
+                for (int i = 0; i < 8; i++) {
+//                    if (s_reg_table[i] != VACANT) {
+//                    prev_func_s.push_back(i);
+                    saved_s.push_back(i);
+                    generate("sw", "$s" + to_string(i),
+                             to_string(STACK_S_BEGIN + 4 * i) + "($sp)");
+//                    }
+                }
+            }
+            for (int i = 0; i < 8; i++) {
+                s_reg_table[i] = VACANT;
+            }
+
+            //被调用者保护ra
+            generate("sw","$ra", STACK_RA);
         }
 
         else if (op == OP_RETURN) {
-            generate("lw $ra, 0($sp)");
+            //恢复s
             if (num1 != VACANT) {
                 load_value(num1, "$v0");
             }
+            for (int i = 0; i < 8; i++) {
+                generate("lw", "$s" + to_string(i),
+                            to_string(STACK_S_BEGIN + 4 * i) + "($sp)");
+            }
+            //恢复ra
+            generate("lw","$ra", STACK_RA);
             generate("jr $ra");
         }
 
@@ -132,18 +157,38 @@ void MipsGenerator::translate() {
         }
 
         else if (op == OP_CALL) {
+            f_count++;
+            //调用者保护t
+            vector<int> saved_t;
+            vector<string> t_old = t_reg_table;
+            for (int i = 0; i < 10 ; i++) {
+                if (t_reg_table[i] != VACANT) {
+                    saved_t.push_back(i);
+                    generate("sw", "$t" + to_string(i),
+                            to_string(STACK_T_BEGIN + 4 * i) + "($sp)");
+                    t_reg_table[i] = VACANT;
+                }
+            }
             assertion(call_func_paras.back().empty() || call_func_paras.back().begin()->stiType != para);
             generate("jal", num1);
+            //调用者恢复t
+            for (int i: saved_t) {
+                generate("lw", "$t" + to_string(i),
+                            to_string(STACK_T_BEGIN + 4 * i) + "($sp)");
+            }
+            t_reg_table = t_old;
             if (sp_size.back() != 0) {
                 generate("addi $sp, $sp, " + to_string(sp_size.back()));
                 sp_size.pop_back();
             }
+
             call_func_sp_offset = sum(sp_size);
             call_func_paras.pop_back();
         }
 
         else if (op == OP_END_FUNC) {
 //            show_reg_status();
+            saved_s.clear();
         }
 
         else if (op == OP_LABEL) {
@@ -240,44 +285,44 @@ void MipsGenerator::translate() {
             string instr = op_to_instr.find(op)->second;
             string reg1 = "$k0";
             string reg2 = "$k1";
-            bool a_in_mem = in_memory(result);
-            bool b_in_mem = in_memory(num1);
-            bool c_in_mem = in_memory(num2);
+            bool a_in_reg = in_reg(result) || assign_reg(result);
+            bool b_in_reg_or_const = is_const(num1) || in_reg(num1) || assign_reg(num1);
+            bool c_in_reg_or_const = is_const(num2) || in_reg(num2) || assign_reg(num2);
 
             string a = symbol_to_addr(result);
             string b = symbol_to_addr(num1);
             string c = symbol_to_addr(num2);
 
-            if (!a_in_mem) {
-                if (b_in_mem && c_in_mem) {
-                    generate("lw", reg1, b);
-                    generate("lw", reg2, c);
-                    generate(instr, a, reg1, reg2);
-                } else if (c_in_mem) {
+            if (a_in_reg) {
+                if (b_in_reg_or_const && c_in_reg_or_const) {
+                    generate(instr, a, b, c);
+                } else if (b_in_reg_or_const) {
                     generate("lw", reg2, c);
                     generate(instr, a, b, reg2);
-                } else if (b_in_mem) {
+                } else if (c_in_reg_or_const) {
                     generate("lw", reg1, b);
                     generate(instr, a, reg1, c);
                 } else {
-                    generate(instr, a, b, c);
-                }
-            } else {
-                if (b_in_mem && c_in_mem) {
                     generate("lw", reg1, b);
                     generate("lw", reg2, c);
-                    generate(instr, reg1, reg1, reg2);
+                    generate(instr, a, reg1, reg2);
+                }
+            } else {
+                if (b_in_reg_or_const && c_in_reg_or_const) {
+                    generate(instr, reg1, b, c);
                     generate("sw", reg1, a);
-                } else if (c_in_mem) {
-                    generate("lw", reg2, c);
+                } else if (b_in_reg_or_const) {
+                     generate("lw", reg2, c);
                     generate(instr, reg2, b, reg2);
                     generate("sw", reg2, a);
-                } else if (b_in_mem) {
+                } else if (c_in_reg_or_const) {
                     generate("lw", reg1, b);
                     generate(instr, reg1, reg1, c);
                     generate("sw", reg1, a);
                 } else {
-                    generate(instr, reg1, b, c);
+                    generate("lw", reg1, b);
+                    generate("lw", reg2, c);
+                    generate(instr, reg1, reg1, reg2);
                     generate("sw", reg1, a);
                 }
             }
@@ -418,23 +463,31 @@ void MipsGenerator::save_value(const string &reg, const string &symbol) {
 }
 
 bool MipsGenerator::assign_reg(const string &symbol) {
-//    if (!SymTable::in_global(cur_func, symbol)) {
-//        SymTableItem item = SymTable::search(cur_func, symbol);
-////        if (item.stiType == var || item.stiType == para) {
-////            //TODO:参数para;数组元素
-////            string sreg = assign_s_reg(symbol);
-////            if (sreg != INVALID) {
-////                return true;
-////            }
-////        } else
-//
-//            if (item.stiType == tmp) {
-//            string treg = assign_t_reg(symbol);
-//            if (treg != INVALID) {
-//                return true;
-//            }
-//        }
-//    }
+    if (!SymTable::in_global(cur_func, symbol)) {
+        SymTableItem item = SymTable::search(cur_func, symbol);
+        //TODO:数组元素
+        if (item.stiType == var) {
+            string sreg = assign_s_reg(symbol);
+            if (sreg != INVALID) {
+                return true;
+            }
+        }
+
+        else if (item.stiType == para) {
+            string sreg = assign_s_reg(symbol);
+            if (sreg != INVALID) {
+                generate("lw", sreg, to_string(item.addr + call_func_sp_offset) + "($sp)");
+                return true;
+            }
+        }
+
+        else if (item.stiType == tmp) {
+            string treg = assign_t_reg(symbol);
+            if (treg != INVALID) {
+                return true;
+            }
+        }
+    }
     return false;
 }
 
@@ -513,12 +566,30 @@ string MipsGenerator::assign_t_reg(const string &name) {
 }
 
 string MipsGenerator::assign_s_reg(const string &name) {
+//    if (f_count >= 2 || cur_func == "main") {
+//        return INVALID;
+//    }
+
+
     for (int i = 0; i < 8; i++) {
         if (s_reg_table[i] == VACANT) {
             s_reg_table[i] = name;
             return "$s" + to_string(i);
         }
     }
+
+// wrong：编译顺序≠调用顺序
+//    if (!prev_func_s.empty()) {
+//        int i = *prev_func_s.begin();
+//        generate("# Realloc prev_s" + to_string(i));
+//        generate("sw", "$s" + to_string(i),
+//                            to_string(STACK_S_BEGIN + 4 * i) + "($sp)");
+//        prev_func_s.erase(prev_func_s.begin());
+//        saved_s.push_back(i);
+//        s_reg_table[i] = name;
+//        return "$s" + to_string(i);
+//    }
+
     return INVALID;
 }
 

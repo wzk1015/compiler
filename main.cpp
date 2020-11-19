@@ -31,5 +31,6 @@ int main() {
 
     SymTable::show();
 
+    grammar.show_tree();
     return 0;
 }

@@ -1,85 +1,12 @@
-str0: The magic happens at 
-str1: Too young, too simple, sometimes 
-str2: Oh 
-str3: 18373444
 ===============
-FUNC void a1d
-arr[0] = 817
-arr[1] = 1109
-#T1 = arr[0]
-#T2 = arr[1]
-#T3 = #T1 + #T2
-arr[2] = #T3
-arr[4] = 9193
-arr[3] = 1284
-PRINT 0 strcon
-#T4 = arr[x]
-PRINT #T4 int
-PRINT #ENDL
+FUNC void Fib
+x = 3
+b = 8
 RETURN #VACANT
-END_FUNC void a1d
-FUNC void b1d
-arr[0] = 45
-arr[1] = 97
-arr[2] = 105
-arr[3] = 118
-arr[4] = 101
-i = 110
-arr[0] = 110
-i = 0
-LABEL label_1
-#T8 = i - 5
-JUMP_IF #T8>=0 label_2
-PRINT 1 strcon
-#T9 = arr[i]
-PRINT #T9 char
-PRINT #ENDL
-i = i + 1
-JUMP label_1
-LABEL label_2
-RETURN #VACANT
-END_FUNC void b1d
-FUNC void a2d
-arr2d[0] = 97
-arr2d[1] = 102
-arr2d[2] = 99
-arr2d[3] = 49
-arr2d[4] = 50
-arr2d[5] = 114
-arr2d[6] = 43
-arr2d[7] = 45
-arr2d[8] = 103
-arr2d[4] = 111
-PRINT 2 strcon
-#T31 = x * 3
-#T32 = #T31 + y
-#T33 = arr2d[#T32]
-PRINT #T33 char
-PRINT #ENDL
-RETURN #VACANT
-END_FUNC void a2d
+END_FUNC void Fib
 FUNC void main
-PRINT 3 strcon
-PRINT #ENDL
-SCANF a
-PREPARE_CALL a1d
-PUSH_PARA a
-CALL a1d
-PREPARE_CALL a1d
-#T34 = a - 2
-PUSH_PARA #T34
-CALL a1d
-PREPARE_CALL b1d
-CALL b1d
-SCANF b
-PREPARE_CALL a2d
-#T35 = a - 2
-PUSH_PARA #T35
-#T36 = b - 1
-PUSH_PARA #T36
-CALL a2d
-PREPARE_CALL a2d
-PUSH_PARA 1
-PUSH_PARA 1
-CALL a2d
+a = 5
+b = 6
+x = 7
+a = b
 RETURN #VACANT

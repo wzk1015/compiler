@@ -9,6 +9,16 @@
 #include "SymTable.h"
 #include "MidCode.h"
 
+class TreeNode {
+public:
+    string str;
+    string type;
+    int parent;
+    vector<int> child;
+
+    TreeNode(string name, string type, int parent): str(std::move(name)), type(std::move(type)), parent(parent) {}
+};
+
 class Grammar {
 public:
     Lexer lexer;
@@ -29,6 +39,9 @@ public:
     DataType funcdef_ret = invalid;
     bool has_returned = false;
     string cur_func = GLOBAL;
+
+    vector<TreeNode> nodes;
+    unsigned int cur_node = 0;
 
     void error(const string &expected);
 
@@ -121,6 +134,16 @@ public:
     string
     add_2d_array(const string &op, const string &n1, const string &n2, const string &n3, const string &r,
                  int dim2_size);
+
+    void add_node(const string& name);
+
+    void add_leaf();
+
+    void tree_backward();
+
+    void dfs_show(const TreeNode&, int);
+
+    void show_tree();
 };
 
 

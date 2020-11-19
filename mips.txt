@@ -1,363 +1,57 @@
 .data
-str__0: .asciiz "The magic happens at "
-str__1: .asciiz "Too young, too simple, sometimes "
-str__2: .asciiz "Oh "
-str__3: .asciiz "18373444"
 newline__: .asciiz "\n"
 .text
-# === FUNC void a1d ===
-addi $sp, $sp, -28
+# === FUNC void Fib ===
+addi $sp, $sp, -208
 jal main
 li $v0, 10
 syscall
-a1d:
+Fib:
+sw $s0, 24($sp)
+sw $s1, 28($sp)
+sw $s2, 32($sp)
+sw $s3, 36($sp)
+sw $s4, 40($sp)
+sw $s5, 44($sp)
+sw $s6, 48($sp)
+sw $s7, 52($sp)
 sw $ra, 0($sp)
-# === arr[0] = 817 ===
-move $k0, $zero
-sll $k0, $k0, 2
-addu $k0, $k0, 8
-addu $k0, $k0, $sp
-li $k1, 817
-sw $k1, 0($k0)
-# === arr[1] = 1109 ===
-li $k0, 1
-sll $k0, $k0, 2
-addu $k0, $k0, 8
-addu $k0, $k0, $sp
-li $k1, 1109
-sw $k1, 0($k0)
-# === #T1 = arr[0] ===
-move $k0, $zero
-sll $k0, $k0, 2
-addu $k0, $k0, 8
-addu $k0, $k0, $sp
-lw $k1, 0($k0)
-sw $k1, 28($sp)
-# === #T2 = arr[1] ===
-li $k0, 1
-sll $k0, $k0, 2
-addu $k0, $k0, 8
-addu $k0, $k0, $sp
-lw $k1, 0($k0)
-sw $k1, 32($sp)
-# === #T3 = #T1 + #T2 ===
-lw $k0, 28($sp)
-lw $k1, 32($sp)
-addu $k0, $k0, $k1
-sw $k0, 36($sp)
-# === arr[2] = #T3 ===
-li $k0, 2
-sll $k0, $k0, 2
-addu $k0, $k0, 8
-addu $k0, $k0, $sp
-lw $k1, 36($sp)
-sw $k1, 0($k0)
-# === arr[4] = 9193 ===
-li $k0, 4
-sll $k0, $k0, 2
-addu $k0, $k0, 8
-addu $k0, $k0, $sp
-li $k1, 9193
-sw $k1, 0($k0)
-# === arr[3] = 1284 ===
-li $k0, 3
-sll $k0, $k0, 2
-addu $k0, $k0, 8
-addu $k0, $k0, $sp
-li $k1, 1284
-sw $k1, 0($k0)
-# === PRINT 0 strcon ===
-la $a0, str__0
-li $v0, 4
-syscall
-# === #T4 = arr[x] ===
-lw $k0, 4($sp)
-sll $k0, $k0, 2
-addu $k0, $k0, 8
-addu $k0, $k0, $sp
-lw $k1, 0($k0)
-sw $k1, 40($sp)
-# === PRINT #T4 int ===
-lw $a0, 40($sp)
-li $v0, 1
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
+# === x = 3 ===
+lw $s0, 100($sp)
+li $s0, 3
+# === b = 8 ===
+li $s1, 8
 # === RETURN #VACANT ===
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+lw $s2, 32($sp)
+lw $s3, 36($sp)
+lw $s4, 40($sp)
+lw $s5, 44($sp)
+lw $s6, 48($sp)
+lw $s7, 52($sp)
 lw $ra, 0($sp)
 jr $ra
-# === END_FUNC void a1d ===
-# === FUNC void b1d ===
-b1d:
-sw $ra, 0($sp)
-# === arr[0] = 45 ===
-move $k0, $zero
-sll $k0, $k0, 2
-addu $k0, $k0, 8
-addu $k0, $k0, $sp
-li $k1, 45
-sw $k1, 0($k0)
-# === arr[1] = 97 ===
-li $k0, 1
-sll $k0, $k0, 2
-addu $k0, $k0, 8
-addu $k0, $k0, $sp
-li $k1, 97
-sw $k1, 0($k0)
-# === arr[2] = 105 ===
-li $k0, 2
-sll $k0, $k0, 2
-addu $k0, $k0, 8
-addu $k0, $k0, $sp
-li $k1, 105
-sw $k1, 0($k0)
-# === arr[3] = 118 ===
-li $k0, 3
-sll $k0, $k0, 2
-addu $k0, $k0, 8
-addu $k0, $k0, $sp
-li $k1, 118
-sw $k1, 0($k0)
-# === arr[4] = 101 ===
-li $k0, 4
-sll $k0, $k0, 2
-addu $k0, $k0, 8
-addu $k0, $k0, $sp
-li $k1, 101
-sw $k1, 0($k0)
-# === i = 110 ===
-li $k0, 110
-sw $k0, 4($sp)
-# === arr[0] = 110 ===
-move $k0, $zero
-sll $k0, $k0, 2
-addu $k0, $k0, 8
-addu $k0, $k0, $sp
-li $k1, 110
-sw $k1, 0($k0)
-# === i = 0 ===
-sw $zero, 4($sp)
-# === LABEL label_1 ===
-label_1:
-# === #T8 = i - 5 ===
-lw $k0, 4($sp)
-subu $k0, $k0, 5
-sw $k0, 40($sp)
-# === JUMP_IF #T8>=0 label_2 ===
-lw $k0, 40($sp)
-bgez $k0, label_2
-# === PRINT 1 strcon ===
-la $a0, str__1
-li $v0, 4
-syscall
-# === #T9 = arr[i] ===
-lw $k0, 4($sp)
-sll $k0, $k0, 2
-addu $k0, $k0, 8
-addu $k0, $k0, $sp
-lw $k1, 0($k0)
-sw $k1, 44($sp)
-# === PRINT #T9 char ===
-lw $a0, 44($sp)
-li $v0, 11
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
-# === i = i + 1 ===
-lw $k0, 4($sp)
-addu $k0, $k0, 1
-sw $k0, 4($sp)
-# === JUMP label_1 ===
-j label_1
-# === LABEL label_2 ===
-label_2:
-# === RETURN #VACANT ===
-lw $ra, 0($sp)
-jr $ra
-# === END_FUNC void b1d ===
-# === FUNC void a2d ===
-a2d:
-sw $ra, 0($sp)
-# === arr2d[0] = 97 ===
-move $k0, $zero
-sll $k0, $k0, 2
-addu $k0, $k0, 84
-addu $k0, $k0, $sp
-li $k1, 97
-sw $k1, 0($k0)
-# === arr2d[1] = 102 ===
-li $k0, 1
-sll $k0, $k0, 2
-addu $k0, $k0, 84
-addu $k0, $k0, $sp
-li $k1, 102
-sw $k1, 0($k0)
-# === arr2d[2] = 99 ===
-li $k0, 2
-sll $k0, $k0, 2
-addu $k0, $k0, 84
-addu $k0, $k0, $sp
-li $k1, 99
-sw $k1, 0($k0)
-# === arr2d[3] = 49 ===
-li $k0, 3
-sll $k0, $k0, 2
-addu $k0, $k0, 84
-addu $k0, $k0, $sp
-li $k1, 49
-sw $k1, 0($k0)
-# === arr2d[4] = 50 ===
-li $k0, 4
-sll $k0, $k0, 2
-addu $k0, $k0, 84
-addu $k0, $k0, $sp
-li $k1, 50
-sw $k1, 0($k0)
-# === arr2d[5] = 114 ===
-li $k0, 5
-sll $k0, $k0, 2
-addu $k0, $k0, 84
-addu $k0, $k0, $sp
-li $k1, 114
-sw $k1, 0($k0)
-# === arr2d[6] = 43 ===
-li $k0, 6
-sll $k0, $k0, 2
-addu $k0, $k0, 84
-addu $k0, $k0, $sp
-li $k1, 43
-sw $k1, 0($k0)
-# === arr2d[7] = 45 ===
-li $k0, 7
-sll $k0, $k0, 2
-addu $k0, $k0, 84
-addu $k0, $k0, $sp
-li $k1, 45
-sw $k1, 0($k0)
-# === arr2d[8] = 103 ===
-li $k0, 8
-sll $k0, $k0, 2
-addu $k0, $k0, 84
-addu $k0, $k0, $sp
-li $k1, 103
-sw $k1, 0($k0)
-# === arr2d[4] = 111 ===
-li $k0, 4
-sll $k0, $k0, 2
-addu $k0, $k0, 84
-addu $k0, $k0, $sp
-li $k1, 111
-sw $k1, 0($k0)
-# === PRINT 2 strcon ===
-la $a0, str__2
-li $v0, 4
-syscall
-# === #T31 = x * 3 ===
-lw $k0, 4($sp)
-mul $k0, $k0, 3
-sw $k0, 128($sp)
-# === #T32 = #T31 + y ===
-lw $k0, 128($sp)
-lw $k1, 8($sp)
-addu $k0, $k0, $k1
-sw $k0, 132($sp)
-# === #T33 = arr2d[#T32] ===
-lw $k0, 132($sp)
-sll $k0, $k0, 2
-addu $k0, $k0, 84
-addu $k0, $k0, $sp
-lw $k1, 0($k0)
-sw $k1, 136($sp)
-# === PRINT #T33 char ===
-lw $a0, 136($sp)
-li $v0, 11
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
-# === RETURN #VACANT ===
-lw $ra, 0($sp)
-jr $ra
-# === END_FUNC void a2d ===
+# === END_FUNC void Fib ===
 # === FUNC void main ===
 main:
 sw $ra, 0($sp)
-# === PRINT 3 strcon ===
-la $a0, str__3
-li $v0, 4
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
-# === SCANF a ===
-li $v0, 5
-syscall
-sw $v0, 4($sp)
-# === PREPARE_CALL a1d ===
-addi $sp, $sp, -48
-# === PUSH_PARA a ===
-lw $k0, 52($sp)
-sw $k0, 4($sp)
-# === CALL a1d ===
-jal a1d
-addi $sp, $sp, 48
-# === PREPARE_CALL a1d ===
-addi $sp, $sp, -48
-# === #T34 = a - 2 ===
-lw $k0, 52($sp)
-subu $k0, $k0, 2
-sw $k0, 60($sp)
-# === PUSH_PARA #T34 ===
-lw $k0, 60($sp)
-sw $k0, 4($sp)
-# === CALL a1d ===
-jal a1d
-addi $sp, $sp, 48
-# === PREPARE_CALL b1d ===
-addi $sp, $sp, -56
-# === CALL b1d ===
-jal b1d
-addi $sp, $sp, 56
-# === SCANF b ===
-li $v0, 5
-syscall
-sw $v0, 8($sp)
-# === PREPARE_CALL a2d ===
-addi $sp, $sp, -144
-# === #T35 = a - 2 ===
-lw $k0, 148($sp)
-subu $k0, $k0, 2
-sw $k0, 160($sp)
-# === PUSH_PARA #T35 ===
-lw $k0, 160($sp)
-sw $k0, 4($sp)
-# === #T36 = b - 1 ===
-lw $k0, 152($sp)
-subu $k0, $k0, 1
-sw $k0, 164($sp)
-# === PUSH_PARA #T36 ===
-lw $k0, 164($sp)
-sw $k0, 8($sp)
-# === CALL a2d ===
-jal a2d
-addi $sp, $sp, 144
-# === PREPARE_CALL a2d ===
-addi $sp, $sp, -144
-# === PUSH_PARA 1 ===
-li $k0, 1
-sw $k0, 4($sp)
-# === PUSH_PARA 1 ===
-li $k0, 1
-sw $k0, 8($sp)
-# === CALL a2d ===
-jal a2d
-addi $sp, $sp, 144
+# === a = 5 ===
+li $s0, 5
+# === b = 6 ===
+li $s1, 6
+# === x = 7 ===
+li $s2, 7
+# === a = b ===
+move $s0, $s1
 # === RETURN #VACANT ===
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+lw $s2, 32($sp)
+lw $s3, 36($sp)
+lw $s4, 40($sp)
+lw $s5, 44($sp)
+lw $s6, 48($sp)
+lw $s7, 52($sp)
 lw $ra, 0($sp)
 jr $ra
