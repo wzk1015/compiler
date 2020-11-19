@@ -1,14 +1,9 @@
+void main()
+{
+    int arr3[3] = {1, 2, 3};
+    int d;
 
+    d = arr3[0];
 
-void Fib(int x) {
-    int b;
-    x = 3;
-    b = 8;
-}
-
-void main() {
-    int a=5;
-    int b = 6;
-    int x=7;
-    a = b;
+    return;
 }

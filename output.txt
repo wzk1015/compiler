@@ -1,86 +1,59 @@
 VOIDTK void
-IDENFR Fib
-LPARENT (
-INTTK int
-IDENFR x
-<参数表>
-RPARENT )
-LBRACE {
-INTTK int
-IDENFR b
-<变量定义无初始化>
-<变量定义>
-SEMICN ;
-<变量说明>
-IDENFR x
-ASSIGN =
-INTCON 3
-<无符号整数>
-<整数>
-<因子>
-<项>
-<表达式>
-<赋值语句>
-SEMICN ;
-<语句>
-IDENFR b
-ASSIGN =
-INTCON 8
-<无符号整数>
-<整数>
-<因子>
-<项>
-<表达式>
-<赋值语句>
-SEMICN ;
-<语句>
-<语句列>
-<复合语句>
-RBRACE }
-<无返回值函数定义>
-VOIDTK void
 MAINTK main
 LPARENT (
 RPARENT )
 LBRACE {
 INTTK int
-IDENFR a
+IDENFR arr3
+LBRACK [
+INTCON 3
+<无符号整数>
+RBRACK ]
 ASSIGN =
-INTCON 5
+LBRACE {
+INTCON 1
 <无符号整数>
 <整数>
 <常量>
+COMMA ,
+INTCON 2
+<无符号整数>
+<整数>
+<常量>
+COMMA ,
+INTCON 3
+<无符号整数>
+<整数>
+<常量>
+RBRACE }
 <变量定义及初始化>
 <变量定义>
 SEMICN ;
 INTTK int
-IDENFR b
-ASSIGN =
-INTCON 6
-<无符号整数>
-<整数>
-<常量>
-<变量定义及初始化>
-<变量定义>
-SEMICN ;
-INTTK int
-IDENFR x
-ASSIGN =
-INTCON 7
-<无符号整数>
-<整数>
-<常量>
-<变量定义及初始化>
+IDENFR d
+<变量定义无初始化>
 <变量定义>
 SEMICN ;
 <变量说明>
-IDENFR a
+IDENFR d
 ASSIGN =
-IDENFR b
+IDENFR arr3
+LBRACK [
+INTCON 0
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+RBRACK ]
 <因子>
 <项>
 <表达式>
 <赋值语句>
+SEMICN ;
+<语句>
+RETURNTK return
+<返回语句>
 SEMICN ;
 <语句>
 <语句列>

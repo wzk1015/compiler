@@ -14,13 +14,11 @@
 
 #define STACK_RA "0($sp)"
 #define STACK_V0 "4($sp)" //unused
-#define STACK_A0 "8($sp)"
-#define STACK_A1 "12($sp)"
-#define STACK_A2 "16($sp)"
-#define STACK_A3 "20($sp)"
+#define STACK_A_BEGIN 8
 #define STACK_S_BEGIN 24
 #define STACK_T_BEGIN 56
 #define STACK_RESERVED "96($sp)"
+
 
 
 class MipsGenerator {
@@ -60,7 +58,6 @@ public:
             "$t8", "$t9", "$k0", "$k1",
             "$gp", "$sp", "$fp", "$ra"
     };
-
     map<string, string> op_to_instr = {
             {OP_ADD, "addu"},
             {OP_SUB, "subu"},
@@ -68,10 +65,11 @@ public:
             {OP_DIV, "div"},
     };
     string cur_func = GLOBAL;
+    vector<pair<DataType, string>> cur_paras;
     vector<vector<SymTableItem>> call_func_paras;
     vector<int> sp_size = {0};
     int call_func_sp_offset = 0;
-    vector<int> saved_s;
+    int para_count = 0;
 
     MipsGenerator(): mid(MidCodeList::codes), strcons(MidCodeList::strcons) {};
 
@@ -82,6 +80,8 @@ public:
     void generate(const string &op, const string &num1, const string& num2);
 
     void generate(const string &op, const string &num1, const string& num2, const string& num3);
+
+    void translate_assign(const string &num1, const string &num2);
 
     void translate();
 

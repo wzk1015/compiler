@@ -12,6 +12,10 @@ using namespace std;
 
 string lower(string);
 
+int max(int, int);
+
+int min(int, int);
+
 bool is_2_power(int);
 
 bool begins_num(string);

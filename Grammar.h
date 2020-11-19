@@ -31,7 +31,7 @@ public:
     string sym = "";
     int local_addr = LOCAL_ADDR_INIT;
 
-    vector<DataType> tmp_para_types;
+    vector<pair<DataType, string>> tmp_paras;
     int tmp_dim1{};
     int tmp_dim2{};
     int tmp_para_count = 0;

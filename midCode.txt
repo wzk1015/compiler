@@ -1,12 +1,8 @@
 ===============
-FUNC void Fib
-x = 3
-b = 8
-RETURN #VACANT
-END_FUNC void Fib
-FUNC void main
-a = 5
-b = 6
-x = 7
-a = b
-RETURN #VACANT
+=========FUNC void main=========
+arr3[0] = 1
+arr3[1] = 2
+arr3[2] = 3
+d = arr3[0]
+RETURN
+RETURN

@@ -13,6 +13,9 @@ string MidCodeList::ret_value;
 
 
 string MidCode::to_str() const {
+    if (op == OP_FUNC || op == OP_END_FUNC) {
+        return "=========" + op + " " + num1 + " " + num2 + "=========";
+    }
     if (op == OP_ASSIGN) {
         return num1 + " = " + num2;
     }
@@ -27,6 +30,9 @@ string MidCode::to_str() const {
     }
     if (result != VACANT) {
         return result + " = " + num1 + " " + op + " " + num2;
+    }
+    if (num1 == VACANT && num2 == VACANT) {
+        return op;
     }
     if (num2 == VACANT) {
         return op + " " + num1;
@@ -97,9 +103,15 @@ void MidCodeList::remove_redundant_assign() {
         MidCode c1 = codes[i];
         MidCode c2 = codes[i + 1];
         if (c2.op == OP_ASSIGN && c2.num1[0] != '#' && c1.result[0] == '#' && c1.result == c2.num2 &&
-            (c1.op == OP_ADD || c1.op == OP_SUB || c1.op == OP_MUL || c1.op == OP_DIV)) {
-            // #T1 = x + y; a = #T1
+            (c1.op == OP_ADD || c1.op == OP_SUB || c1.op == OP_MUL || c1.op == OP_DIV || c1.op == OP_ARR_LOAD)) {
+
 //                    cout << "before: " << c1.to_str() << "  " << c2.to_str() << endl;
+//            if (c1.op == OP_ARR_LOAD) {
+//                // #T1 = arr[i];  a = #T1
+//                new_codes.emplace_back(c1.op, c1.num1, c1.num2, c2.num1);
+//            }
+
+            // #T1 = x + y; a = #T1
             new_codes.emplace_back(c1.op, c1.num1, c1.num2, c2.num1);
 //                    cout << "after:  " << new_codes.back().to_str() << endl;
             i++;

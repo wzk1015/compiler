@@ -595,7 +595,7 @@ void Grammar::RetFuncDef() {
     next_sym();
     Identifier();
     cur_func = tk.str;
-    int idx = SymTable::add_func(tk, ret_type, tmp_para_types);
+    int idx = SymTable::add_func(tk, ret_type, tmp_paras);
     add_midcode(OP_FUNC, type_to_str(ret_type), tk.str, VACANT);
     output("<声明头部>");
     tree_backward();
@@ -603,7 +603,7 @@ void Grammar::RetFuncDef() {
     next_sym();
     SharedFuncDefHead();
     if (idx != -1) {
-        SymTable::global[idx].types = tmp_para_types;
+        SymTable::global[idx].paras = tmp_paras;
     }
     next_sym();
     SharedFuncDefBody();
@@ -611,7 +611,7 @@ void Grammar::RetFuncDef() {
         error("ret return");
     }
 
-    tmp_para_types.clear();
+    tmp_paras.clear();
     funcdef_ret = invalid;
     has_returned = false;
 
@@ -632,18 +632,18 @@ void Grammar::NonRetFuncDef() {
     next_sym();
     Identifier();
     cur_func = tk.str;
-    int idx = SymTable::add_func(tk, void_ret, tmp_para_types);
+    int idx = SymTable::add_func(tk, void_ret, tmp_paras);
     add_midcode(OP_FUNC, "void", tk.str, VACANT);
 
     next_sym();
     SharedFuncDefHead();
     if (idx != -1) {
-        SymTable::global[idx].types = tmp_para_types;
+        SymTable::global[idx].paras = tmp_paras;
     }
     next_sym();
     SharedFuncDefBody();
 
-    tmp_para_types.clear();
+    tmp_paras.clear();
     funcdef_ret = invalid;
     has_returned = false;
 
@@ -675,9 +675,9 @@ void Grammar::ParaList() {
     add_node("<参数表>");
     TypeIdentifier();
     DataType dataType = (sym == "INTTK") ? integer : character;
-    tmp_para_types.push_back(dataType);
     next_sym();
     Identifier();
+    tmp_paras.emplace_back(dataType, tk.str);
     SymTable::add(cur_func, tk, para, dataType, local_addr);
 //    add_midcode(OP_PARA, type_to_str(dataType), tk.str, VACANT);
     local_addr += size_of(dataType);
@@ -686,14 +686,14 @@ void Grammar::ParaList() {
     while (sym == "COMMA") {
         next_sym();
         TypeIdentifier();
-        DataType dataType2 = (sym == "INTTK") ? integer : character;
+        dataType = (sym == "INTTK") ? integer : character;
         add_leaf();
-        tmp_para_types.push_back(dataType2);
         next_sym();
         Identifier();
-        SymTable::add(cur_func, tk, para, dataType2, local_addr);
+        tmp_paras.emplace_back(dataType, tk.str);
+        SymTable::add(cur_func, tk, para, dataType, local_addr);
 //        add_midcode(OP_PARA, type_to_str(dataType), tk.str, VACANT);
-        local_addr += size_of(dataType2);
+        local_addr += size_of(dataType);
         next_sym();
         tmp_para_count++;
     }
@@ -706,7 +706,7 @@ void Grammar::ParaList() {
 
 void Grammar::Main() {
     add_node("<主函数>");
-    SymTable::add_func(tk, void_ret, tmp_para_types);
+    SymTable::add_func(tk, void_ret, tmp_paras);
     add_midcode(OP_FUNC, "void", "main", VACANT);
     funcdef_ret = void_ret;
     cur_func = "main";
@@ -1238,6 +1238,8 @@ void Grammar::CaseStmt() {
     pair<DataType, string> expr = Expr();
     string expr_var = add_midcode(OP_ADD, expr.second, "0", AUTO);
     SymTable::add(cur_func, expr_var, var, expr.first, local_addr);
+    add_midcode(OP_EMPTY, VACANT, VACANT, VACANT);
+    //用来防止remove_redundant_assign时非tmp变量被优化掉
     local_addr += 4;
     next_sym();
     if (sym != "RPARENT") {
@@ -1337,7 +1339,7 @@ void Grammar::SharedFuncCall() {
     bool para_count_err = false;
     string func_name = Identifier();
     add_midcode(OP_PREPARE_CALL, func_name, VACANT, VACANT);
-    vector<DataType> types = SymTable::search(cur_func, tk).types;
+    vector<pair<DataType, string>> paras = SymTable::search(cur_func, tk).paras;
     pair<DataType, string> expr;
     next_sym();
     if (sym != "LPARENT") {
@@ -1349,32 +1351,32 @@ void Grammar::SharedFuncCall() {
         retract();
         output("<值参数表>");
     } else {
-        if (types.begin() == types.end()) {
+        if (paras.begin() == paras.end()) {
 //            error("para count");
             para_count_err = true;
             expr = Expr();
             add_midcode(OP_PUSH_PARA, expr.second, VACANT, VACANT);
         } else {
             expr = Expr();
-            if (*(types.begin()) != expr.first) {
+            if (paras.begin()->first != expr.first) {
                 error("para type");
             }
-            types.erase(types.begin());
+            paras.erase(paras.begin());
             add_midcode(OP_PUSH_PARA, expr.second, VACANT, VACANT);
         }
         next_sym();
         while (sym == "COMMA") {
             next_sym();
-            if (types.begin() == types.end()) {
+            if (paras.begin() == paras.end()) {
                 para_count_err = true;
                 expr = Expr();
                 add_midcode(OP_PUSH_PARA, expr.second, VACANT, VACANT);
             } else {
                 expr = Expr();
-                if (*(types.begin()) != expr.first) {
+                if (paras.begin()->first != expr.first) {
                     error("para type");
                 }
-                types.erase(types.begin());
+                paras.erase(paras.begin());
                 add_midcode(OP_PUSH_PARA, expr.second, VACANT, VACANT);
             }
             next_sym();
@@ -1384,7 +1386,7 @@ void Grammar::SharedFuncCall() {
         //空
     }
     next_sym();
-    if (!types.empty()) {
+    if (!paras.empty()) {
         para_count_err = true;
     }
     if (sym != "RPARENT") {

@@ -1,57 +1,27 @@
 .data
 newline__: .asciiz "\n"
 .text
-# === FUNC void Fib ===
-addi $sp, $sp, -208
+# === =========FUNC void main========= ===
+addi $sp, $sp, -220
 jal main
 li $v0, 10
 syscall
-Fib:
-sw $s0, 24($sp)
-sw $s1, 28($sp)
-sw $s2, 32($sp)
-sw $s3, 36($sp)
-sw $s4, 40($sp)
-sw $s5, 44($sp)
-sw $s6, 48($sp)
-sw $s7, 52($sp)
-sw $ra, 0($sp)
-# === x = 3 ===
-lw $s0, 100($sp)
-li $s0, 3
-# === b = 8 ===
-li $s1, 8
-# === RETURN #VACANT ===
-lw $s0, 24($sp)
-lw $s1, 28($sp)
-lw $s2, 32($sp)
-lw $s3, 36($sp)
-lw $s4, 40($sp)
-lw $s5, 44($sp)
-lw $s6, 48($sp)
-lw $s7, 52($sp)
-lw $ra, 0($sp)
-jr $ra
-# === END_FUNC void Fib ===
-# === FUNC void main ===
 main:
 sw $ra, 0($sp)
-# === a = 5 ===
-li $s0, 5
-# === b = 6 ===
-li $s1, 6
-# === x = 7 ===
-li $s2, 7
-# === a = b ===
-move $s0, $s1
-# === RETURN #VACANT ===
-lw $s0, 24($sp)
-lw $s1, 28($sp)
-lw $s2, 32($sp)
-lw $s3, 36($sp)
-lw $s4, 40($sp)
-lw $s5, 44($sp)
-lw $s6, 48($sp)
-lw $s7, 52($sp)
+# === arr3[0] = 1 ===
+li $k1, 1
+sw $k1, 100($sp)
+# === arr3[1] = 2 ===
+li $k1, 2
+sw $k1, 104($sp)
+# === arr3[2] = 3 ===
+li $k1, 3
+sw $k1, 108($sp)
+# === d = arr3[0] ===
+lw $s0, 100($sp)
+# === RETURN ===
+lw $ra, 0($sp)
+jr $ra
+# === RETURN ===
 lw $ra, 0($sp)
 jr $ra

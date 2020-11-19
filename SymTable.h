@@ -42,14 +42,14 @@ public:
     DataType dataType{};
     int dim = 0;
     bool valid = true;
-    vector<DataType> types;
+    vector<pair<DataType, string>> paras;
     int addr{};
     int size{};
     int dim1_size{};
     int dim2_size{};
     string const_value;
     bool modified = false;
-    vector<string> arr_value;
+
 
     SymTableItem(string name, STIType stiType1, DataType dataType1, int addr) :
             name(std::move(name)), stiType(stiType1), dataType(dataType1), addr(addr) {};
@@ -76,7 +76,7 @@ public:
 
     static void add_const(const string &func, const Token &tk, DataType dataType, string const_value);
 
-    static int add_func(const Token &tk, DataType dataType, vector<DataType> types);
+    static int add_func(const Token &tk, DataType dataType, vector<pair<DataType, string>> paras);
 
     static SymTableItem search(const string &func, const Token &tk);
 
@@ -86,7 +86,7 @@ public:
 
     static bool in_global(const string &func, const string &str);
 
-    static bool search_func(const string &func_name);
+    static SymTableItem search_func(const string &func_name);
 
     static void show();
 

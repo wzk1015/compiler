@@ -17,6 +17,14 @@ string lower(string wd) {
     return s;
 }
 
+int max(int a, int b) {
+    return a > b ? a : b;
+}
+
+int min(int a, int b) {
+    return a < b ? a : b;
+}
+
 bool is_2_power(int x) {
     return (x & (x - 1)) == 0;
 }
@@ -31,7 +39,7 @@ bool num_or_char(string symbol) {
 
 void panic(const string &msg) {
     cerr << msg << endl;
-    //exit(1);
+    exit(1);
 }
 
 void assertion(bool flag) {

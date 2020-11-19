@@ -40,7 +40,7 @@
 #define OP_PUSH_PARA "PUSH_PARA"
 #define OP_RETURN "RETURN"
 
-
+#define OP_EMPTY "EMPTY"
 
 
 #define OP_VAR "VAR"

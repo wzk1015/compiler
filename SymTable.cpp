@@ -47,13 +47,13 @@ SymTable::add(const string &func, const Token &tk, STIType stiType, DataType dat
         a.dim = 1;
         a.dim1_size = dim1;
         a.size = size_of(dataType) * dim1;
-        a.arr_value = vector<string>(dim1);
+//        a.arr_value = vector<string>(dim1);
     } else {
         a.dim = 2;
         a.dim1_size = dim1;
         a.dim2_size = dim2;
         a.size = size_of(dataType) * dim1 * dim2;
-        a.arr_value = vector<string>(dim1 * dim2);
+//        a.arr_value = vector<string>(dim1 * dim2);
     }
     if (func == GLOBAL) {
         global.push_back(a);
@@ -80,7 +80,7 @@ void SymTable::add_const(const string &func, const Token &tk, DataType dataType,
     symtable_check();
 }
 
-int SymTable::add_func(const Token &tk, DataType dataType, vector<DataType> types) {
+int SymTable::add_func(const Token &tk, DataType dataType, vector<pair<DataType, string>> paras) {
     if (try_search(GLOBAL, tk.str, true).valid) {
         Errors::add("redefined function '" + tk.str + "'", tk.line, tk.column, ERR_REDEFINED);
         return -1;
@@ -90,7 +90,7 @@ int SymTable::add_func(const Token &tk, DataType dataType, vector<DataType> type
     //local.insert(make_pair(tk.str, vector<SymTableItem>()));
 
     SymTableItem a(lower(tk.str), func, dataType, 0);
-    a.types = std::move(types);
+    a.paras = std::move(paras);
     global.push_back(a);
     max_name_length = max_name_length > tk.str.length() ? max_name_length : tk.str.length();
     symtable_check();
@@ -99,7 +99,7 @@ int SymTable::add_func(const Token &tk, DataType dataType, vector<DataType> type
 
 SymTableItem SymTable::search(const string &func, const Token &tk) {
     if (func != GLOBAL) {
-        if (!search_func(func)) {
+        if (!search_func(func).valid) {
             return SymTableItem(false);
         }
         vector<SymTableItem> loc = local.find(func)->second;
@@ -122,7 +122,7 @@ SymTableItem SymTable::search(const string &func, const Token &tk) {
 
 SymTableItem SymTable::search(const string &func, const string &str) {
     if (func != GLOBAL) {
-        if (!search_func(func)) {
+        if (!search_func(func).valid) {
             return SymTableItem(false);
         }
         vector<SymTableItem> loc = local.find(func)->second;
@@ -144,7 +144,7 @@ SymTableItem SymTable::search(const string &func, const string &str) {
 
 SymTableItem &SymTable::ref_search(const string &func, const string &str) {
     if (func != GLOBAL) {
-        if (!search_func(func)) {
+        if (!search_func(func).valid) {
             return invalid;
         }
         for (auto &item: local.find(func)->second) {
@@ -165,7 +165,7 @@ SymTableItem &SymTable::ref_search(const string &func, const string &str) {
 
 SymTableItem SymTable::try_search(const string &func, const string &str, bool include_global) {
     if (func != GLOBAL) {
-        if (!search_func(func)) {
+        if (!search_func(func).valid) {
             return SymTableItem(false);
         }
         vector<SymTableItem> loc = local.find(func)->second;
@@ -186,15 +186,15 @@ SymTableItem SymTable::try_search(const string &func, const string &str, bool in
     return SymTableItem(false);
 }
 
-bool SymTable::search_func(const string &func_name) {
+SymTableItem SymTable::search_func(const string &func_name) {
     for (auto &item: global) {
         if (lower(item.name) == lower(func_name) && item.stiType == func) {
-            return true;
+            return item;
         }
     }
     Errors::add("undefined function '" + func_name + "'", ERR_UNDEFINED);
     symtable_check();
-    return false;
+    return invalid;
 }
 
 void SymTable::show() {
