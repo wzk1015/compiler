@@ -8,7 +8,7 @@
 
 #include <utility>
 
-//TODO：函数inline；
+//TODO：用a寄存器且不区分ast；sp直接硬编码；
 
 void MipsGenerator::generate(const string &code) {
     mips.push_back(code);
@@ -51,10 +51,14 @@ void MipsGenerator::release(string addr) {
 }
 
 void MipsGenerator::translate() {
+    for (auto &item: SymTable::global) {
+        
+    }
+
     generate(".data");
     for (auto &item: SymTable::global) {
         if (item.dim >= 1) {
-            generate(item.name + ": .space " + to_string(item.size));
+            generate("arr__"+ item.name + "_: .space " + to_string(item.size));
         }
     }
     for (int i = 0; i < strcons.size(); i++) {
@@ -65,7 +69,6 @@ void MipsGenerator::translate() {
         }
     }
     generate(R"(newline__: .asciiz "\n")");
-
     generate(".text");
 
     bool init = true;
@@ -79,11 +82,9 @@ void MipsGenerator::translate() {
             //进入新函数
 
             if (init) {
-                //此前为全局变量初始化
+                //此前为全局变量初始化，在此调用主函数
                 generate("addi $sp, $sp, -" + to_string(LOCAL_ADDR_INIT + SymTable::func_size("main")));
-                generate("jal main");
-                generate("li $v0, 10");
-                generate("syscall");
+                generate("j main");
                 init = false;
             }
 
@@ -96,12 +97,10 @@ void MipsGenerator::translate() {
             }
 
             //被调用者保护ra、a
-            cur_paras = SymTable::search_func(cur_func).paras;
 
 //            for (int i = 0; i < min(cur_paras.size(),4); i++) {
 //                generate("sw","$a" + to_string(i), to_string(STACK_A_BEGIN + 4 * i) + "($sp)");
 //            }
-            generate("sw","$ra", STACK_RA);
 
 //            for (int i = 0; i < cur_paras.size() && i <= 3; i++) {
 //                string sreg = assign_s_reg(cur_paras[i].second);    // s0~s3存储a0~a3；其余参数留在内存
@@ -119,8 +118,12 @@ void MipsGenerator::translate() {
 //            for (int i = 0; i <= min(cur_paras.size(),4); i++) {
 //                generate("lw","$a" + to_string(i), to_string(STACK_A_BEGIN + 4 * i) + "($sp)");
 //            }
-            generate("lw","$ra", STACK_RA);
-            generate("jr $ra");
+            if (cur_func == "main") {
+                generate("li $v0, 10");
+                generate("syscall");
+            } else {
+                generate("jr $ra");
+            }
         }
 
         else if (op == OP_PREPARE_CALL) {
@@ -188,10 +191,15 @@ void MipsGenerator::translate() {
                     s_reg_table[i] = VACANT;
                 }
             }
-
+            if (cur_func != "main") {
+                generate("sw", "$ra", STACK_RA);
+            }
             assertion(call_func_paras.back().empty() || call_func_paras.back().begin()->stiType != para);
             generate("jal", num1);
 
+            if (cur_func != "main") {
+                generate("lw", "$ra", STACK_RA);
+            }
             for (int i: saved_s) {
                 generate("lw", "$s" + to_string(i),
                          to_string(STACK_S_BEGIN + 4 * i) + "($sp)");
@@ -362,7 +370,7 @@ void MipsGenerator::translate() {
             if (begins_num(num2)) {     //下标是常数，可以简化计算
                 int offset = 4 * stoi(num2);
                 if (array_in_global) {
-                    item_addr = lower(num1) + "+" + to_string(offset) + "($zero)";
+                    item_addr = "arr__" + lower(num1) + "_+" + to_string(offset) + "($zero)";
                 }
                 else {
                     offset += SymTable::search(cur_func, num1).addr + call_func_sp_offset;
@@ -379,7 +387,7 @@ void MipsGenerator::translate() {
                 }
 
                 if (array_in_global) {
-                    item_addr = lower(num1) + "(" + reg + ")";
+                    item_addr = "arr__" + lower(num1) + "_(" + reg + ")";
                 } else {
                     generate("addu", reg, reg, to_string(SymTable::search(cur_func, num1).addr + call_func_sp_offset));
                     generate("addu", reg, reg, "$sp");

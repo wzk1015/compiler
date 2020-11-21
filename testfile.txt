@@ -1,9 +1,34 @@
-void main()
-{
-    int arr3[3] = {1, 2, 3};
-    int d;
+const char A_c='*';
+int A = 222;
+int B=333;
+int C=444;
+int ans;
+char B_c='a';
+char C_c='b';
+char D_c='c';
 
-    d = arr3[0];
+int check_assign(int n,char N_c){
+	char AA_c = '3';
+	int AA[3]={0,0,0};
+	int BB[2][3]={{1,1,1},{1,1,1}};
+	printf("const A_c=",A_c);
 
-    return;
+	AA_c=N_c;
+	AA[1]=n;
+	BB[1][1]=n+1;
+	BB[0][0]=-BB[1][1];
+	printf("BB[0][0]=",BB[0][0]);
+
+	printf("AA_c+AA[1]+BB[1][1]=",AA_c+AA[1]+BB[1][1]);
+	return (AA_c+AA[1]+BB[1][1]);
+}
+
+char func() {
+    return ('c');
+}
+
+void main(){
+	check_assign(A,B_c);
+	D_c = func();
+	printf("good");
 }

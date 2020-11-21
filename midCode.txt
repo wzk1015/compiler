@@ -1,8 +1,63 @@
+str0: const A_c=
+str1: BB[0][0]=
+str2: AA_c+AA[1]+BB[1][1]=
+str3: good\n
 ===============
+A = 222
+B = 333
+C = 444
+B_c = 97
+C_c = 98
+D_c = 99
+=========FUNC int check_assign=========
+AA_c = 51
+AA[0] = 0
+AA[1] = 0
+AA[2] = 0
+BB[0] = 1
+BB[1] = 1
+BB[2] = 1
+BB[3] = 1
+BB[4] = 1
+BB[5] = 1
+PRINT 0 strcon
+PRINT 42 char
+PRINT #ENDL
+AA_c = N_c
+AA[1] = n
+#T13 = n + 1
+BB[4] = #T13
+#T18 = BB[4]
+0 = 0
+#T19 = 0 - #T18
+BB[0] = #T19
+PRINT 1 strcon
+#T24 = BB[0]
+PRINT #T24 int
+PRINT #ENDL
+PRINT 2 strcon
+#T25 = AA[1]
+#T26 = AA_c + #T25
+#T29 = BB[4]
+#T30 = #T26 + #T29
+PRINT #T30 int
+PRINT #ENDL
+#T31 = AA[1]
+#T32 = AA_c + #T31
+#T35 = BB[4]
+#T36 = #T32 + #T35
+RETURN #T36
+=========END_FUNC int check_assign=========
+=========FUNC char func=========
+RETURN 99
+=========END_FUNC char func=========
 =========FUNC void main=========
-arr3[0] = 1
-arr3[1] = 2
-arr3[2] = 3
-d = arr3[0]
-RETURN
+PREPARE_CALL check_assign
+PUSH_PARA A
+PUSH_PARA B_c
+CALL check_assign
+PREPARE_CALL func
+CALL func
+D_c = %RET + 0
+PRINT 3 strcon
 RETURN

@@ -19,8 +19,8 @@ Token Lexer::get_token() {
 
     Token r(INVALID, INVALID, line_num, col_num, pos);
 
-    if (isalpha(ch) || ch == '_') {
-        while (isalnum(ch) || ch == '_') {
+    if (isalpha(ch) || ch == '_' || (replace_mode && ch == '&')) {
+        while (isalnum(ch) || ch == '_' || (replace_mode && ch == '&')) {
             token += ch;
             read_char();
         }

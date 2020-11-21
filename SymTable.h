@@ -21,6 +21,7 @@
 using namespace std;
 
 enum STIType {
+    invalid_sti,
     constant,
     var,
     tmp,
@@ -29,10 +30,11 @@ enum STIType {
 };
 
 enum DataType {
+    invalid_dt,
     integer,
     character,
-    void_ret,
-    invalid
+    void_ret
+
 };
 
 class SymTableItem {
@@ -93,6 +95,8 @@ public:
     static SymTableItem &ref_search(const string &func, const string &str);
 
     static int func_size(const string &func);
+
+    static void reset();
 };
 
 

@@ -261,3 +261,9 @@ string SymTableItem::to_str() const {
     return ans + " " + stitype_str[stiType] + " " + datatype_str[dataType] + " " + to_string(dim) + "   " +
            to_string(addr) + sep + const_value;
 }
+
+void SymTable::reset() {
+    global.clear();
+    local.clear();
+    max_name_length = 5;
+}

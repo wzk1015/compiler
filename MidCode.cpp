@@ -8,8 +8,6 @@ vector<MidCode> MidCodeList::codes;
 int MidCodeList::code_index = 1;
 vector<string> MidCodeList::strcons;
 int MidCodeList::label_index = 1;
-vector<string> MidCodeList::paras;
-string MidCodeList::ret_value;
 
 
 string MidCode::to_str() const {
@@ -115,7 +113,14 @@ void MidCodeList::remove_redundant_assign() {
             new_codes.emplace_back(c1.op, c1.num1, c1.num2, c2.num1);
 //                    cout << "after:  " << new_codes.back().to_str() << endl;
             i++;
-        } else if (i == codes.size() - 2) {
+        }
+        else if (c1.op == OP_PRINT && c2.op == OP_PRINT && c1.num2 == "strcon" && c2.num1 == ENDL) {
+            strcons[stoi(c1.num1)] += "\\n";
+            new_codes.emplace_back(OP_PRINT, c1.num1, c1.num2, VACANT);
+            i++;
+        }
+
+        else if (i == codes.size() - 2) {
             new_codes.push_back(c1);
             new_codes.push_back(c2);
         } else {

@@ -1,27 +1,177 @@
 .data
+str__0: .asciiz "const A_c="
+str__1: .asciiz "BB[0][0]="
+str__2: .asciiz "AA_c+AA[1]+BB[1][1]="
+str__3: .asciiz "good\n"
 newline__: .asciiz "\n"
 .text
-# === =========FUNC void main========= ===
-addi $sp, $sp, -220
+# === A = 222 ===
+li $k0, 222
+sw $k0, 0($gp)
+# === B = 333 ===
+li $k0, 333
+sw $k0, 4($gp)
+# === C = 444 ===
+li $k0, 444
+sw $k0, 8($gp)
+# === B_c = 97 ===
+li $k0, 97
+sw $k0, 16($gp)
+# === C_c = 98 ===
+li $k0, 98
+sw $k0, 20($gp)
+# === D_c = 99 ===
+li $k0, 99
+sw $k0, 24($gp)
+# === =========FUNC int check_assign========= ===
+addi $sp, $sp, -204
 jal main
+check_assign:
+# === AA_c = 51 ===
+li $s0, 51
+# === AA[0] = 0 ===
+sw $zero, 112($sp)
+# === AA[1] = 0 ===
+sw $zero, 116($sp)
+# === AA[2] = 0 ===
+sw $zero, 120($sp)
+# === BB[0] = 1 ===
+li $k1, 1
+sw $k1, 172($sp)
+# === BB[1] = 1 ===
+li $k1, 1
+sw $k1, 176($sp)
+# === BB[2] = 1 ===
+li $k1, 1
+sw $k1, 180($sp)
+# === BB[3] = 1 ===
+li $k1, 1
+sw $k1, 184($sp)
+# === BB[4] = 1 ===
+li $k1, 1
+sw $k1, 188($sp)
+# === BB[5] = 1 ===
+li $k1, 1
+sw $k1, 192($sp)
+# === PRINT 0 strcon ===
+la $a0, str__0
+li $v0, 4
+syscall
+# === PRINT 42 char ===
+li $a0, 42
+li $v0, 11
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === AA_c = N_c ===
+lw $s1, 104($sp)
+move $s0, $s1
+# === AA[1] = n ===
+lw $s2, 100($sp)
+sw $s2, 116($sp)
+# === #T13 = n + 1 ===
+addu $t0, $s2, 1
+# === BB[4] = #T13 ===
+sw $t0, 188($sp)
+# RELEASE $t0
+# === #T18 = BB[4] ===
+lw $t0, 188($sp)
+# === 0 = 0 ===
+move $zero, $zero
+# === #T19 = 0 - #T18 ===
+subu $t1, $zero, $t0
+# RELEASE $t0
+# === BB[0] = #T19 ===
+sw $t1, 172($sp)
+# RELEASE $t1
+# === PRINT 1 strcon ===
+la $a0, str__1
+li $v0, 4
+syscall
+# === #T24 = BB[0] ===
+lw $t0, 172($sp)
+# === PRINT #T24 int ===
+move $a0, $t0
+# RELEASE $t0
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === PRINT 2 strcon ===
+la $a0, str__2
+li $v0, 4
+syscall
+# === #T25 = AA[1] ===
+lw $t0, 116($sp)
+# === #T26 = AA_c + #T25 ===
+addu $t1, $s0, $t0
+# RELEASE $t0
+# === #T29 = BB[4] ===
+lw $t0, 188($sp)
+# === #T30 = #T26 + #T29 ===
+addu $t2, $t1, $t0
+# RELEASE $t1
+# RELEASE $t0
+# === PRINT #T30 int ===
+move $a0, $t2
+# RELEASE $t2
+li $v0, 1
+syscall
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+# === #T31 = AA[1] ===
+lw $t0, 116($sp)
+# === #T32 = AA_c + #T31 ===
+addu $t1, $s0, $t0
+# RELEASE $t0
+# === #T35 = BB[4] ===
+lw $t0, 188($sp)
+# === #T36 = #T32 + #T35 ===
+addu $t2, $t1, $t0
+# RELEASE $t1
+# RELEASE $t0
+# === RETURN #T36 ===
+move $v0, $t2
+# RELEASE $t2
+jr $ra
+# === =========END_FUNC int check_assign========= ===
+# === =========FUNC char func========= ===
+func:
+# === RETURN 99 ===
+li $v0, 99
+jr $ra
+# === =========END_FUNC char func========= ===
+# === =========FUNC void main========= ===
+main:
+# === PREPARE_CALL check_assign ===
+addi $sp, $sp, -392
+# === PUSH_PARA A ===
+lw $k0, 0($gp)
+sw $k0, 100($sp)
+# === PUSH_PARA B_c ===
+lw $k0, 16($gp)
+sw $k0, 104($sp)
+# === CALL check_assign ===
+jal check_assign
+addi $sp, $sp, 392
+# === PREPARE_CALL func ===
+addi $sp, $sp, -100
+# === CALL func ===
+jal func
+addi $sp, $sp, 100
+# === D_c = %RET + 0 ===
+addu $k0, $v0, $zero
+sw $k0, 24($gp)
+# === PRINT 3 strcon ===
+la $a0, str__3
+li $v0, 4
+syscall
+# === RETURN ===
 li $v0, 10
 syscall
-main:
-sw $ra, 0($sp)
-# === arr3[0] = 1 ===
-li $k1, 1
-sw $k1, 100($sp)
-# === arr3[1] = 2 ===
-li $k1, 2
-sw $k1, 104($sp)
-# === arr3[2] = 3 ===
-li $k1, 3
-sw $k1, 108($sp)
-# === d = arr3[0] ===
-lw $s0, 100($sp)
-# === RETURN ===
-lw $ra, 0($sp)
-jr $ra
-# === RETURN ===
-lw $ra, 0($sp)
-jr $ra

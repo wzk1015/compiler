@@ -80,8 +80,13 @@ public:
     static int code_index;
     static int label_index;
     static vector<string> strcons;
-    static vector<string> paras;
-    static string ret_value;
+
+    static void reset() {
+        codes.clear();
+        strcons.clear();
+        code_index = 1;
+        label_index = 1;
+    }
 
     static string add(const string &op, const string &n1, const string &n2, const string &r) {
         string result = r;

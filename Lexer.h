@@ -6,6 +6,7 @@
 #define COMPILER_LEXER_H
 #include <iostream>
 #include <fstream>
+#include <utility>
 #include <vector>
 #include <map>
 #include <sstream>
@@ -26,11 +27,8 @@ public:
 
     Token(string t, string s, int l, int c, int p) :
             type(std::move(t)), str(std::move(s)), line(l), column(c), pos(p) {};
-    explicit Token(const string& t) : type(t){
-        if (t != INVALID) {
-            throw exception();
-        }
-    };
+    explicit Token(string t) : type(std::move(t)) {};
+    Token(string t, string s) : type(std::move(t)), str(std::move(s)) {};
 };
 
 class Lexer {
@@ -42,6 +40,7 @@ public:
     int pos = 0;
     int line_num = 1;
     int col_num = 1;
+    bool replace_mode;
 
 
     Token analyze();
@@ -50,7 +49,8 @@ public:
     void retract();
     static string special(char);
     static string reserved(string);
-    explicit Lexer(const string& in_path) {
+    explicit Lexer(const string& in_path, bool replace) {
+        replace_mode = replace;
         ifstream in(in_path);
         stringstream buffer;
         buffer << in.rdbuf();

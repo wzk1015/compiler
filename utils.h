@@ -30,4 +30,6 @@ void assertion(bool);
 
 int sum(const vector<int>& arr);
 
+void mips_debug();
+
 #endif //COMPILER_UTILS_H

@@ -65,11 +65,10 @@ public:
             {OP_DIV, "div"},
     };
     string cur_func = GLOBAL;
-    vector<pair<DataType, string>> cur_paras;
     vector<vector<SymTableItem>> call_func_paras;
     vector<int> sp_size = {0};
     int call_func_sp_offset = 0;
-    int para_count = 0;
+    map<string, int> func_sp_offsets;
 
     MipsGenerator(): mid(MidCodeList::codes), strcons(MidCodeList::strcons) {};
 

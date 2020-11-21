@@ -1,9 +1,87 @@
+str0: const A_c=
+str1: BB[0][0]=
+str2: AA_c+AA[1]+BB[1][1]=
+str3: good\n
 ===============
+A = 222
+B = 333
+C = 444
+B_c = 97
+C_c = 98
+D_c = 99
+=========FUNC int check_assign=========
+AA_c = 51
+AA[0] = 0
+AA[1] = 0
+AA[2] = 0
+#T1 = 0
+#T2 = #T1 + 0
+BB[#T2] = 1
+#T3 = 0
+#T4 = #T3 + 1
+BB[#T4] = 1
+#T5 = 0
+#T6 = #T5 + 2
+BB[#T6] = 1
+#T7 = 3
+#T8 = #T7 + 0
+BB[#T8] = 1
+#T9 = 3
+#T10 = #T9 + 1
+BB[#T10] = 1
+#T11 = 3
+#T12 = #T11 + 2
+BB[#T12] = 1
+PRINT 0 strcon
+PRINT 42 char
+PRINT #ENDL
+AA_c = N_c
+AA[1] = n
+#T13 = n + 1
+#T14 = 3
+#T15 = #T14 + 1
+BB[#T15] = #T13
+#T16 = 3
+#T17 = #T16 + 1
+#T18 = BB[#T17]
+#T19 = 0 - #T18
+#T20 = 0
+#T21 = #T20 + 0
+BB[#T21] = #T19
+PRINT 1 strcon
+#T22 = 0
+#T23 = #T22 + 0
+#T24 = BB[#T23]
+PRINT #T24 int
+PRINT #ENDL
+PRINT 2 strcon
+#T25 = AA[1]
+#T26 = AA_c + #T25
+#T27 = 3
+#T28 = #T27 + 1
+#T29 = BB[#T28]
+#T30 = #T26 + #T29
+PRINT #T30 int
+PRINT #ENDL
+#T31 = AA[1]
+#T32 = AA_c + #T31
+#T33 = 3
+#T34 = #T33 + 1
+#T35 = BB[#T34]
+#T36 = #T32 + #T35
+RETURN #T36
+=========END_FUNC int check_assign=========
+=========FUNC char func=========
+RETURN 99
+=========END_FUNC char func=========
 =========FUNC void main=========
-arr3[0] = 1
-arr3[1] = 2
-arr3[2] = 3
-d = arr3[0]
-RETURN
+PREPARE_CALL check_assign
+PUSH_PARA A
+PUSH_PARA B_c
+CALL check_assign
+PREPARE_CALL func
+CALL func
+D_c = %RET + 0
+PRINT 3 strcon
 RETURN
 =========END_FUNC void main=========
