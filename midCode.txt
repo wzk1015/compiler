@@ -28,7 +28,6 @@ aa[1] = n
 #T13 = n + 1
 bb[4] = #T13
 #T18 = bb[4]
-0 = 0
 #T19 = 0 - #T18
 bb[0] = #T19
 PRINT 1 strcon

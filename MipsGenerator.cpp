@@ -96,17 +96,6 @@ void MipsGenerator::translate() {
                 s_reg_table[i] = VACANT;
             }
 
-            //被调用者保护ra、a
-
-//            for (int i = 0; i < min(cur_paras.size(),4); i++) {
-//                generate("sw","$a" + to_string(i), to_string(STACK_A_BEGIN + 4 * i) + "($sp)");
-//            }
-
-//            for (int i = 0; i < cur_paras.size() && i <= 3; i++) {
-//                string sreg = assign_s_reg(cur_paras[i].second);    // s0~s3存储a0~a3；其余参数留在内存
-//                generate("move", sreg, "$a" + to_string(i));
-//            }
-
         }
 
         else if (op == OP_RETURN) {
@@ -114,10 +103,6 @@ void MipsGenerator::translate() {
             if (num1 != VACANT) {
                 load_value(num1, "$v0");
             }
-            //恢复ra、a
-//            for (int i = 0; i <= min(cur_paras.size(),4); i++) {
-//                generate("lw","$a" + to_string(i), to_string(STACK_A_BEGIN + 4 * i) + "($sp)");
-//            }
             if (cur_func == "main") {
                 generate("li $v0, 10");
                 generate("syscall");
@@ -149,9 +134,6 @@ void MipsGenerator::translate() {
             call_func_paras.back().erase(call_func_paras.back().begin());
             string reg = "$k0";
 
-//            if (para_count <= 3) {
-//                load_value(num1, "$a" + to_string(para_count));
-//            } else {
 
             bool b_in_reg = in_reg(num1) || assign_reg(num1);
             string b = symbol_to_addr(num1);
@@ -165,8 +147,6 @@ void MipsGenerator::translate() {
                 generate("sw", reg, para_addr);
             }
 
-//            }
-//            para_count++;
         }
 
         else if (op == OP_CALL) {
@@ -230,9 +210,6 @@ void MipsGenerator::translate() {
         }
 
         else if (op == OP_PRINT) {
-//            if (!cur_paras.empty() && !in_reg(cur_paras[0].second)) {
-//                assign_reg(cur_paras[0].second); //save $a0
-//            }
             if (num2 == "strcon") {
                 generate("la $a0, str__" + num1);
                 generate("li $v0, 4");
@@ -264,11 +241,6 @@ void MipsGenerator::translate() {
             }
             generate("syscall");
             save_value("$v0", num1);
-//            if (it.dataType == character) {
-//                //读换行符
-//                generate("li $v0, 12");
-//                generate("syscall");
-//            }
         }
 
         else if (op == OP_ASSIGN) {
@@ -353,11 +325,6 @@ void MipsGenerator::translate() {
 
             string symbol = "^" + num1 + "[" + num2 + "]";
 
-//            if (!SymTable::in_global(cur_func, num1) && (in_reg(symbol) || assign_s_reg(symbol) != INVALID)) {
-//                translate_assign(symbol, result);
-//                continue;
-//            }
-
             bool a_in_reg = in_reg(result) || assign_reg(result);
             string a = symbol_to_addr(result);
             string reg = "$k0";
@@ -393,9 +360,6 @@ void MipsGenerator::translate() {
                     item_addr = "0(" + reg + ")";
                 }
             }
-
-
-
 
 
             if (op == OP_ARR_LOAD) {
@@ -560,13 +524,7 @@ bool MipsGenerator::in_reg(const string &symbol) {
             return true;
         }
     }
-//    if (cur_func != GLOBAL) {
-//        for (int i = 0; i < cur_paras.size() && i <= 3; i++) {
-//            if (cur_paras[i].second == symbol) {
-//                return true;
-//            }
-//        }
-//    }
+
     return false;
 }
 
@@ -624,25 +582,12 @@ string MipsGenerator::assign_t_reg(const string &name) {
 }
 
 string MipsGenerator::assign_s_reg(const string &name) {
-
     for (int i = 0; i < 8; i++) {
         if (s_reg_table[i] == VACANT) {
             s_reg_table[i] = name;
             return "$s" + to_string(i);
         }
     }
-
-// wrong：编译顺序≠调用顺序
-//    if (!prev_func_s.empty()) {
-//        int i = *prev_func_s.begin();
-//        generate("# Realloc prev_s" + to_string(i));
-//        generate("sw", "$s" + to_string(i),
-//                            to_string(STACK_S_BEGIN + 4 * i) + "($sp)");
-//        prev_func_s.erase(prev_func_s.begin());
-//        saved_s.push_back(i);
-//        s_reg_table[i] = name;
-//        return "$s" + to_string(i);
-//    }
 
     return INVALID;
 }

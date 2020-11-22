@@ -78,8 +78,6 @@ sw $t0, 188($sp)
 # RELEASE $t0
 # === #T18 = bb[4] ===
 lw $t0, 188($sp)
-# === 0 = 0 ===
-move $zero, $zero
 # === #T19 = 0 - #T18 ===
 subu $t1, $zero, $t0
 # RELEASE $t0

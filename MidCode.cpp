@@ -102,16 +102,7 @@ void MidCodeList::remove_redundant_assign() {
         MidCode c2 = codes[i + 1];
         if (c2.op == OP_ASSIGN && c2.num1[0] != '#' && c1.result[0] == '#' && c1.result == c2.num2 &&
             (c1.op == OP_ADD || c1.op == OP_SUB || c1.op == OP_MUL || c1.op == OP_DIV || c1.op == OP_ARR_LOAD)) {
-
-//                    cout << "before: " << c1.to_str() << "  " << c2.to_str() << endl;
-//            if (c1.op == OP_ARR_LOAD) {
-//                // #T1 = arr[i];  a = #T1
-//                new_codes.emplace_back(c1.op, c1.num1, c1.num2, c2.num1);
-//            }
-
-            // #T1 = x + y; a = #T1
             new_codes.emplace_back(c1.op, c1.num1, c1.num2, c2.num1);
-//                    cout << "after:  " << new_codes.back().to_str() << endl;
             i++;
         }
         else if (c1.op == OP_PRINT && c2.op == OP_PRINT && c1.num2 == "strcon" && c2.num1 == ENDL) {
@@ -171,7 +162,9 @@ void MidCodeList::const_broadcast() {
             int v1 = stoi(begins_num(c.num1) ? c.num1 : it1->const_value);
             if (c.op == OP_SUB || c.op == OP_DIV) {
                 // y=5-x  y=5/x
-                new_codes.emplace_back(OP_ASSIGN, c.num1, to_string(v1), c.result);
+                if (c.num1 != to_string(v1)) {
+                    new_codes.emplace_back(OP_ASSIGN, c.num1, to_string(v1), c.result);
+                }
                 new_codes.push_back(c);
             } else if (c.op == OP_ADD || c.op == OP_MUL) {
                 new_codes.emplace_back(c.op, c.num2, to_string(v1), c.result);
@@ -187,6 +180,9 @@ void MidCodeList::const_broadcast() {
             new_codes.push_back(c);
         } else {
             new_codes.push_back(c);
+        }
+        if (c.result == "#T18") {
+
         }
     }
     codes = new_codes;
