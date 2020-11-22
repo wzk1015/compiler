@@ -17,7 +17,7 @@ int Grammar::next_sym(bool add_to_new = true) {
     }
     pos++;
     sym = tk.type;
-    output_str.push_back(tk.type + " " + tk.str);
+    output_str.push_back(tk.type + " " + tk.original_str);
 
 //    if (DEBUG) {
 //        cout << tk.type + " " + tk.str << endl;
@@ -572,7 +572,7 @@ void Grammar::SharedFuncDefBody() {
     local_addr = LOCAL_ADDR_INIT;
     int end = pos - 1;
     if (mode == grammar_check && !para_assigned) {
-        function_tokens_index.emplace_back(begin, end, lower(cur_func));
+        function_tokens_index.emplace_back(begin, end, cur_func);
     }
     para_assigned = false;
 
@@ -1419,7 +1419,7 @@ void Grammar::SharedFuncCall() {
 
     pair<int, int> index = make_pair(-1, -1);
     for (auto &ft: function_tokens_index) {
-        if (lower(ft.name) == lower(func_name)) {
+        if (ft.name == func_name) {
             index = make_pair(ft.begin, ft.end);
         }
     }

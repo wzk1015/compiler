@@ -3,48 +3,48 @@ str1: BB[0][0]=
 str2: AA_c+AA[1]+BB[1][1]=
 str3: good\n
 ===============
-A = 222
-B = 333
-C = 444
-B_c = 97
-C_c = 98
-D_c = 99
+a = 222
+b = 333
+c = 444
+b_c = 97
+c_c = 98
+d_c = 99
 =========FUNC int check_assign=========
-AA_c = 51
-AA[0] = 0
-AA[1] = 0
-AA[2] = 0
-BB[0] = 1
-BB[1] = 1
-BB[2] = 1
-BB[3] = 1
-BB[4] = 1
-BB[5] = 1
+aa_c = 51
+aa[0] = 0
+aa[1] = 0
+aa[2] = 0
+bb[0] = 1
+bb[1] = 1
+bb[2] = 1
+bb[3] = 1
+bb[4] = 1
+bb[5] = 1
 PRINT 0 strcon
 PRINT 42 char
 PRINT #ENDL
-AA_c = N_c
-AA[1] = n
+aa_c = n_c
+aa[1] = n
 #T13 = n + 1
-BB[4] = #T13
-#T18 = BB[4]
+bb[4] = #T13
+#T18 = bb[4]
 0 = 0
 #T19 = 0 - #T18
-BB[0] = #T19
+bb[0] = #T19
 PRINT 1 strcon
-#T24 = BB[0]
+#T24 = bb[0]
 PRINT #T24 int
 PRINT #ENDL
 PRINT 2 strcon
-#T25 = AA[1]
-#T26 = AA_c + #T25
-#T29 = BB[4]
+#T25 = aa[1]
+#T26 = aa_c + #T25
+#T29 = bb[4]
 #T30 = #T26 + #T29
 PRINT #T30 int
 PRINT #ENDL
-#T31 = AA[1]
-#T32 = AA_c + #T31
-#T35 = BB[4]
+#T31 = aa[1]
+#T32 = aa_c + #T31
+#T35 = bb[4]
 #T36 = #T32 + #T35
 RETURN #T36
 =========END_FUNC int check_assign=========
@@ -53,11 +53,11 @@ RETURN 99
 =========END_FUNC char func=========
 =========FUNC void main=========
 PREPARE_CALL check_assign
-PUSH_PARA A
-PUSH_PARA B_c
+PUSH_PARA a
+PUSH_PARA b_c
 CALL check_assign
 PREPARE_CALL func
 CALL func
-D_c = %RET + 0
+d_c = %RET + 0
 PRINT 3 strcon
 RETURN

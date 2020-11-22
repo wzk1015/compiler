@@ -14,7 +14,7 @@ int main() {
 	Grammar grammar("testfile.txt", grammar_check);
     grammar.analyze();
     grammar.save_to_file("output.txt");
-    grammar.save_lexer_results("testfile_replace.txt");
+//    grammar.save_lexer_results("testfile_replace.txt");
     Errors::save_to_file("error.txt");
 
     if (Errors::terminate()) {
@@ -45,7 +45,7 @@ int main() {
     mips.translate();
     mips.save_to_file("mips.txt");
 
-    //SymTable::show();
+    SymTable::show();
 
     //grammar.show_tree();
     return 0;

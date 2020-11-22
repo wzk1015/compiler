@@ -103,7 +103,8 @@ Token Lexer::get_token() {
     }
 
     r.type = symbol;
-    r.str = token;
+    r.original_str = token;
+    r.str = symbol == "CHARCON" || symbol == "STRCON" ? token : lower(token);
     if (symbol == "INTCON") {
         r.v_int = (int) strtol(token.c_str(), nullptr, 10);
     }

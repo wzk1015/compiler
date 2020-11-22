@@ -19,7 +19,7 @@ void SymTable::add(const string &func, const string &name, STIType stiType, Data
         Errors::add("redefined identifier '" + name + "'", ERR_REDEFINED);
         return;
     }
-    SymTableItem a(lower(name), stiType, dataType, addr);
+    SymTableItem a(name, stiType, dataType, addr);
     a.size = size_of(dataType);
     if (func == GLOBAL) {
         global.push_back(a);
@@ -40,7 +40,7 @@ SymTable::add(const string &func, const Token &tk, STIType stiType, DataType dat
         Errors::add("redefined identifier '" + tk.str + "'", tk.line, tk.column, ERR_REDEFINED);
         return;
     }
-    SymTableItem a(lower(tk.str), stiType, dataType, addr);
+    SymTableItem a(tk.str, stiType, dataType, addr);
     if (dim1 == 0) {
         a.dim = 0;
     } else if (dim2 == 0) {
@@ -69,7 +69,7 @@ void SymTable::add_const(const string &func, const Token &tk, DataType dataType,
         Errors::add("redefined const '" + tk.str + "'", tk.line, tk.column, ERR_REDEFINED);
         return;
     }
-    SymTableItem a(lower(tk.str), constant, dataType, 0);
+    SymTableItem a(tk.str, constant, dataType, 0);
     a.const_value = std::move(const_value);
     if (func == GLOBAL) {
         global.push_back(a);
@@ -89,7 +89,7 @@ int SymTable::add_func(const Token &tk, DataType dataType, vector<pair<DataType,
     local[tk.str] = vector<SymTableItem>();
     //local.insert(make_pair(tk.str, vector<SymTableItem>()));
 
-    SymTableItem a(lower(tk.str), func, dataType, 0);
+    SymTableItem a(tk.str, func, dataType, 0);
     a.paras = std::move(paras);
     global.push_back(a);
     max_name_length = max_name_length > tk.str.length() ? max_name_length : tk.str.length();
@@ -104,13 +104,13 @@ SymTableItem SymTable::search(const string &func, const Token &tk) {
         }
         vector<SymTableItem> loc = local.find(func)->second;
         for (auto &item: loc) {
-            if (lower(item.name) == lower(tk.str)) {
+            if (item.name == tk.str) {
                 return item;
             }
         }
     }
     for (auto &item: global) {
-        if (lower(item.name) == lower(tk.str)) {
+        if (item.name == tk.str) {
             return item;
         }
     }
@@ -127,13 +127,13 @@ SymTableItem SymTable::search(const string &func, const string &str) {
         }
         vector<SymTableItem> loc = local.find(func)->second;
         for (auto &item: loc) {
-            if (lower(item.name) == lower(str)) {
+            if (item.name == str) {
                 return item;
             }
         }
     }
     for (auto &item: global) {
-        if (lower(item.name) == lower(str)) {
+        if (item.name == str) {
             return item;
         }
     }
@@ -148,13 +148,13 @@ SymTableItem &SymTable::ref_search(const string &func, const string &str) {
             return invalid;
         }
         for (auto &item: local.find(func)->second) {
-            if (lower(item.name) == lower(str)) {
+            if (item.name == str) {
                 return item;
             }
         }
     }
     for (auto &item: global) {
-        if (lower(item.name) == lower(str)) {
+        if (item.name == str) {
             return item;
         }
     }
@@ -170,14 +170,14 @@ SymTableItem SymTable::try_search(const string &func, const string &str, bool in
         }
         vector<SymTableItem> loc = local.find(func)->second;
         for (auto &item: loc) {
-            if (lower(item.name) == lower(str)) {
+            if (item.name == str) {
                 return item;
             }
         }
     }
     if (include_global) {
         for (auto &item: global) {
-            if (lower(item.name) == lower(str)) {
+            if (item.name == str) {
                 return item;
             }
         }
@@ -188,7 +188,7 @@ SymTableItem SymTable::try_search(const string &func, const string &str, bool in
 
 SymTableItem SymTable::search_func(const string &func_name) {
     for (auto &item: global) {
-        if (lower(item.name) == lower(func_name) && item.stiType == func) {
+        if (item.name == func_name && item.stiType == func) {
             return item;
         }
     }

@@ -19,6 +19,7 @@ class Token {
 public:
     string type;
     string str;
+    string original_str;
     int v_int = -1;
     char v_char = 'E';
     int line{};

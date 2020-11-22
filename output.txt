@@ -67,7 +67,7 @@ CHARCON c
 SEMICN ;
 <变量说明>
 INTTK int
-IDENFR check_assign
+IDENFR check_ASSIGN
 <声明头部>
 LPARENT (
 INTTK int

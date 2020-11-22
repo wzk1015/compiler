@@ -219,7 +219,6 @@ void MipsGenerator::translate() {
 
             call_func_sp_offset = sum(sp_size);
             call_func_paras.pop_back();
-            para_count = 0;
         }
 
         else if (op == OP_END_FUNC) {
@@ -370,7 +369,7 @@ void MipsGenerator::translate() {
             if (begins_num(num2)) {     //下标是常数，可以简化计算
                 int offset = 4 * stoi(num2);
                 if (array_in_global) {
-                    item_addr = "arr__" + lower(num1) + "_+" + to_string(offset) + "($zero)";
+                    item_addr = "arr__" + num1 + "_+" + to_string(offset) + "($zero)";
                 }
                 else {
                     offset += SymTable::search(cur_func, num1).addr + call_func_sp_offset;
@@ -387,7 +386,7 @@ void MipsGenerator::translate() {
                 }
 
                 if (array_in_global) {
-                    item_addr = "arr__" + lower(num1) + "_(" + reg + ")";
+                    item_addr = "arr__" + num1 + "_(" + reg + ")";
                 } else {
                     generate("addu", reg, reg, to_string(SymTable::search(cur_func, num1).addr + call_func_sp_offset));
                     generate("addu", reg, reg, "$sp");
@@ -552,18 +551,18 @@ bool MipsGenerator::in_reg(const string &symbol) {
         return false;
     }
     for (int i = 0; i < 10; i++) {
-        if (t_reg_table[i] == lower(symbol)) {
+        if (t_reg_table[i] == symbol) {
             return true;
         }
     }
     for (int i = 0; i < 8; i++) {
-        if (s_reg_table[i] == lower(symbol)) {
+        if (s_reg_table[i] == symbol) {
             return true;
         }
     }
 //    if (cur_func != GLOBAL) {
 //        for (int i = 0; i < cur_paras.size() && i <= 3; i++) {
-//            if (lower(cur_paras[i].second) == lower(symbol)) {
+//            if (cur_paras[i].second == symbol) {
 //                return true;
 //            }
 //        }
@@ -593,13 +592,13 @@ string MipsGenerator::symbol_to_addr(const string &symbol) {
     }
 
     for (int i = 0; i < 10; i++) {
-        if (t_reg_table[i] == lower(symbol)) {
+        if (t_reg_table[i] == symbol) {
             string t_reg = "$t" + to_string(i);
             return t_reg;
         }
     }
     for (int i = 0; i < 8; i++) {
-        if (s_reg_table[i] == lower(symbol)) {
+        if (s_reg_table[i] == symbol) {
             return "$s" + to_string(i);
         }
     }
@@ -617,7 +616,7 @@ string MipsGenerator::symbol_to_addr(const string &symbol) {
 string MipsGenerator::assign_t_reg(const string &name) {
     for (int i = 0; i < 10; i++) {
         if (t_reg_table[i] == VACANT) {
-            t_reg_table[i] = lower(name);
+            t_reg_table[i] = name;
             return "$t" + to_string(i);
         }
     }
@@ -628,7 +627,7 @@ string MipsGenerator::assign_s_reg(const string &name) {
 
     for (int i = 0; i < 8; i++) {
         if (s_reg_table[i] == VACANT) {
-            s_reg_table[i] = lower(name);
+            s_reg_table[i] = name;
             return "$s" + to_string(i);
         }
     }

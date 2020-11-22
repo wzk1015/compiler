@@ -1,18 +1,18 @@
-const char A_c = '*' ;
-int A = 222 ;
-int B = 333 ;
-int C = 444 ;
+const char a_c = '*' ;
+int a = 222 ;
+int b = 333 ;
+int c = 444 ;
 int ans ;
-char B_c = 'a' ;
-char C_c = 'b' ;
-char D_c = 'c' ;
-int check_assign (int n , char N_c ){
-char AA_c = '3' ;
-int AA [ 3 ] = {
+char b_c = 'a' ;
+char c_c = 'b' ;
+char d_c = 'c' ;
+int check_assign (int n , char n_c ){
+char aa_c = '3' ;
+int aa [ 3 ] = {
 0 , 0 , 0 }
 
 ;
-int BB [ 2 ] [ 3 ] = {
+int bb [ 2 ] [ 3 ] = {
 {
 1 , 1 , 1 }
 
@@ -22,14 +22,14 @@ int BB [ 2 ] [ 3 ] = {
 }
 
 ;
-printf ("const A_c=" , A_c );
-AA_c = N_c ;
-AA [ 1 ] = n ;
-BB [ 1 ] [ 1 ] = n + 1 ;
-BB [ 0 ] [ 0 ] = - BB [ 1 ] [ 1 ] ;
-printf ("BB[0][0]=" , BB [ 0 ] [ 0 ] );
-printf ("AA_c+AA[1]+BB[1][1]=" , AA_c + AA [ 1 ] + BB [ 1 ] [ 1 ] );
-return (AA_c + AA [ 1 ] + BB [ 1 ] [ 1 ] );
+printf ("const A_c=" , a_c );
+aa_c = n_c ;
+aa [ 1 ] = n ;
+bb [ 1 ] [ 1 ] = n + 1 ;
+bb [ 0 ] [ 0 ] = - bb [ 1 ] [ 1 ] ;
+printf ("BB[0][0]=" , bb [ 0 ] [ 0 ] );
+printf ("AA_c+AA[1]+BB[1][1]=" , aa_c + aa [ 1 ] + bb [ 1 ] [ 1 ] );
+return (aa_c + aa [ 1 ] + bb [ 1 ] [ 1 ] );
 }
 
 char func (){
@@ -37,8 +37,8 @@ return ('c' );
 }
 
 void main (){
-check_assign (A , B_c );
-D_c = func ();
+check_assign (a , b_c );
+d_c = func ();
 printf ("good" );
 }
 

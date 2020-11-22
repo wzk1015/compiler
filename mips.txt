@@ -5,52 +5,52 @@ str__2: .asciiz "AA_c+AA[1]+BB[1][1]="
 str__3: .asciiz "good\n"
 newline__: .asciiz "\n"
 .text
-# === A = 222 ===
+# === a = 222 ===
 li $k0, 222
 sw $k0, 0($gp)
-# === B = 333 ===
+# === b = 333 ===
 li $k0, 333
 sw $k0, 4($gp)
-# === C = 444 ===
+# === c = 444 ===
 li $k0, 444
 sw $k0, 8($gp)
-# === B_c = 97 ===
+# === b_c = 97 ===
 li $k0, 97
 sw $k0, 16($gp)
-# === C_c = 98 ===
+# === c_c = 98 ===
 li $k0, 98
 sw $k0, 20($gp)
-# === D_c = 99 ===
+# === d_c = 99 ===
 li $k0, 99
 sw $k0, 24($gp)
 # === =========FUNC int check_assign========= ===
 addi $sp, $sp, -204
-jal main
+j main
 check_assign:
-# === AA_c = 51 ===
+# === aa_c = 51 ===
 li $s0, 51
-# === AA[0] = 0 ===
+# === aa[0] = 0 ===
 sw $zero, 112($sp)
-# === AA[1] = 0 ===
+# === aa[1] = 0 ===
 sw $zero, 116($sp)
-# === AA[2] = 0 ===
+# === aa[2] = 0 ===
 sw $zero, 120($sp)
-# === BB[0] = 1 ===
+# === bb[0] = 1 ===
 li $k1, 1
 sw $k1, 172($sp)
-# === BB[1] = 1 ===
+# === bb[1] = 1 ===
 li $k1, 1
 sw $k1, 176($sp)
-# === BB[2] = 1 ===
+# === bb[2] = 1 ===
 li $k1, 1
 sw $k1, 180($sp)
-# === BB[3] = 1 ===
+# === bb[3] = 1 ===
 li $k1, 1
 sw $k1, 184($sp)
-# === BB[4] = 1 ===
+# === bb[4] = 1 ===
 li $k1, 1
 sw $k1, 188($sp)
-# === BB[5] = 1 ===
+# === bb[5] = 1 ===
 li $k1, 1
 sw $k1, 192($sp)
 # === PRINT 0 strcon ===
@@ -65,32 +65,32 @@ syscall
 la $a0, newline__
 li $v0, 4
 syscall
-# === AA_c = N_c ===
+# === aa_c = n_c ===
 lw $s1, 104($sp)
 move $s0, $s1
-# === AA[1] = n ===
+# === aa[1] = n ===
 lw $s2, 100($sp)
 sw $s2, 116($sp)
 # === #T13 = n + 1 ===
 addu $t0, $s2, 1
-# === BB[4] = #T13 ===
+# === bb[4] = #T13 ===
 sw $t0, 188($sp)
 # RELEASE $t0
-# === #T18 = BB[4] ===
+# === #T18 = bb[4] ===
 lw $t0, 188($sp)
 # === 0 = 0 ===
 move $zero, $zero
 # === #T19 = 0 - #T18 ===
 subu $t1, $zero, $t0
 # RELEASE $t0
-# === BB[0] = #T19 ===
+# === bb[0] = #T19 ===
 sw $t1, 172($sp)
 # RELEASE $t1
 # === PRINT 1 strcon ===
 la $a0, str__1
 li $v0, 4
 syscall
-# === #T24 = BB[0] ===
+# === #T24 = bb[0] ===
 lw $t0, 172($sp)
 # === PRINT #T24 int ===
 move $a0, $t0
@@ -105,12 +105,12 @@ syscall
 la $a0, str__2
 li $v0, 4
 syscall
-# === #T25 = AA[1] ===
+# === #T25 = aa[1] ===
 lw $t0, 116($sp)
-# === #T26 = AA_c + #T25 ===
+# === #T26 = aa_c + #T25 ===
 addu $t1, $s0, $t0
 # RELEASE $t0
-# === #T29 = BB[4] ===
+# === #T29 = bb[4] ===
 lw $t0, 188($sp)
 # === #T30 = #T26 + #T29 ===
 addu $t2, $t1, $t0
@@ -125,12 +125,12 @@ syscall
 la $a0, newline__
 li $v0, 4
 syscall
-# === #T31 = AA[1] ===
+# === #T31 = aa[1] ===
 lw $t0, 116($sp)
-# === #T32 = AA_c + #T31 ===
+# === #T32 = aa_c + #T31 ===
 addu $t1, $s0, $t0
 # RELEASE $t0
-# === #T35 = BB[4] ===
+# === #T35 = bb[4] ===
 lw $t0, 188($sp)
 # === #T36 = #T32 + #T35 ===
 addu $t2, $t1, $t0
@@ -151,10 +151,10 @@ jr $ra
 main:
 # === PREPARE_CALL check_assign ===
 addi $sp, $sp, -392
-# === PUSH_PARA A ===
+# === PUSH_PARA a ===
 lw $k0, 0($gp)
 sw $k0, 100($sp)
-# === PUSH_PARA B_c ===
+# === PUSH_PARA b_c ===
 lw $k0, 16($gp)
 sw $k0, 104($sp)
 # === CALL check_assign ===
@@ -165,7 +165,7 @@ addi $sp, $sp, -100
 # === CALL func ===
 jal func
 addi $sp, $sp, 100
-# === D_c = %RET + 0 ===
+# === d_c = %RET + 0 ===
 addu $k0, $v0, $zero
 sw $k0, 24($gp)
 # === PRINT 3 strcon ===
