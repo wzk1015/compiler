@@ -1,175 +1,1282 @@
 .data
-str__0: .asciiz "const A_c="
-str__1: .asciiz "BB[0][0]="
-str__2: .asciiz "AA_c+AA[1]+BB[1][1]="
-str__3: .asciiz "good\n"
+arr__a_: .space 4000
+arr__b_: .space 4000
+arr__kernelid_: .space 160
 newline__: .asciiz "\n"
 .text
-# === a = 222 ===
-li $k0, 222
-sw $k0, 0($gp)
-# === b = 333 ===
-li $k0, 333
-sw $k0, 4($gp)
-# === c = 444 ===
-li $k0, 444
-sw $k0, 8($gp)
-# === b_c = 97 ===
-li $k0, 97
-sw $k0, 16($gp)
-# === c_c = 98 ===
-li $k0, 98
-sw $k0, 20($gp)
-# === d_c = 99 ===
-li $k0, 99
-sw $k0, 24($gp)
-# === =========FUNC int check_assign========= ===
-addi $sp, $sp, -204
+
+# === =========FUNC int myscanf========= ===
+addi $sp, $sp, -304
 j main
-check_assign:
-# === aa_c = 51 ===
-li $s0, 51
-# === aa[0] = 0 ===
-sw $zero, 112($sp)
-# === aa[1] = 0 ===
-sw $zero, 116($sp)
-# === aa[2] = 0 ===
-sw $zero, 120($sp)
-# === bb[0] = 1 ===
-li $k1, 1
-sw $k1, 172($sp)
-# === bb[1] = 1 ===
-li $k1, 1
-sw $k1, 176($sp)
-# === bb[2] = 1 ===
-li $k1, 1
-sw $k1, 180($sp)
-# === bb[3] = 1 ===
-li $k1, 1
-sw $k1, 184($sp)
-# === bb[4] = 1 ===
-li $k1, 1
-sw $k1, 188($sp)
-# === bb[5] = 1 ===
-li $k1, 1
-sw $k1, 192($sp)
-# === PRINT 0 strcon ===
-la $a0, str__0
-li $v0, 4
+myscanf:
+
+# === SCANF n ===
+li $v0, 5
 syscall
-# === PRINT 42 char ===
-li $a0, 42
-li $v0, 11
+move $s0, $v0
+
+# === RETURN n ===
+move $v0, $s0
+jr $ra
+
+# === =========END_FUNC int myscanf========= ===
+
+# === =========FUNC void myprintf========= ===
+myprintf:
+
+# === PRINT n int ===
+lw $s0, 100($sp)
+move $a0, $s0
+li $v0, 1
 syscall
+
 # === PRINT #ENDL ===
 la $a0, newline__
 li $v0, 4
 syscall
-# === aa_c = n_c ===
-lw $s1, 104($sp)
-move $s0, $s1
-# === aa[1] = n ===
+
+# === RETURN ===
+jr $ra
+
+# === RETURN ===
+jr $ra
+
+# === =========END_FUNC void myprintf========= ===
+
+# === =========FUNC int checkrange========= ===
+checkrange:
+
+# === LABEL label_1 ===
+label_1:
+
+# === #T1 = num - 1073741824 ===
+lw $s0, 100($sp)
+subu $t0, $s0, 1073741824
+
+# === JUMP_IF #T1<=0 label_2 ===
+blez $t0, label_2
+# RELEASE $t0
+
+# === num = num - 1073741824 ===
+subu $s0, $s0, 1073741824
+
+# === JUMP label_1 ===
+j label_1
+
+# === LABEL label_2 ===
+label_2:
+
+# === LABEL label_3 ===
+label_3:
+
+# === #T3 = num ===
+move $t0, $s0
+
+# === JUMP_IF #T3>=0 label_4 ===
+bgez $t0, label_4
+# RELEASE $t0
+
+# === num = num + 1073741824 ===
+addu $s0, $s0, 1073741824
+
+# === JUMP label_3 ===
+j label_3
+
+# === LABEL label_4 ===
+label_4:
+
+# === RETURN num ===
+move $v0, $s0
+jr $ra
+
+# === =========END_FUNC int checkrange========= ===
+
+# === =========FUNC int reduce========= ===
+reduce:
+
+# === #T5 = kernelid ===
+lw $s0, 100($sp)
+move $t0, $s0
+
+# === JUMP_IF #T5!=0 label_5 ===
+bne $t0, $zero, label_5
+# RELEASE $t0
+
+# === PREPARE_CALL checkrange ===
+addi $sp, $sp, -220
+
+# === #T6 = x + y ===
+lw $s1, 324($sp)
+lw $s2, 328($sp)
+addu $t0, $s1, $s2
+
+# === PUSH_PARA #T6 ===
+sw $t0, 100($sp)
+# RELEASE $t0
+
+# === CALL checkrange ===
+sw $s0, 24($sp)
+sw $s1, 28($sp)
+sw $s2, 32($sp)
+sw $ra, 0($sp)
+jal checkrange
+lw $ra, 0($sp)
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+lw $s2, 32($sp)
+addi $sp, $sp, 220
+
+# === #T7 = %RET ===
+move $t0, $v0
+
+# === RETURN #T7 ===
+move $v0, $t0
+# RELEASE $t0
+jr $ra
+
+# === LABEL label_5 ===
+label_5:
+
+# === #T8 = kernelid - 1 ===
+subu $t0, $s0, 1
+
+# === JUMP_IF #T8!=0 label_6 ===
+bne $t0, $zero, label_6
+# RELEASE $t0
+
+# === ret = 0 ===
+move $s3, $zero
+
+# === i = 1 ===
+li $s4, 1
+
+# === LABEL label_7 ===
+label_7:
+
+# === #T9 = i - 1073741824 ===
+subu $t0, $s4, 1073741824
+
+# === JUMP_IF #T9>=0 label_8 ===
+bgez $t0, label_8
+# RELEASE $t0
+
+# === #T10 = x / i ===
+div $t0, $s1, $s4
+
+# === #T11 = x / i ===
+div $t1, $s1, $s4
+
+# === #T12 = #T11 / 2 ===
+div $t2, $t1, 2
+# RELEASE $t1
+
+# === #T13 = #T12 * 2 ===
+sll $t1, $t2, 1
+# RELEASE $t2
+
+# === #T14 = #T10 - #T13 ===
+subu $t2, $t0, $t1
+# RELEASE $t0
+# RELEASE $t1
+
+# === #T15 = y / i ===
+div $t0, $s2, $s4
+
+# === #T16 = y / i ===
+div $t1, $s2, $s4
+
+# === #T17 = #T16 / 2 ===
+div $t3, $t1, 2
+# RELEASE $t1
+
+# === #T18 = #T17 * 2 ===
+sll $t1, $t3, 1
+# RELEASE $t3
+
+# === #T19 = #T15 - #T18 ===
+subu $t3, $t0, $t1
+# RELEASE $t0
+# RELEASE $t1
+
+# === #T20 = #T14 - #T19 ===
+subu $t0, $t2, $t3
+# RELEASE $t2
+# RELEASE $t3
+
+# === JUMP_IF #T20!=0 label_9 ===
+bne $t0, $zero, label_9
+# RELEASE $t0
+
+# === ret = ret * 2 ===
+sll $s3, $s3, 1
+
+# === JUMP label_10 ===
+j label_10
+
+# === LABEL label_9 ===
+label_9:
+
+# === #T22 = ret * 2 ===
+sll $t0, $s3, 1
+
+# === ret = #T22 + 1 ===
+addu $s3, $t0, 1
+# RELEASE $t0
+
+# === LABEL label_10 ===
+label_10:
+
+# === i = i * 2 ===
+sll $s4, $s4, 1
+
+# === JUMP label_7 ===
+j label_7
+
+# === LABEL label_8 ===
+label_8:
+
+# === RETURN ret ===
+move $v0, $s3
+jr $ra
+
+# === LABEL label_6 ===
+label_6:
+
+# === #T25 = kernelid - 2 ===
+subu $t0, $s0, 2
+
+# === JUMP_IF #T25!=0 label_11 ===
+bne $t0, $zero, label_11
+# RELEASE $t0
+
+# === #T26 = x - y ===
+subu $t0, $s1, $s2
+
+# === JUMP_IF #T26<=0 label_12 ===
+blez $t0, label_12
+# RELEASE $t0
+
+# === RETURN x ===
+move $v0, $s1
+jr $ra
+
+# === JUMP label_13 ===
+j label_13
+
+# === LABEL label_12 ===
+label_12:
+
+# === RETURN y ===
+move $v0, $s2
+jr $ra
+
+# === LABEL label_13 ===
+label_13:
+
+# === LABEL label_11 ===
+label_11:
+
+# === #T27 = kernelid - 3 ===
+subu $t0, $s0, 3
+
+# === JUMP_IF #T27!=0 label_14 ===
+bne $t0, $zero, label_14
+# RELEASE $t0
+
+# === ret = 0 ===
+move $s3, $zero
+
+# === i = 1 ===
+li $s4, 1
+
+# === LABEL label_15 ===
+label_15:
+
+# === #T28 = i - 1073741824 ===
+subu $t0, $s4, 1073741824
+
+# === JUMP_IF #T28>=0 label_16 ===
+bgez $t0, label_16
+# RELEASE $t0
+
+# === #T29 = x / i ===
+div $t0, $s1, $s4
+
+# === #T30 = x / i ===
+div $t1, $s1, $s4
+
+# === #T31 = #T30 / 2 ===
+div $t2, $t1, 2
+# RELEASE $t1
+
+# === #T32 = #T31 * 2 ===
+sll $t1, $t2, 1
+# RELEASE $t2
+
+# === #T33 = #T29 - #T32 ===
+subu $t2, $t0, $t1
+# RELEASE $t0
+# RELEASE $t1
+
+# === #T34 = #T33 - 1 ===
+subu $t0, $t2, 1
+# RELEASE $t2
+
+# === JUMP_IF #T34!=0 label_17 ===
+bne $t0, $zero, label_17
+# RELEASE $t0
+
+# === #T35 = ret * 2 ===
+sll $t0, $s3, 1
+
+# === ret = #T35 + 1 ===
+addu $s3, $t0, 1
+# RELEASE $t0
+
+# === JUMP label_18 ===
+j label_18
+
+# === LABEL label_17 ===
+label_17:
+
+# === #T37 = y / i ===
+div $t0, $s2, $s4
+
+# === #T38 = y / i ===
+div $t1, $s2, $s4
+
+# === #T39 = #T38 / 2 ===
+div $t2, $t1, 2
+# RELEASE $t1
+
+# === #T40 = #T39 * 2 ===
+sll $t1, $t2, 1
+# RELEASE $t2
+
+# === #T41 = #T37 - #T40 ===
+subu $t2, $t0, $t1
+# RELEASE $t0
+# RELEASE $t1
+
+# === #T42 = #T41 - 1 ===
+subu $t0, $t2, 1
+# RELEASE $t2
+
+# === JUMP_IF #T42!=0 label_19 ===
+bne $t0, $zero, label_19
+# RELEASE $t0
+
+# === #T43 = ret * 2 ===
+sll $t0, $s3, 1
+
+# === ret = #T43 + 1 ===
+addu $s3, $t0, 1
+# RELEASE $t0
+
+# === LABEL label_19 ===
+label_19:
+
+# === ret = ret * 2 ===
+sll $s3, $s3, 1
+
+# === LABEL label_18 ===
+label_18:
+
+# === i = i * 2 ===
+sll $s4, $s4, 1
+
+# === JUMP label_15 ===
+j label_15
+
+# === LABEL label_16 ===
+label_16:
+
+# === RETURN ret ===
+move $v0, $s3
+jr $ra
+
+# === LABEL label_14 ===
+label_14:
+
+# === #T47 = kernelid - 4 ===
+subu $t0, $s0, 4
+
+# === JUMP_IF #T47!=0 label_20 ===
+bne $t0, $zero, label_20
+# RELEASE $t0
+
+# === ret = 0 ===
+move $s3, $zero
+
+# === i = 1 ===
+li $s4, 1
+
+# === LABEL label_21 ===
+label_21:
+
+# === #T48 = i - 1073741824 ===
+subu $t0, $s4, 1073741824
+
+# === JUMP_IF #T48>=0 label_22 ===
+bgez $t0, label_22
+# RELEASE $t0
+
+# === #T49 = x / i ===
+div $t0, $s1, $s4
+
+# === #T50 = x / i ===
+div $t1, $s1, $s4
+
+# === #T51 = #T50 / 2 ===
+div $t2, $t1, 2
+# RELEASE $t1
+
+# === #T52 = #T51 * 2 ===
+sll $t1, $t2, 1
+# RELEASE $t2
+
+# === #T53 = #T49 - #T52 ===
+subu $t2, $t0, $t1
+# RELEASE $t0
+# RELEASE $t1
+
+# === #T54 = #T53 - 1 ===
+subu $t0, $t2, 1
+# RELEASE $t2
+
+# === JUMP_IF #T54!=0 label_23 ===
+bne $t0, $zero, label_23
+# RELEASE $t0
+
+# === #T55 = y / i ===
+div $t0, $s2, $s4
+
+# === #T56 = y / i ===
+div $t1, $s2, $s4
+
+# === #T57 = #T56 / 2 ===
+div $t2, $t1, 2
+# RELEASE $t1
+
+# === #T58 = #T57 * 2 ===
+sll $t1, $t2, 1
+# RELEASE $t2
+
+# === #T59 = #T55 - #T58 ===
+subu $t2, $t0, $t1
+# RELEASE $t0
+# RELEASE $t1
+
+# === #T60 = #T59 - 1 ===
+subu $t0, $t2, 1
+# RELEASE $t2
+
+# === JUMP_IF #T60!=0 label_24 ===
+bne $t0, $zero, label_24
+# RELEASE $t0
+
+# === #T61 = ret * 2 ===
+sll $t0, $s3, 1
+
+# === ret = #T61 + 1 ===
+addu $s3, $t0, 1
+# RELEASE $t0
+
+# === JUMP label_25 ===
+j label_25
+
+# === LABEL label_24 ===
+label_24:
+
+# === ret = ret * 2 ===
+sll $s3, $s3, 1
+
+# === LABEL label_25 ===
+label_25:
+
+# === JUMP label_26 ===
+j label_26
+
+# === LABEL label_23 ===
+label_23:
+
+# === ret = ret * 2 ===
+sll $s3, $s3, 1
+
+# === LABEL label_26 ===
+label_26:
+
+# === i = i * 2 ===
+sll $s4, $s4, 1
+
+# === JUMP label_21 ===
+j label_21
+
+# === LABEL label_22 ===
+label_22:
+
+# === RETURN ret ===
+move $v0, $s3
+jr $ra
+
+# === LABEL label_20 ===
+label_20:
+
+# === RETURN 0 ===
+move $v0, $zero
+jr $ra
+
+# === =========END_FUNC int reduce========= ===
+
+# === =========FUNC int getvalue========= ===
+getvalue:
+
+# === #T66 = x ===
+lw $s0, 108($sp)
+move $t0, $s0
+
+# === JUMP_IF #T66>=0 label_27 ===
+bgez $t0, label_27
+# RELEASE $t0
+
+# === RETURN 0 ===
+move $v0, $zero
+jr $ra
+
+# === LABEL label_27 ===
+label_27:
+
+# === #T67 = y ===
+lw $s1, 112($sp)
+move $t0, $s1
+
+# === JUMP_IF #T67>=0 label_28 ===
+bgez $t0, label_28
+# RELEASE $t0
+
+# === RETURN 0 ===
+move $v0, $zero
+jr $ra
+
+# === LABEL label_28 ===
+label_28:
+
+# === #T68 = x - n ===
 lw $s2, 100($sp)
-sw $s2, 116($sp)
-# === #T13 = n + 1 ===
-addu $t0, $s2, 1
-# === bb[4] = #T13 ===
-sw $t0, 188($sp)
+subu $t0, $s0, $s2
+
+# === JUMP_IF #T68<0 label_29 ===
+bltz $t0, label_29
 # RELEASE $t0
-# === #T18 = bb[4] ===
-lw $t0, 188($sp)
-# === #T19 = 0 - #T18 ===
-subu $t1, $zero, $t0
+
+# === RETURN 0 ===
+move $v0, $zero
+jr $ra
+
+# === LABEL label_29 ===
+label_29:
+
+# === #T69 = y - m ===
+lw $s3, 104($sp)
+subu $t0, $s1, $s3
+
+# === JUMP_IF #T69<0 label_30 ===
+bltz $t0, label_30
 # RELEASE $t0
-# === bb[0] = #T19 ===
-sw $t1, 172($sp)
+
+# === RETURN 0 ===
+move $v0, $zero
+jr $ra
+
+# === LABEL label_30 ===
+label_30:
+
+# === #T70 = x * m ===
+mul $t0, $s0, $s3
+
+# === #T71 = #T70 + y ===
+addu $t1, $t0, $s1
+# RELEASE $t0
+
+# === #T72 = a[#T71] ===
+sll $k0, $t1, 2
 # RELEASE $t1
-# === PRINT 1 strcon ===
-la $a0, str__1
-li $v0, 4
-syscall
-# === #T24 = bb[0] ===
-lw $t0, 172($sp)
-# === PRINT #T24 int ===
-move $a0, $t0
+lw $t0, arr__a_($k0)
+
+# === RETURN #T72 ===
+move $v0, $t0
 # RELEASE $t0
-li $v0, 1
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
-# === PRINT 2 strcon ===
-la $a0, str__2
-li $v0, 4
-syscall
-# === #T25 = aa[1] ===
-lw $t0, 116($sp)
-# === #T26 = aa_c + #T25 ===
+jr $ra
+
+# === =========END_FUNC int getvalue========= ===
+
+# === =========FUNC int convn========= ===
+convn:
+
+# === i = 0 ===
+move $s0, $zero
+
+# === j = 0 ===
+move $s1, $zero
+
+# === flag1 = 1 ===
+li $s2, 1
+
+# === flag2 = 1 ===
+li $s3, 1
+
+# === flag3 = 1 ===
+li $s4, 1
+
+# === flag4 = 1 ===
+li $s5, 1
+
+# === LABEL label_31 ===
+label_31:
+
+# === #T73 = flag1 - 1 ===
+subu $t0, $s2, 1
+
+# === JUMP_IF #T73!=0 label_32 ===
+bne $t0, $zero, label_32
+# RELEASE $t0
+
+# === j = 0 ===
+move $s1, $zero
+
+# === LABEL label_33 ===
+label_33:
+
+# === #T74 = flag2 - 1 ===
+subu $t0, $s3, 1
+
+# === JUMP_IF #T74!=0 label_34 ===
+bne $t0, $zero, label_34
+# RELEASE $t0
+
+# === curr = 0 ===
+move $s6, $zero
+
+# === #T75 = c / 2 ===
+lw $s7, 112($sp)
+div $t0, $s7, 2
+
+# === x = i - #T75 ===
+subu $k0, $s0, $t0
+# RELEASE $t0
+sw $k0, 124($sp)
+
+# === LABEL label_35 ===
+label_35:
+
+# === #T77 = flag3 - 1 ===
+subu $t0, $s4, 1
+
+# === JUMP_IF #T77!=0 label_36 ===
+bne $t0, $zero, label_36
+# RELEASE $t0
+
+# === #T78 = c / 2 ===
+div $t0, $s7, 2
+
+# === y = j - #T78 ===
+subu $k0, $s1, $t0
+# RELEASE $t0
+sw $k0, 128($sp)
+
+# === LABEL label_37 ===
+label_37:
+
+# === #T80 = flag4 - 1 ===
+subu $t0, $s5, 1
+
+# === JUMP_IF #T80!=0 label_38 ===
+bne $t0, $zero, label_38
+# RELEASE $t0
+
+# === PREPARE_CALL reduce ===
+addi $sp, $sp, -464
+
+# === PUSH_PARA kernelid ===
+lw $k0, 564($sp)
+sw $k0, 100($sp)
+
+# === PUSH_PARA curr ===
+sw $s6, 104($sp)
+
+# === PREPARE_CALL getvalue ===
+addi $sp, $sp, -244
+
+# === PUSH_PARA n ===
+lw $k0, 812($sp)
+sw $k0, 100($sp)
+
+# === PUSH_PARA m ===
+lw $k0, 816($sp)
+sw $k0, 104($sp)
+
+# === PUSH_PARA x ===
+lw $k0, 832($sp)
+sw $k0, 108($sp)
+
+# === PUSH_PARA y ===
+lw $k0, 836($sp)
+sw $k0, 112($sp)
+
+# === CALL getvalue ===
+sw $s0, 24($sp)
+sw $s1, 28($sp)
+sw $s2, 32($sp)
+sw $s3, 36($sp)
+sw $s4, 40($sp)
+sw $s5, 44($sp)
+sw $s6, 48($sp)
+sw $s7, 52($sp)
+sw $ra, 0($sp)
+jal getvalue
+lw $ra, 0($sp)
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+lw $s2, 32($sp)
+lw $s3, 36($sp)
+lw $s4, 40($sp)
+lw $s5, 44($sp)
+lw $s6, 48($sp)
+lw $s7, 52($sp)
+addi $sp, $sp, 244
+
+# === #T81 = %RET ===
+move $t0, $v0
+
+# === PUSH_PARA #T81 ===
+sw $t0, 108($sp)
+# RELEASE $t0
+
+# === CALL reduce ===
+sw $s0, 24($sp)
+sw $s1, 28($sp)
+sw $s2, 32($sp)
+sw $s3, 36($sp)
+sw $s4, 40($sp)
+sw $s5, 44($sp)
+sw $s6, 48($sp)
+sw $s7, 52($sp)
+sw $ra, 0($sp)
+jal reduce
+lw $ra, 0($sp)
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+lw $s2, 32($sp)
+lw $s3, 36($sp)
+lw $s4, 40($sp)
+lw $s5, 44($sp)
+lw $s6, 48($sp)
+lw $s7, 52($sp)
+addi $sp, $sp, 464
+
+# === curr = %RET ===
+move $s6, $v0
+
+# === y = y + 1 ===
+lw $k0, 128($sp)
+addu $k0, $k0, 1
+sw $k0, 128($sp)
+
+# === #T84 = c / 2 ===
+div $t0, $s7, 2
+
+# === #T85 = j + #T84 ===
+addu $t1, $s1, $t0
+# RELEASE $t0
+
+# === #T86 = y - #T85 ===
+lw $k0, 128($sp)
+subu $t0, $k0, $t1
+# RELEASE $t1
+
+# === JUMP_IF #T86<0 label_39 ===
+bltz $t0, label_39
+# RELEASE $t0
+
+# === flag4 = 0 ===
+move $s5, $zero
+
+# === LABEL label_39 ===
+label_39:
+
+# === JUMP label_37 ===
+j label_37
+
+# === LABEL label_38 ===
+label_38:
+
+# === flag4 = 1 ===
+li $s5, 1
+
+# === x = x + 1 ===
+lw $k0, 124($sp)
+addu $k0, $k0, 1
+sw $k0, 124($sp)
+
+# === #T88 = c / 2 ===
+div $t0, $s7, 2
+
+# === #T89 = i + #T88 ===
 addu $t1, $s0, $t0
 # RELEASE $t0
-# === #T29 = bb[4] ===
-lw $t0, 188($sp)
-# === #T30 = #T26 + #T29 ===
-addu $t2, $t1, $t0
+
+# === #T90 = x - #T89 ===
+lw $k0, 124($sp)
+subu $t0, $k0, $t1
 # RELEASE $t1
+
+# === JUMP_IF #T90<0 label_40 ===
+bltz $t0, label_40
 # RELEASE $t0
-# === PRINT #T30 int ===
-move $a0, $t2
-# RELEASE $t2
-li $v0, 1
-syscall
-# === PRINT #ENDL ===
-la $a0, newline__
-li $v0, 4
-syscall
-# === #T31 = aa[1] ===
-lw $t0, 116($sp)
-# === #T32 = aa_c + #T31 ===
-addu $t1, $s0, $t0
+
+# === flag3 = 0 ===
+move $s4, $zero
+
+# === LABEL label_40 ===
+label_40:
+
+# === JUMP label_35 ===
+j label_35
+
+# === LABEL label_36 ===
+label_36:
+
+# === flag3 = 1 ===
+li $s4, 1
+
+# === #T91 = i * m ===
+lw $k0, 108($sp)
+mul $t0, $s0, $k0
+
+# === #T92 = #T91 + j ===
+addu $t1, $t0, $s1
 # RELEASE $t0
-# === #T35 = bb[4] ===
-lw $t0, 188($sp)
-# === #T36 = #T32 + #T35 ===
-addu $t2, $t1, $t0
+
+# === b[#T92] = curr ===
+sll $k0, $t1, 2
 # RELEASE $t1
+sw $s6, arr__b_($k0)
+
+# === j = j + 1 ===
+addu $s1, $s1, 1
+
+# === #T94 = j - m ===
+lw $k0, 108($sp)
+subu $t0, $s1, $k0
+
+# === JUMP_IF #T94<0 label_41 ===
+bltz $t0, label_41
 # RELEASE $t0
-# === RETURN #T36 ===
-move $v0, $t2
-# RELEASE $t2
+
+# === flag2 = 0 ===
+move $s3, $zero
+
+# === LABEL label_41 ===
+label_41:
+
+# === JUMP label_33 ===
+j label_33
+
+# === LABEL label_34 ===
+label_34:
+
+# === flag2 = 1 ===
+li $s3, 1
+
+# === i = i + 1 ===
+addu $s0, $s0, 1
+
+# === #T96 = i - n ===
+lw $k0, 104($sp)
+subu $t0, $s0, $k0
+
+# === JUMP_IF #T96<0 label_42 ===
+bltz $t0, label_42
+# RELEASE $t0
+
+# === flag1 = 0 ===
+move $s2, $zero
+
+# === LABEL label_42 ===
+label_42:
+
+# === JUMP label_31 ===
+j label_31
+
+# === LABEL label_32 ===
+label_32:
+
+# === RETURN 0 ===
+move $v0, $zero
 jr $ra
-# === =========END_FUNC int check_assign========= ===
-# === =========FUNC char func========= ===
-func:
-# === RETURN 99 ===
-li $v0, 99
+
+# === =========END_FUNC int convn========= ===
+
+# === =========FUNC void mymemmove========= ===
+mymemmove:
+
+# === i = 0 ===
+move $s0, $zero
+
+# === LABEL label_43 ===
+label_43:
+
+# === #T97 = i - n ===
+lw $s1, 100($sp)
+subu $t0, $s0, $s1
+
+# === JUMP_IF #T97>=0 label_44 ===
+bgez $t0, label_44
+# RELEASE $t0
+
+# === #T98 = b[i] ===
+sll $k0, $s0, 2
+lw $t0, arr__b_($k0)
+
+# === a[i] = #T98 ===
+sll $k0, $s0, 2
+sw $t0, arr__a_($k0)
+# RELEASE $t0
+
+# === i = i + 1 ===
+addu $s0, $s0, 1
+
+# === JUMP label_43 ===
+j label_43
+
+# === LABEL label_44 ===
+label_44:
+
+# === RETURN ===
 jr $ra
-# === =========END_FUNC char func========= ===
+
+# === =========END_FUNC void mymemmove========= ===
+
 # === =========FUNC void main========= ===
 main:
-# === PREPARE_CALL check_assign ===
-addi $sp, $sp, -392
-# === PUSH_PARA a ===
-lw $k0, 0($gp)
-sw $k0, 100($sp)
-# === PUSH_PARA b_c ===
-lw $k0, 16($gp)
-sw $k0, 104($sp)
-# === CALL check_assign ===
-jal check_assign
-addi $sp, $sp, 392
-# === PREPARE_CALL func ===
-addi $sp, $sp, -100
-# === CALL func ===
-jal func
-addi $sp, $sp, 100
-# === d_c = %RET + 0 ===
-addu $k0, $v0, $zero
-sw $k0, 24($gp)
-# === PRINT 3 strcon ===
-la $a0, str__3
-li $v0, 4
+
+# === i = 0 ===
+move $s0, $zero
+
+# === PREPARE_CALL myscanf ===
+addi $sp, $sp, -200
+
+# === CALL myscanf ===
+sw $s0, 24($sp)
+jal myscanf
+lw $s0, 24($sp)
+addi $sp, $sp, 200
+
+# === c = %RET ===
+move $s1, $v0
+
+# === PREPARE_CALL myscanf ===
+addi $sp, $sp, -200
+
+# === CALL myscanf ===
+sw $s0, 24($sp)
+sw $s1, 28($sp)
+jal myscanf
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+addi $sp, $sp, 200
+
+# === n = %RET ===
+move $s2, $v0
+
+# === PREPARE_CALL myscanf ===
+addi $sp, $sp, -200
+
+# === CALL myscanf ===
+sw $s0, 24($sp)
+sw $s1, 28($sp)
+sw $s2, 32($sp)
+jal myscanf
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+lw $s2, 32($sp)
+addi $sp, $sp, 200
+
+# === m = %RET ===
+move $s3, $v0
+
+# === PREPARE_CALL myscanf ===
+addi $sp, $sp, -200
+
+# === CALL myscanf ===
+sw $s0, 24($sp)
+sw $s1, 28($sp)
+sw $s2, 32($sp)
+sw $s3, 36($sp)
+jal myscanf
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+lw $s2, 32($sp)
+lw $s3, 36($sp)
+addi $sp, $sp, 200
+
+# === arrlen = %RET ===
+move $s4, $v0
+
+# === LABEL label_45 ===
+label_45:
+
+# === #T104 = i - arrlen ===
+subu $t0, $s0, $s4
+
+# === JUMP_IF #T104>=0 label_46 ===
+bgez $t0, label_46
+# RELEASE $t0
+
+# === PREPARE_CALL myscanf ===
+addi $sp, $sp, -200
+
+# === CALL myscanf ===
+sw $s0, 24($sp)
+sw $s1, 28($sp)
+sw $s2, 32($sp)
+sw $s3, 36($sp)
+sw $s4, 40($sp)
+jal myscanf
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+lw $s2, 32($sp)
+lw $s3, 36($sp)
+lw $s4, 40($sp)
+addi $sp, $sp, 200
+
+# === #T105 = %RET ===
+move $t0, $v0
+
+# === a[i] = #T105 ===
+sll $k0, $s0, 2
+sw $t0, arr__a_($k0)
+# RELEASE $t0
+
+# === i = i + 1 ===
+addu $s0, $s0, 1
+
+# === JUMP label_45 ===
+j label_45
+
+# === LABEL label_46 ===
+label_46:
+
+# === PREPARE_CALL myscanf ===
+addi $sp, $sp, -200
+
+# === CALL myscanf ===
+sw $s0, 24($sp)
+sw $s1, 28($sp)
+sw $s2, 32($sp)
+sw $s3, 36($sp)
+sw $s4, 40($sp)
+jal myscanf
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+lw $s2, 32($sp)
+lw $s3, 36($sp)
+lw $s4, 40($sp)
+addi $sp, $sp, 200
+
+# === task = %RET ===
+move $s5, $v0
+
+# === i = 0 ===
+move $s0, $zero
+
+# === LABEL label_47 ===
+label_47:
+
+# === #T108 = i - task ===
+subu $t0, $s0, $s5
+
+# === JUMP_IF #T108>=0 label_48 ===
+bgez $t0, label_48
+# RELEASE $t0
+
+# === PREPARE_CALL myscanf ===
+addi $sp, $sp, -200
+
+# === CALL myscanf ===
+sw $s0, 24($sp)
+sw $s1, 28($sp)
+sw $s2, 32($sp)
+sw $s3, 36($sp)
+sw $s4, 40($sp)
+sw $s5, 44($sp)
+jal myscanf
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+lw $s2, 32($sp)
+lw $s3, 36($sp)
+lw $s4, 40($sp)
+lw $s5, 44($sp)
+addi $sp, $sp, 200
+
+# === #T109 = %RET ===
+move $t0, $v0
+
+# === kernelid[i] = #T109 ===
+sll $k0, $s0, 2
+sw $t0, arr__kernelid_($k0)
+# RELEASE $t0
+
+# === i = i + 1 ===
+addu $s0, $s0, 1
+
+# === JUMP label_47 ===
+j label_47
+
+# === LABEL label_48 ===
+label_48:
+
+# === i = 0 ===
+move $s0, $zero
+
+# === LABEL label_49 ===
+label_49:
+
+# === #T111 = i - task ===
+subu $t0, $s0, $s5
+
+# === JUMP_IF #T111>=0 label_50 ===
+bgez $t0, label_50
+# RELEASE $t0
+
+# === PREPARE_CALL convn ===
+addi $sp, $sp, -348
+
+# === #T112 = kernelid[i] ===
+sll $k0, $s0, 2
+lw $t0, arr__kernelid_($k0)
+
+# === PUSH_PARA #T112 ===
+sw $t0, 100($sp)
+# RELEASE $t0
+
+# === PUSH_PARA n ===
+sw $s2, 104($sp)
+
+# === PUSH_PARA m ===
+sw $s3, 108($sp)
+
+# === PUSH_PARA c ===
+sw $s1, 112($sp)
+
+# === CALL convn ===
+sw $s0, 24($sp)
+sw $s1, 28($sp)
+sw $s2, 32($sp)
+sw $s3, 36($sp)
+sw $s4, 40($sp)
+sw $s5, 44($sp)
+jal convn
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+lw $s2, 32($sp)
+lw $s3, 36($sp)
+lw $s4, 40($sp)
+lw $s5, 44($sp)
+addi $sp, $sp, 348
+
+# === PREPARE_CALL mymemmove ===
+addi $sp, $sp, -220
+
+# === #T113 = n * m ===
+mul $t0, $s2, $s3
+
+# === PUSH_PARA #T113 ===
+sw $t0, 100($sp)
+# RELEASE $t0
+
+# === CALL mymemmove ===
+sw $s0, 24($sp)
+sw $s1, 28($sp)
+sw $s2, 32($sp)
+sw $s3, 36($sp)
+sw $s4, 40($sp)
+sw $s5, 44($sp)
+jal mymemmove
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+lw $s2, 32($sp)
+lw $s3, 36($sp)
+lw $s4, 40($sp)
+lw $s5, 44($sp)
+addi $sp, $sp, 220
+
+# === i = i + 1 ===
+addu $s0, $s0, 1
+
+# === JUMP label_49 ===
+j label_49
+
+# === LABEL label_50 ===
+label_50:
+
+# === i = 0 ===
+move $s0, $zero
+
+# === LABEL label_51 ===
+label_51:
+
+# === #T115 = n * m ===
+mul $t0, $s2, $s3
+
+# === #T116 = i - #T115 ===
+subu $t1, $s0, $t0
+# RELEASE $t0
+
+# === JUMP_IF #T116>=0 label_52 ===
+bgez $t1, label_52
+# RELEASE $t1
+
+# === PREPARE_CALL myprintf ===
+addi $sp, $sp, -200
+
+# === #T117 = a[i] ===
+sll $k0, $s0, 2
+lw $t0, arr__a_($k0)
+
+# === PUSH_PARA #T117 ===
+sw $t0, 100($sp)
+# RELEASE $t0
+
+# === CALL myprintf ===
+sw $s0, 24($sp)
+sw $s1, 28($sp)
+sw $s2, 32($sp)
+sw $s3, 36($sp)
+sw $s4, 40($sp)
+sw $s5, 44($sp)
+jal myprintf
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+lw $s2, 32($sp)
+lw $s3, 36($sp)
+lw $s4, 40($sp)
+lw $s5, 44($sp)
+addi $sp, $sp, 200
+
+# === i = i + 1 ===
+addu $s0, $s0, 1
+
+# === JUMP label_51 ===
+j label_51
+
+# === LABEL label_52 ===
+label_52:
+
+# === RETURN ===
+li $v0, 10
 syscall
+
 # === RETURN ===
 li $v0, 10
 syscall

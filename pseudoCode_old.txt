@@ -1,0 +1,331 @@
+===============
+=========FUNC int myscanf=========
+SCANF n
+RETURN n
+=========END_FUNC int myscanf=========
+=========FUNC void myprintf=========
+PRINT n int
+PRINT #ENDL
+RETURN
+RETURN
+=========END_FUNC void myprintf=========
+=========FUNC int checkrange=========
+LABEL label_1
+#T1 = num - 1073741824
+JUMP_IF #T1<=0 label_2
+num = num - 1073741824
+JUMP label_1
+LABEL label_2
+LABEL label_3
+#T3 = num
+JUMP_IF #T3>=0 label_4
+num = num + 1073741824
+JUMP label_3
+LABEL label_4
+RETURN num
+=========END_FUNC int checkrange=========
+=========FUNC int reduce=========
+#T5 = kernelid
+JUMP_IF #T5!=0 label_5
+PREPARE_CALL checkrange
+#T6 = x + y
+PUSH_PARA #T6
+CALL checkrange
+#T7 = %RET
+RETURN #T7
+LABEL label_5
+#T8 = kernelid - 1
+JUMP_IF #T8!=0 label_6
+ret = 0
+i = 1
+LABEL label_7
+#T9 = i - 1073741824
+JUMP_IF #T9>=0 label_8
+#T10 = x / i
+#T11 = x / i
+#T12 = #T11 / 2
+#T13 = #T12 * 2
+#T14 = #T10 - #T13
+#T15 = y / i
+#T16 = y / i
+#T17 = #T16 / 2
+#T18 = #T17 * 2
+#T19 = #T15 - #T18
+#T20 = #T14 - #T19
+JUMP_IF #T20!=0 label_9
+ret = ret * 2
+JUMP label_10
+LABEL label_9
+#T22 = ret * 2
+ret = #T22 + 1
+LABEL label_10
+i = i * 2
+JUMP label_7
+LABEL label_8
+RETURN ret
+LABEL label_6
+#T25 = kernelid - 2
+JUMP_IF #T25!=0 label_11
+#T26 = x - y
+JUMP_IF #T26<=0 label_12
+RETURN x
+JUMP label_13
+LABEL label_12
+RETURN y
+LABEL label_13
+LABEL label_11
+#T27 = kernelid - 3
+JUMP_IF #T27!=0 label_14
+ret = 0
+i = 1
+LABEL label_15
+#T28 = i - 1073741824
+JUMP_IF #T28>=0 label_16
+#T29 = x / i
+#T30 = x / i
+#T31 = #T30 / 2
+#T32 = #T31 * 2
+#T33 = #T29 - #T32
+#T34 = #T33 - 1
+JUMP_IF #T34!=0 label_17
+#T35 = ret * 2
+ret = #T35 + 1
+JUMP label_18
+LABEL label_17
+#T37 = y / i
+#T38 = y / i
+#T39 = #T38 / 2
+#T40 = #T39 * 2
+#T41 = #T37 - #T40
+#T42 = #T41 - 1
+JUMP_IF #T42!=0 label_19
+#T43 = ret * 2
+ret = #T43 + 1
+LABEL label_19
+ret = ret * 2
+LABEL label_18
+i = i * 2
+JUMP label_15
+LABEL label_16
+RETURN ret
+LABEL label_14
+#T47 = kernelid - 4
+JUMP_IF #T47!=0 label_20
+ret = 0
+i = 1
+LABEL label_21
+#T48 = i - 1073741824
+JUMP_IF #T48>=0 label_22
+#T49 = x / i
+#T50 = x / i
+#T51 = #T50 / 2
+#T52 = #T51 * 2
+#T53 = #T49 - #T52
+#T54 = #T53 - 1
+JUMP_IF #T54!=0 label_23
+#T55 = y / i
+#T56 = y / i
+#T57 = #T56 / 2
+#T58 = #T57 * 2
+#T59 = #T55 - #T58
+#T60 = #T59 - 1
+JUMP_IF #T60!=0 label_24
+#T61 = ret * 2
+ret = #T61 + 1
+JUMP label_25
+LABEL label_24
+ret = ret * 2
+LABEL label_25
+JUMP label_26
+LABEL label_23
+ret = ret * 2
+LABEL label_26
+i = i * 2
+JUMP label_21
+LABEL label_22
+RETURN ret
+LABEL label_20
+RETURN 0
+=========END_FUNC int reduce=========
+=========FUNC int getvalue=========
+#T66 = x
+JUMP_IF #T66>=0 label_27
+RETURN 0
+LABEL label_27
+#T67 = y
+JUMP_IF #T67>=0 label_28
+RETURN 0
+LABEL label_28
+#T68 = x - n
+JUMP_IF #T68<0 label_29
+RETURN 0
+LABEL label_29
+#T69 = y - m
+JUMP_IF #T69<0 label_30
+RETURN 0
+LABEL label_30
+#T70 = x * m
+#T71 = #T70 + y
+#T72 = a[#T71]
+RETURN #T72
+=========END_FUNC int getvalue=========
+=========FUNC int convn=========
+i = 0
+j = 0
+flag1 = 1
+flag2 = 1
+flag3 = 1
+flag4 = 1
+LABEL label_31
+#T73 = flag1 - 1
+JUMP_IF #T73!=0 label_32
+j = 0
+LABEL label_33
+#T74 = flag2 - 1
+JUMP_IF #T74!=0 label_34
+curr = 0
+#T75 = c / 2
+x = i - #T75
+LABEL label_35
+#T77 = flag3 - 1
+JUMP_IF #T77!=0 label_36
+#T78 = c / 2
+y = j - #T78
+LABEL label_37
+#T80 = flag4 - 1
+JUMP_IF #T80!=0 label_38
+PREPARE_CALL reduce
+PUSH_PARA kernelid
+PUSH_PARA curr
+PREPARE_CALL getvalue
+PUSH_PARA n
+PUSH_PARA m
+PUSH_PARA x
+PUSH_PARA y
+CALL getvalue
+#T81 = %RET
+PUSH_PARA #T81
+CALL reduce
+curr = %RET
+y = y + 1
+#T84 = c / 2
+#T85 = j + #T84
+#T86 = y - #T85
+JUMP_IF #T86<0 label_39
+flag4 = 0
+LABEL label_39
+JUMP label_37
+LABEL label_38
+flag4 = 1
+x = x + 1
+#T88 = c / 2
+#T89 = i + #T88
+#T90 = x - #T89
+JUMP_IF #T90<0 label_40
+flag3 = 0
+LABEL label_40
+JUMP label_35
+LABEL label_36
+flag3 = 1
+#T91 = i * m
+#T92 = #T91 + j
+b[#T92] = curr
+j = j + 1
+#T94 = j - m
+JUMP_IF #T94<0 label_41
+flag2 = 0
+LABEL label_41
+JUMP label_33
+LABEL label_34
+flag2 = 1
+i = i + 1
+#T96 = i - n
+JUMP_IF #T96<0 label_42
+flag1 = 0
+LABEL label_42
+JUMP label_31
+LABEL label_32
+RETURN 0
+=========END_FUNC int convn=========
+=========FUNC void mymemmove=========
+i = 0
+LABEL label_43
+#T97 = i - n
+JUMP_IF #T97>=0 label_44
+#T98 = b[i]
+a[i] = #T98
+i = i + 1
+JUMP label_43
+LABEL label_44
+RETURN
+=========END_FUNC void mymemmove=========
+=========FUNC void main=========
+i = 0
+PREPARE_CALL myscanf
+CALL myscanf
+c = %RET
+PREPARE_CALL myscanf
+CALL myscanf
+n = %RET
+PREPARE_CALL myscanf
+CALL myscanf
+m = %RET
+PREPARE_CALL myscanf
+CALL myscanf
+arrlen = %RET
+LABEL label_45
+#T104 = i - arrlen
+JUMP_IF #T104>=0 label_46
+PREPARE_CALL myscanf
+CALL myscanf
+#T105 = %RET
+a[i] = #T105
+i = i + 1
+JUMP label_45
+LABEL label_46
+PREPARE_CALL myscanf
+CALL myscanf
+task = %RET
+i = 0
+LABEL label_47
+#T108 = i - task
+JUMP_IF #T108>=0 label_48
+PREPARE_CALL myscanf
+CALL myscanf
+#T109 = %RET
+kernelid[i] = #T109
+i = i + 1
+JUMP label_47
+LABEL label_48
+i = 0
+LABEL label_49
+#T111 = i - task
+JUMP_IF #T111>=0 label_50
+PREPARE_CALL convn
+#T112 = kernelid[i]
+PUSH_PARA #T112
+PUSH_PARA n
+PUSH_PARA m
+PUSH_PARA c
+CALL convn
+PREPARE_CALL mymemmove
+#T113 = n * m
+PUSH_PARA #T113
+CALL mymemmove
+i = i + 1
+JUMP label_49
+LABEL label_50
+i = 0
+LABEL label_51
+#T115 = n * m
+#T116 = i - #T115
+JUMP_IF #T116>=0 label_52
+PREPARE_CALL myprintf
+#T117 = a[i]
+PUSH_PARA #T117
+CALL myprintf
+i = i + 1
+JUMP label_51
+LABEL label_52
+RETURN
+RETURN

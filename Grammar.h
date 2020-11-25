@@ -7,7 +7,7 @@
 #include "Lexer.h"
 #include "Error.h"
 #include "SymTable.h"
-#include "MidCode.h"
+#include "PseudoCode.h"
 
 class TreeNode {
 public:

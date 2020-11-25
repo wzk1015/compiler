@@ -21,24 +21,40 @@ int main() {
         return 0;
     }
 
-//    MidCodeList::reset();
+//    PseudoCodeList::reset();
 //    SymTable::reset();
 //    Grammar optimizer("testfile_replace.txt", gen_inline);
 //    optimizer.analyze();
 //    optimizer.save_lexer_results("testfile_optimize.txt");
 //
 //    //语义分析、中间代码生成
-//    MidCodeList::reset();
+//    PseudoCodeList::reset();
 //    SymTable::reset();
 //    Grammar semantic("testfile_optimize.txt", semantic_analyze);
 //    semantic.analyze();
 
     //中间代码优化
-    MidCodeList::refactor();
-    MidCodeList::remove_redundant_assign();
-    MidCodeList::save_to_file("midCode_old.txt");
-    MidCodeList::const_broadcast();
-    MidCodeList::save_to_file("midCode.txt");
+
+    PseudoCodeList::refactor();
+
+
+
+    PseudoCodeList::remove_redundant_assign();
+
+    PseudoCodeList::const_broadcast();
+
+    PseudoCodeList::save_to_file("pseudoCode_old.txt");
+
+    PseudoCodeList::remove_redundant_tmp();
+//
+//    PseudoCodeList::remove_redundant_assign();
+//
+//    PseudoCodeList::remove_tripple();
+//
+//    PseudoCodeList::const_broadcast();
+
+    PseudoCodeList::save_to_file("pseudoCode.txt");
+
 
     //目标代码生成
     MipsGenerator mips;
@@ -48,5 +64,6 @@ int main() {
     SymTable::show();
 
     //grammar.show_tree();
+
     return 0;
 }

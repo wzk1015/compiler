@@ -190,7 +190,6 @@ void Grammar::ConstDef() {
         do {
             next_sym();
             id = Identifier();
-            change_name();
             Token tk2 = tk;
             next_sym();
             if (sym != "ASSIGN") {
@@ -207,7 +206,6 @@ void Grammar::ConstDef() {
         do {
             next_sym();
             id = Identifier();
-            change_name();
             Token tk2 = tk;
             next_sym();
             if (sym != "ASSIGN") {
@@ -328,7 +326,6 @@ void Grammar::VariableDef() {
 
     next_sym();
     id = Identifier();
-    change_name();
     Token tk2 = tk;
     next_sym();
     if (sym == "ASSIGN") {  //int a=1;
@@ -488,7 +485,6 @@ void Grammar::VariableDef() {
         while (sym == "COMMA") {
             next_sym();
             Identifier();
-            change_name();
             Token tk3 = tk;
             next_sym();
             if (sym == "LBRACK") {
@@ -551,16 +547,6 @@ void Grammar::SharedFuncDefBody() {
     if (sym != "LBRACE") {
         error("'{'");
     }
-//    if (mode == gen_inline && funcdef_ret != void_ret) {
-//        if (funcdef_ret == integer) {
-//            new_lex_results.emplace_back("INTTK", "int");
-//        } else {
-//            new_lex_results.emplace_back("CHARTK", "char");
-//        }
-//
-//        new_lex_results.emplace_back("IDENFR", "&RET&");
-//        new_lex_results.emplace_back("SEMICN", ";");
-//    }
     add_leaf();
     next_sym();
     CompoundStmt();
@@ -719,7 +705,6 @@ void Grammar::ParaList() {
     DataType dataType = (sym == "INTTK") ? integer : character;
     next_sym();
     Identifier();
-    change_name();
     tmp_paras.emplace_back(dataType, tk.str);
     SymTable::add(cur_func, tk, para, dataType, local_addr);
 //    add_midcode(OP_PARA, type_to_str(dataType), tk.str, VACANT);
@@ -733,7 +718,6 @@ void Grammar::ParaList() {
         add_leaf();
         next_sym();
         Identifier();
-        change_name();
         tmp_paras.emplace_back(dataType, tk.str);
         SymTable::add(cur_func, tk, para, dataType, local_addr);
 //        add_midcode(OP_PARA, type_to_str(dataType), tk.str, VACANT);
@@ -874,13 +858,12 @@ pair<DataType, string> Grammar::Factor() {
     DataType ret_type = integer;
     string ret_str;
     if (sym == "IDENFR") {
-        next_sym();
-        if (sym != "LPARENT") {
-            retract();
-            change_name();
-        } else {
-            retract();
-        }
+//        next_sym();
+//        if (sym != "LPARENT") {
+//            retract();
+//        } else {
+//            retract();
+//        }
         add_leaf();
         SymTableItem item = SymTable::search(cur_func, tk);
         if (item.dataType == character) {
@@ -1043,7 +1026,6 @@ void Grammar::Stmt() {
 void Grammar::AssignStmt() {
     add_node("<赋值语句>");
     string id = Identifier();
-    change_name();
     string value;
     SymTableItem item = SymTable::search(cur_func, tk);
     if (item.valid && item.stiType == constant) {
@@ -1132,7 +1114,7 @@ void Grammar::ConditionStmt() {
     next_sym();
     if (sym == "ELSETK") {
         add_leaf();
-        string label_end = MidCodeList::assign_label();
+        string label_end = PseudoCodeList::assign_label();
         add_midcode(OP_JUMP_UNCOND, label_end, VACANT, VACANT);
         add_midcode(OP_LABEL, label_else, VACANT, VACANT);
         next_sym();
@@ -1196,7 +1178,7 @@ void Grammar::LoopStmt() {
         }
         add_leaf();
         next_sym();
-        string label_begin = MidCodeList::assign_label();
+        string label_begin = PseudoCodeList::assign_label();
         add_midcode(OP_LABEL, label_begin, VACANT, VACANT);
         pair<string, string> cond = Condition();
         string label_end = add_midcode(OP_JUMP_IF, cond.first, cond.second, AUTO_LABEL);
@@ -1218,7 +1200,6 @@ void Grammar::LoopStmt() {
         add_leaf();
         next_sym();
         string id = Identifier();
-        change_name();
         SymTable::search(cur_func, tk);
         SymTableItem item = SymTable::search(cur_func, tk);
         if (item.stiType == para) {
@@ -1239,7 +1220,7 @@ void Grammar::LoopStmt() {
         }
         add_leaf();
         next_sym();
-        string label_begin = MidCodeList::assign_label();
+        string label_begin = PseudoCodeList::assign_label();
         add_midcode(OP_LABEL, label_begin, VACANT, VACANT);
         pair<string, string> cond = Condition();
         string label_end = add_midcode(OP_JUMP_IF, cond.first, cond.second, AUTO_LABEL);
@@ -1251,7 +1232,6 @@ void Grammar::LoopStmt() {
 
         next_sym();
         id = Identifier();
-        change_name();
         item = SymTable::search(cur_func, tk);
         if (item.stiType == para) {
             para_assigned = true;
@@ -1263,7 +1243,6 @@ void Grammar::LoopStmt() {
         add_leaf();
         next_sym();
         string id2 = Identifier();
-        change_name();
         SymTable::search(cur_func, tk);
         next_sym();
         string op = sym == "PLUS" ? OP_ADD : OP_SUB;
@@ -1325,7 +1304,7 @@ void Grammar::CaseStmt() {
     }
     add_leaf();
     next_sym();
-    string label_end = MidCodeList::assign_label();
+    string label_end = PseudoCodeList::assign_label();
 
     add_node("<情况表>");
     add_node("<情况子语句>");
@@ -1665,7 +1644,6 @@ void Grammar::ReadStmt() {
     add_leaf();
     next_sym();
     Identifier();
-    change_name();
     add_midcode(OP_SCANF, tk.str, VACANT, VACANT);
     SymTableItem item = SymTable::search(cur_func, tk);
     if (item.stiType == constant) {
@@ -1698,8 +1676,8 @@ void Grammar::WriteStmt() {
     if (sym == "STRCON") {
         add_leaf();
         add_node("<字符串>");
-        MidCodeList::strcons.push_back(str_replace(tk.str, "\\", "\\\\"));
-        add_midcode(OP_PRINT, to_string(MidCodeList::strcons.size() - 1), "strcon", VACANT);
+        PseudoCodeList::strcons.push_back(str_replace(tk.str, "\\", "\\\\"));
+        add_midcode(OP_PRINT, to_string(PseudoCodeList::strcons.size() - 1), "strcon", VACANT);
         output("<字符串>");
         tree_backward();
         next_sym();
@@ -1780,7 +1758,7 @@ string Grammar::add_midcode(const string &op, const string &n1, const string &n2
     if (op == OP_ARR_SAVE) {
         result = const_replace(r);
     }
-    return MidCodeList::add(op, num1, num2, result);
+    return PseudoCodeList::add(op, num1, num2, result);
 }
 
 string Grammar::const_replace(string symbol) const {
@@ -1899,15 +1877,5 @@ void Grammar::save_lexer_results(const string &path) {
         }
     }
     out.close();
-}
-
-void Grammar::change_name() {
-//    if (mode == grammar_check) {
-//        string new_name;
-//        for (int i = 0; i < func_count; i++) {
-//            new_name += "&";
-//        }
-//        cur_lex_results[pos - 1].str = new_name + cur_lex_results[pos - 1].str;
-//    }
 }
 

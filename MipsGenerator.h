@@ -8,7 +8,7 @@
 #include <utility>
 #include <cmath>
 
-#include "MidCode.h"
+#include "PseudoCode.h"
 #include "Error.h"
 #include "SymTable.h"
 
@@ -23,7 +23,7 @@
 
 class MipsGenerator {
 public:
-    vector<MidCode> mid;
+    vector<PseudoCode> mid;
     vector<string> mips;
     vector<string> strcons;
     vector<string> s_reg_table = {
@@ -70,7 +70,7 @@ public:
     int call_func_sp_offset = 0;
     map<string, int> func_sp_offsets;
 
-    MipsGenerator(): mid(MidCodeList::codes), strcons(MidCodeList::strcons) {};
+    MipsGenerator(): mid(PseudoCodeList::codes), strcons(PseudoCodeList::strcons) {};
 
     void generate(const string &code);
 
@@ -83,6 +83,8 @@ public:
     void translate_assign(const string &num1, const string &num2);
 
     void translate();
+
+    void gen_arithmetic(const string &op, const string &num1, const string& num2, const string& num3);
 
     void show() {
         cout << "=============Mips code=============" << endl;
@@ -109,7 +111,7 @@ public:
 
     string assign_s_reg(const string &);
 
-    bool assign_reg(const string& symbol);
+    bool assign_reg(const string& symbol, bool only_para=false);
 
     bool in_reg(const string& symbol);
 
@@ -123,10 +125,6 @@ public:
 
 //    string allocate_memory();
 };
-
-bool in_reg(string);
-
-bool in_memory(string);
 
 
 
