@@ -8,6 +8,7 @@
 #include <iostream>
 #include <utility>
 #include <vector>
+#include <set>
 #include <fstream>
 #include <map>
 
@@ -16,8 +17,9 @@
 
 #define VACANT "#VACANT"
 #define AUTO "#AUTO"
+#define AUTO_VAR "#AUTO_VAR"
 #define ENDL "#ENDL"
-#define AUTO_LABEL "AUTO_LABEL"
+#define AUTO_LABEL "#AUTO_LABEL"
 
 #define OP_PRINT "PRINT"
 #define OP_SCANF "SCANF"
@@ -41,6 +43,7 @@
 #define OP_RETURN "RETURN"
 
 #define OP_EMPTY "EMPTY"
+#define OP_PLACEHOLDER "PLACEHOLDER"
 
 
 #define OP_VAR "VAR"
@@ -74,20 +77,59 @@ public:
     string to_standard_format() const;
 };
 
+class BasicBlock {
+public:
+    int index;
+    int start;
+    int end;
+    vector<PseudoCode> codes;
+    vector<BasicBlock> prev;
+    vector<BasicBlock> next;
+
+    BasicBlock(int index, int start, int end) : index(index), start(start), end(end) {}
+};
+
+class DAGNode {
+public:
+    int index;
+    string name;
+    bool is_leaf;
+    bool in_queue = false;
+    string primary_symbol;
+    vector<string> symbols;
+    vector<int> children;
+    vector<int> parents;
+
+    DAGNode(int index, const string& name, bool is_leaf) : index(index), name(name), is_leaf(is_leaf) {
+        if (is_leaf) {
+            symbols.push_back(name);
+        }
+    }
+
+//    DAGNode(int index, string name, bool is_leaf, const string &name2) :
+//            index(index), name(std::move(name)), is_leaf(is_leaf) {
+//        symbols.push_back(name2);
+//    }
+};
+
 class PseudoCodeList {
 public:
     static vector<PseudoCode> codes;
     static int code_index;
     static int label_index;
     static vector<string> strcons;
-    static vector<int> basic_block_idx;
+    static map<string, vector<BasicBlock>> blocks;
+    static vector<DAGNode> DAGNodes;
+    static map<string, int> NodesMap;
 
     static void reset() {
         codes.clear();
         strcons.clear();
-        basic_block_idx.clear();
+        blocks.clear();
         code_index = 1;
         label_index = 1;
+        DAGNodes.clear();
+        NodesMap.clear();
     }
 
     static string add(const string &op, const string &n1, const string &n2, const string &r) {
@@ -97,6 +139,9 @@ public:
             code_index++;
         } else if (result == AUTO_LABEL) {
             result = assign_label();
+        } else if (result == AUTO_VAR) {
+            result = "@V" + to_string(code_index);
+            code_index++;
         }
         codes.emplace_back(op, n1, n2, result);
         return result;
@@ -121,6 +166,16 @@ public:
 
     static void divide_basic_blocks();
 
+    static void dfs_show(const DAGNode &node, int depth);
+
+    static void show_DAG_tree();
+
+    static void DAG_optimize();
+
+    static vector<PseudoCode> DAG_output();
+
+    static void gen_DAG_graph(int, int);
+
     static void show() {
         cout << "========MID CODES========" << endl;
         for (auto &c: codes) {
@@ -136,8 +191,8 @@ public:
             out << "str" << i << ": " << strcons[i] << endl;
         }
         out << "===============" << endl;
-        for (auto &c: codes) {
-            out << c.to_str() << endl;
+        for (int i = 0; i < codes.size(); i++) {
+            out << i << ": " << codes[i].to_str() << endl;
         }
         out.close();
     }
@@ -166,5 +221,7 @@ public:
 };
 
 bool is_arith(const string &op);
+
+bool can_dag(const string &op);
 
 #endif //COMPILER_Pseudo_H

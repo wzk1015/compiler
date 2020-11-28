@@ -92,6 +92,15 @@ void MipsGenerator::translate() {
             for (int i = 0; i < 8; i++) {
                 s_reg_table[i] = VACANT;
             }
+            for (auto &it: SymTable::search_func(cur_func).paras) {
+                string sreg = assign_s_reg(it.second);
+                if (sreg != INVALID) {
+                    generate("lw", sreg, to_string(SymTable::search(cur_func, it.second).addr
+                    + call_func_sp_offset) + "($sp)");
+                } else {
+                    break;
+                }
+            }
 
         } else if (op == OP_RETURN) {
             //恢复s
@@ -249,20 +258,28 @@ void MipsGenerator::translate() {
 
             bool is_2_pow_1 = is_const(code.num1) && is_2_power(stoi(code.num1));
             bool is_2_pow_2 = is_const(code.num2) && is_2_power(stoi(code.num2));
+            bool sra = false;
             if (op == OP_MUL) {
                 // || op == OP_DIV) {
                 if (is_2_pow_1 && op == OP_MUL) {
                     // mul a, 8, c : sll a, c, 3
-                    instr = op == OP_MUL ? "sll" : "sra";
+                    instr = "sll";
                     b = c;
                     c = to_string(int(log2(stoi(code.num1))));
                     b_in_reg_or_const = c_in_reg_or_const;
                     c_in_reg_or_const = true;
-                } else if (is_2_pow_2) {
+                } else if (is_2_pow_2 && op == OP_MUL) {
                     // mul a, b, 8 : sll a, b, 3
-                    instr = op == OP_MUL ? "sll" : "sra";
+                    instr = "sll";
                     c = to_string(int(log2(stoi(code.num2))));
                 }
+
+//                else if (is_2_pow_2 && op == OP_DIV) {
+//                    // mul a, b, 8 : sll a, b, 3
+//                    generate("bltz ")
+//                    instr = "sra";
+//                    c = to_string(int(log2(stoi(code.num2))));
+//                }
             }
 
             if (a_in_reg) {
@@ -505,13 +522,18 @@ bool MipsGenerator::assign_reg(const string &symbol, bool only_para) {
             if (sreg != INVALID) {
                 return true;
             }
-        } else if (item.stiType == para) {
-            string sreg = assign_s_reg(symbol);
-            if (sreg != INVALID) {
-                generate("lw", sreg, to_string(item.addr + call_func_sp_offset) + "($sp)");
-                return true;
-            }
-        } else if (item.stiType == tmp && !only_para) {
+        }
+
+        //TODO:参数在函数开始时load；不要放在第一次用的时候
+//        else if (item.stiType == para) {
+//            string sreg = assign_s_reg(symbol);
+//            if (sreg != INVALID) {
+//                generate("lw", sreg, to_string(item.addr + call_func_sp_offset) + "($sp)");
+//                return true;
+//            }
+//        }
+
+        else if (item.stiType == tmp && !only_para) {
             string treg = assign_t_reg(symbol);
             if (treg != INVALID) {
                 return true;

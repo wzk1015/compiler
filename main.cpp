@@ -36,15 +36,8 @@ int main() {
     //中间代码优化
 
     PseudoCodeList::refactor();
-
-
-
     PseudoCodeList::remove_redundant_assign();
-
     PseudoCodeList::const_broadcast();
-
-    PseudoCodeList::save_to_file("pseudoCode_old.txt");
-
     PseudoCodeList::remove_redundant_tmp();
 //
 //    PseudoCodeList::remove_redundant_assign();
@@ -53,15 +46,22 @@ int main() {
 //
 //    PseudoCodeList::const_broadcast();
 
-    PseudoCodeList::save_to_file("pseudoCode.txt");
+    PseudoCodeList::divide_basic_blocks();
 
+    PseudoCodeList::save_to_file("pseudoCode_old.txt");
+
+    //PseudoCodeList::DAG_optimize();
+
+    //PseudoCodeList::const_broadcast();
+
+    PseudoCodeList::save_to_file("pseudoCode.txt");
 
     //目标代码生成
     MipsGenerator mips;
     mips.translate();
     mips.save_to_file("mips.txt");
-
-    SymTable::show();
+//
+//    SymTable::show();
 
     //grammar.show_tree();
 

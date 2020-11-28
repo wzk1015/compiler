@@ -105,6 +105,38 @@ IDENFR num
 <参数表>
 RPARENT )
 LBRACE {
+IFTK if
+LPARENT (
+INTCON 0
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+GRE >
+INTCON 1
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<条件>
+RPARENT )
+PRINTFTK printf
+LPARENT (
+STRCON in checkrange, num=
+<字符串>
+COMMA ,
+IDENFR num
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+<条件语句>
+<语句>
 WHILETK while
 LPARENT (
 IDENFR num
@@ -162,6 +194,38 @@ IDENFR max
 SEMICN ;
 <语句>
 <循环语句>
+<语句>
+IFTK if
+LPARENT (
+INTCON 0
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+GRE >
+INTCON 1
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<条件>
+RPARENT )
+PRINTFTK printf
+LPARENT (
+STRCON out checkrange, num=
+<字符串>
+COMMA ,
+IDENFR num
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+<条件语句>
 <语句>
 RETURNTK return
 LPARENT (
@@ -1260,6 +1324,19 @@ INTCON 1
 <变量定义>
 SEMICN ;
 <变量说明>
+PRINTFTK printf
+LPARENT (
+STRCON running convn, kernelid=
+<字符串>
+COMMA ,
+IDENFR kernelid
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
 WHILETK while
 LPARENT (
 IDENFR flag1
@@ -1276,6 +1353,31 @@ INTCON 1
 <条件>
 RPARENT )
 LBRACE {
+IFTK if
+LPARENT (
+IDENFR kernelid
+<因子>
+<项>
+<表达式>
+EQL ==
+INTCON 9990
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<条件>
+RPARENT )
+PRINTFTK printf
+LPARENT (
+STRCON flag1 loop
+<字符串>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+<条件语句>
+<语句>
 IDENFR j
 ASSIGN =
 INTCON 0
@@ -1303,6 +1405,31 @@ INTCON 1
 <条件>
 RPARENT )
 LBRACE {
+IFTK if
+LPARENT (
+IDENFR kernelid
+<因子>
+<项>
+<表达式>
+EQL ==
+INTCON 9990
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<条件>
+RPARENT )
+PRINTFTK printf
+LPARENT (
+STRCON flag2 loop
+<字符串>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+<条件语句>
+<语句>
 IDENFR curr
 ASSIGN =
 INTCON 0
@@ -1348,6 +1475,31 @@ INTCON 1
 <条件>
 RPARENT )
 LBRACE {
+IFTK if
+LPARENT (
+IDENFR kernelid
+<因子>
+<项>
+<表达式>
+EQL ==
+INTCON 9990
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<条件>
+RPARENT )
+PRINTFTK printf
+LPARENT (
+STRCON flag3 loop
+<字符串>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+<条件语句>
+<语句>
 IDENFR y
 ASSIGN =
 IDENFR j
@@ -1382,6 +1534,31 @@ INTCON 1
 <条件>
 RPARENT )
 LBRACE {
+IFTK if
+LPARENT (
+IDENFR kernelid
+<因子>
+<项>
+<表达式>
+EQL ==
+INTCON 9990
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<条件>
+RPARENT )
+PRINTFTK printf
+LPARENT (
+STRCON flag4 loop
+<字符串>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+<条件语句>
+<语句>
 IDENFR curr
 ASSIGN =
 IDENFR reduce
@@ -1486,6 +1663,31 @@ RBRACE }
 <语句>
 <条件语句>
 <语句>
+IFTK if
+LPARENT (
+IDENFR kernelid
+<因子>
+<项>
+<表达式>
+EQL ==
+INTCON 9990
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<条件>
+RPARENT )
+PRINTFTK printf
+LPARENT (
+STRCON next flag4 loop
+<字符串>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+<条件语句>
+<语句>
 <语句列>
 RBRACE }
 <语句>
@@ -1553,6 +1755,31 @@ SEMICN ;
 <语句>
 <语句列>
 RBRACE }
+<语句>
+<条件语句>
+<语句>
+IFTK if
+LPARENT (
+IDENFR kernelid
+<因子>
+<项>
+<表达式>
+EQL ==
+INTCON 9990
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<条件>
+RPARENT )
+PRINTFTK printf
+LPARENT (
+STRCON next flag3 loop
+<字符串>
+RPARENT )
+<写语句>
+SEMICN ;
 <语句>
 <条件语句>
 <语句>
@@ -1639,6 +1866,31 @@ RBRACE }
 <语句>
 <条件语句>
 <语句>
+IFTK if
+LPARENT (
+IDENFR kernelid
+<因子>
+<项>
+<表达式>
+EQL ==
+INTCON 9990
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<条件>
+RPARENT )
+PRINTFTK printf
+LPARENT (
+STRCON next flag2 loop
+<字符串>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+<条件语句>
+<语句>
 <语句列>
 RBRACE }
 <语句>
@@ -1700,10 +1952,43 @@ RBRACE }
 <语句>
 <条件语句>
 <语句>
+IFTK if
+LPARENT (
+IDENFR kernelid
+<因子>
+<项>
+<表达式>
+EQL ==
+INTCON 9990
+<无符号整数>
+<整数>
+<因子>
+<项>
+<表达式>
+<条件>
+RPARENT )
+PRINTFTK printf
+LPARENT (
+STRCON next flag1 loop
+<字符串>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
+<条件语句>
+<语句>
 <语句列>
 RBRACE }
 <语句>
 <循环语句>
+<语句>
+PRINTFTK printf
+LPARENT (
+STRCON end running convn
+<字符串>
+RPARENT )
+<写语句>
+SEMICN ;
 <语句>
 RETURNTK return
 LPARENT (
@@ -2023,6 +2308,19 @@ INTCON 0
 <赋值语句>
 SEMICN ;
 <语句>
+PRINTFTK printf
+LPARENT (
+STRCON task is
+<字符串>
+COMMA ,
+IDENFR task
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
 WHILETK while
 LPARENT (
 IDENFR i
@@ -2037,6 +2335,19 @@ IDENFR task
 <条件>
 RPARENT )
 LBRACE {
+PRINTFTK printf
+LPARENT (
+STRCON running task
+<字符串>
+COMMA ,
+IDENFR i
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
 IDENFR convn
 LPARENT (
 IDENFR kernelid

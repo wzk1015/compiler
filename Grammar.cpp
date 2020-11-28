@@ -1288,7 +1288,7 @@ void Grammar::CaseStmt() {
     add_leaf();
     next_sym();
     pair<DataType, string> expr = Expr();
-    string expr_var = add_midcode(OP_ADD, expr.second, "0", AUTO);
+    string expr_var = add_midcode(OP_ADD, expr.second, "0", AUTO_VAR);
     SymTable::add(cur_func, expr_var, var, expr.first, local_addr);
     add_midcode(OP_EMPTY, VACANT, VACANT, VACANT);
     //用来防止remove_redundant_assign时非tmp变量被优化掉

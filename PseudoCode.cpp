@@ -8,7 +8,9 @@ vector<PseudoCode> PseudoCodeList::codes;
 int PseudoCodeList::code_index = 1;
 vector<string> PseudoCodeList::strcons;
 int PseudoCodeList::label_index = 1;
-vector<int> PseudoCodeList::basic_block_idx;
+map<string, vector<BasicBlock>> PseudoCodeList::blocks;
+vector<DAGNode> PseudoCodeList::DAGNodes;
+map<string, int> PseudoCodeList::NodesMap;
 
 
 string PseudoCode::to_str() const {
@@ -130,9 +132,7 @@ void PseudoCodeList::remove_redundant_assign() {
 void PseudoCodeList::const_broadcast() {
     string cur_func = GLOBAL;
     vector<PseudoCode> new_codes;
-    for (int i = 0; i < codes.size() - 1; i++) {
-        PseudoCode c = codes[i];
-
+    for (auto &c : codes) {
         SymTableItem *it1, *it2, *itr;
         if (!begins_num(c.num1)) {
             it1 = &SymTable::ref_search(cur_func, c.num1);
@@ -145,6 +145,12 @@ void PseudoCodeList::const_broadcast() {
         }
         bool num1_can_cal = begins_num(c.num1) || !it1->const_value.empty();
         bool num2_can_cal = begins_num(c.num2) || !it2->const_value.empty();
+
+        if (c.op == OP_ARR_SAVE && c.result == "#T33") {
+            cout << (c.op == OP_ARR_SAVE) << endl;
+            cout << begins_num(c.result) << endl;
+            cout << !itr->const_value.empty() << endl;
+        }
 
         if (c.op == OP_ASSIGN && num2_can_cal && it1->stiType == tmp) {
             it1->const_value = begins_num(c.num2) ? c.num2 : it2->const_value;
@@ -195,6 +201,14 @@ void PseudoCodeList::const_broadcast() {
                 new_codes.emplace_back(c.op, to_string(v1), c.num2, c.result);
             }
 
+        } else if (c.op == OP_ARR_SAVE && (begins_num(c.result) || !itr->const_value.empty())) {
+            int vr = stoi(begins_num(c.result) ? c.result : itr->const_value);
+            if (num2_can_cal) {
+                int v2 = stoi(begins_num(c.num2) ? c.num2 : it2->const_value);
+                new_codes.emplace_back(c.op, c.num1, to_string(v2), to_string(vr));
+            } else {
+                new_codes.emplace_back(c.op, c.num1, c.num2, to_string(vr));
+            }
         } else if (num2_can_cal) {
             int v2 = stoi(begins_num(c.num2) ? c.num2 : it2->const_value);
             if ((c.op == OP_ADD && v2 == 0) || (c.op == OP_SUB && v2 == 0) ||
@@ -327,7 +341,7 @@ void PseudoCodeList::remove_tripple() {
             it2r = &SymTable::ref_search(cur_func, c2.result);
         }
         if (is_arith(c1.op) && c1.op == c2.op && c1.num1 == c2.num1 && c1.num2 == c2.num2 &&
-                it1r->stiType == tmp && it2r->stiType == tmp && c3.num1 == c1.result && c3.num2 == c2.result) {
+            it1r->stiType == tmp && it2r->stiType == tmp && c3.num1 == c1.result && c3.num2 == c2.result) {
             if (c3.op == OP_SUB) {
                 new_codes.emplace_back(OP_ASSIGN, c3.result, "0", VACANT);
                 i += 2;
@@ -443,9 +457,364 @@ void PseudoCodeList::interpret() {
 }
 
 void PseudoCodeList::divide_basic_blocks() {
+    map<string, set<int>> basic_block_idx;
+    string cur_func = GLOBAL;
+    for (int i = 0; i < codes.size(); i++) {
+        string op = codes[i].op;
+        PseudoCode c = codes[i];
+        if (op == OP_FUNC) {
+            cur_func = c.num2;
+            basic_block_idx[cur_func] = set<int>();
+            //函数第一条语句为入口语句
+            for (int j = i + 1; codes[j].op != OP_END_FUNC; j++) {
+                if (codes[j + 1].op == OP_END_FUNC) {
+                    basic_block_idx[cur_func].insert(j + 1);
+                }
+                if (codes[j].op != OP_LABEL) {
+                    basic_block_idx[cur_func].insert(j);
+                    break;
+                }
+            }
+        } else if (cur_func == GLOBAL) {
+            //不给全局变量赋值语句划分基本块
+            continue;
+        }
 
+        if (op == OP_LABEL || op == OP_JUMP_IF || op == OP_JUMP_UNCOND
+            || op == OP_RETURN || op == OP_CALL) {
+            for (int j = i + 1; codes[j].op != OP_END_FUNC; j++) {
+                if (codes[j + 1].op == OP_END_FUNC) {
+                    basic_block_idx[cur_func].insert(j + 1);
+                }
+                if (codes[j].op != OP_LABEL) {
+                    basic_block_idx[cur_func].insert(j);
+                    break;
+                }
+            }
+        }
+        if (op == OP_END_FUNC) {
+            basic_block_idx[cur_func].insert(i);
+        }
+    }
+
+
+    int index = 0;
+    for (auto &it: basic_block_idx) {
+        blocks[it.first] = vector<BasicBlock>();
+        vector<int> vec(basic_block_idx[it.first].begin(), basic_block_idx[it.first].end());
+        for (int i = 0; i < vec.size() - 1; i++) {
+            blocks[it.first].emplace_back(index++, vec[i], vec[i + 1] - 1);
+        }
+    }
+
+    cout << "=====basic blocks:=====" << endl;
+    for (auto &it: blocks) {
+        cout << "===function " << it.first << "===" << endl;
+        for (auto &b: blocks[it.first]) {
+            cout << "#" << b.index << " " << b.start << "~" << b.end << endl;
+        }
+    }
+
+    //TODO：生成流图
+}
+
+void PseudoCodeList::gen_DAG_graph(int begin, int end) {
+    for (int idx = begin; idx <= end; idx++) {
+        PseudoCode c = codes[idx];
+        string num1 = c.op == OP_ARR_SAVE ? c.num2 : c.num1;
+        string num2 = c.op == OP_ARR_SAVE ? c.result : c.num2;
+        string result = c.op == OP_ARR_SAVE ? c.num1 : c.result;
+        if (c.op == OP_ASSIGN) {
+            unsigned int k = -1;
+            for (auto &n: NodesMap) {
+                if (n.first == num2) {
+                    k = n.second;
+                    break;
+                }
+            }
+            if (k == -1) {
+                k = DAGNodes.size();
+                string name = num2[0] == '#' ? num2 : num2 + "";
+                DAGNodes.emplace_back(k, name, true);
+                NodesMap[num2] = k;
+            }
+            DAGNodes[k].symbols.push_back(num1);
+
+            bool find = false;
+            for (auto &n: NodesMap) {
+                if (n.first == num1) {
+                    n.second = k;
+                    find = true;
+                    break;
+                }
+            }
+            if (!find) {
+                NodesMap[num1] = k;
+            }
+
+            continue;
+        }
+
+        unsigned int i = -1;
+        for (auto &n: NodesMap) {
+            if (n.first == num1) {
+                i = n.second;
+                break;
+            }
+        }
+        if (i == -1) {
+            i = DAGNodes.size();
+            string name = num2[0] == '#' ? num1 : num1 + "";
+            DAGNodes.emplace_back(i, name, true);
+            NodesMap[num1] = i;
+        }
+
+        unsigned int j = -1;
+        for (auto &n: NodesMap) {
+            if (n.first == num2) {
+                j = n.second;
+                break;
+            }
+        }
+        if (j == -1) {
+            j = DAGNodes.size();
+            string name = num2[0] == '#' ? num2 : num2 + "";
+            DAGNodes.emplace_back(j, name, true);
+            NodesMap[num2] = j;
+        }
+
+        unsigned int k = -1;
+        for (auto &n: DAGNodes) {
+            if (n.name == c.op && n.children[0] == 0 && n.children[1] == j) {
+                k = n.index;
+                break;
+            }
+        }
+        if (k == -1) {
+            k = DAGNodes.size();
+            DAGNode new_node(DAGNodes.size(), c.op, false);
+            new_node.children.push_back(i);
+            new_node.children.push_back(j);
+            DAGNodes[i].parents.push_back(k);
+            DAGNodes[j].parents.push_back(k);
+            DAGNodes.push_back(new_node);
+        }
+        DAGNodes[k].symbols.push_back(result);
+
+        bool find = false;
+        for (auto &n1: NodesMap) {
+            if (n1.first == result) {
+                n1.second = k;
+                find = true;
+                break;
+            }
+        }
+        if (!find) {
+            NodesMap[result] = k;
+        }
+    }
+
+    for (auto &n: DAGNodes) {
+        bool has_find = false;
+        for (auto &name: n.symbols) {
+            if (name[0] != '#') {
+                n.primary_symbol = name;
+                has_find = true;
+                break;
+            }
+        }
+        if (!has_find) {
+            n.primary_symbol = n.symbols[0];
+        }
+    }
+}
+
+vector<PseudoCode> PseudoCodeList::DAG_output() {
+    vector<PseudoCode> ret;
+    vector<DAGNode> queue;
+    cout << "total number of DAGNodes: " << DAGNodes.size() << endl;
+    while (true) {
+        bool break_flag = true;
+        for (auto &n: DAGNodes) {
+            if (!n.is_leaf && !n.in_queue) {
+                break_flag = false;
+                //cout << "dag output loop1" << endl;
+            }
+        }
+        if (break_flag) {
+            break;
+        }
+
+        int i;
+        for (i = 0; i < DAGNodes.size(); i++) {
+            if (DAGNodes[i].parents.empty() && !DAGNodes[i].is_leaf && !DAGNodes[i].in_queue) {
+                queue.push_back(DAGNodes[i]);
+                DAGNodes[i].in_queue = true;
+                cout << "Node" << i << "enqueue" << endl;
+                break;
+            }
+        }
+        for (auto &node: DAGNodes) {
+            vector<int> new_parents;
+            for (auto &parent: node.parents) {
+                if (parent != i) {
+                    new_parents.push_back(parent);
+                }
+            }
+            node.parents = new_parents;
+        }
+        if (!DAGNodes[i].children.empty()) {
+            int child_id = DAGNodes[i].children[0];
+            DAGNode cur = DAGNodes[child_id];
+            while (cur.parents.empty() && !cur.is_leaf && !DAGNodes[i].in_queue) {
+                queue.push_back(cur);
+                cur.in_queue = true;
+                for (auto &node: DAGNodes) {
+                    vector<int> new_parents;
+                    for (auto &parent: node.parents) {
+                        if (parent != child_id) {
+                            new_parents.push_back(parent);
+                        }
+                    }
+                    node.parents = new_parents;
+                }
+                if (!cur.children.empty()) {
+                    child_id = cur.children[0];
+                    cur = DAGNodes[child_id];
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
+    for (auto &n : DAGNodes) {
+        if (n.is_leaf) {
+            for (auto &name: n.symbols) {
+                if (name[0] != '#' && name != n.primary_symbol && NodesMap[name] == n.index) {
+                    ret.emplace_back(OP_ASSIGN, name, n.primary_symbol, VACANT);
+                }
+            }
+        }
+    }
+
+    for (int i = (int) queue.size() - 1; i >= 0; i--) {
+//        cout << "queue[" << i << "]: " << queue[i].primary_symbol << endl;
+        assertion(can_dag(queue[i].name));
+        bool has_print = false;
+        for (auto &name: queue[i].symbols) {
+            if (name[0] != '#') {
+                if (queue[i].name == OP_ARR_SAVE) {
+                    ret.emplace_back(queue[i].name, name, DAGNodes[queue[i].children[0]].primary_symbol,
+                                     DAGNodes[queue[i].children[1]].primary_symbol);
+                } else {
+                    ret.emplace_back(queue[i].name, DAGNodes[queue[i].children[0]].primary_symbol,
+                                     DAGNodes[queue[i].children[1]].primary_symbol, name);
+                }
+                has_print = true;
+            }
+        }
+        if (!has_print) {
+            if (queue[i].name == OP_ARR_SAVE) {
+                ret.emplace_back(queue[i].name, queue[i].primary_symbol, DAGNodes[queue[i].children[0]].primary_symbol,
+                                 DAGNodes[queue[i].children[1]].primary_symbol);
+            } else {
+                ret.emplace_back(queue[i].name, DAGNodes[queue[i].children[0]].primary_symbol,
+                                 DAGNodes[queue[i].children[1]].primary_symbol, queue[i].primary_symbol);
+            }
+        }
+    }
+
+    cout << "AFTER DAG" << endl;
+    for (auto &code: ret) {
+        cout << code.to_str() << endl;
+    }
+    return ret;
+}
+
+void PseudoCodeList::DAG_optimize() {
+    for (auto &it: blocks) {
+        for (auto &b: blocks[it.first]) {
+            for (int i = b.start; i < b.end; i++) {
+                if (!can_dag(codes[i].op)) continue;
+                cout << "BEFORE DAG" << endl;
+                cout << codes[i].to_str() << endl;
+                int j = i + 1;
+                while (can_dag(codes[j].op)) {
+                    cout << codes[j].to_str() << endl;
+                    j++;
+                }
+                if (j - i <= 1) continue;
+
+                cout << "DAG for " << i << "~" << j - 1 << endl;
+                gen_DAG_graph(i, j - 1);
+                cout << "gen DAG graph done" << endl;
+                show_DAG_tree();
+                if (!DAGNodes.empty()) {
+                    vector<PseudoCode> dag_outputs = DAG_output();
+                    assertion(dag_outputs.size() <= j - i);
+                    for (int m = i; m <= j - 1; m++) {
+                        if (m - i < dag_outputs.size()) {
+                            codes[m] = dag_outputs[m - i];
+                        } else {
+                            codes[m] = PseudoCode(OP_PLACEHOLDER, VACANT, VACANT, VACANT);
+                        }
+                    }
+                    //TODO: replace old with new
+                }
+                i = j;
+
+                DAGNodes.clear();
+                NodesMap.clear();
+            }
+        }
+    }
+
+    vector<PseudoCode> new_codes;
+    for (auto &c: codes) {
+        if (c.op != OP_PLACEHOLDER) {
+            new_codes.push_back(c);
+        }
+    }
+    codes = new_codes;
+}
+
+void PseudoCodeList::dfs_show(const DAGNode &node, int depth) {
+    for (int i = 0; i < depth - 1; i++) {
+        cout << "|     ";
+    }
+    if (depth != 0) {
+        cout << "|-----";
+    }
+    cout << "'" << node.name << "' " << node.primary_symbol << "(" << node.index << ") [";
+    for (auto &s: node.symbols) {
+        if (s != node.primary_symbol) {
+            cout << s << ",";
+        }
+    }
+    cout << "]" << (node.is_leaf ? " LEAF" : "") << endl;
+    for (auto &child: node.children) {
+        dfs_show(DAGNodes[child], depth + 1);
+    }
+}
+
+void PseudoCodeList::show_DAG_tree() {
+    DAGNode root(-1, "ROOT", false);
+    for (auto &node: DAGNodes) {
+        if (node.parents.empty()) {
+            root.children.push_back(node.index);
+        }
+    }
+    dfs_show(root, 0);
+//    for (auto &it: NodesMap) {
+//        cout << it.first << ": " << it.second << endl;
+//    }
 }
 
 bool is_arith(const string &op) {
     return (op == OP_ADD || op == OP_SUB || op == OP_MUL || op == OP_DIV);
+}
+
+bool can_dag(const string &op) {
+    return is_arith(op) || op == OP_ASSIGN ; //|| op == OP_ARR_LOAD || op == OP_ARR_SAVE;
 }

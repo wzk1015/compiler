@@ -45,8 +45,8 @@ void panic(const string &msg) {
 
 void assertion(bool flag) {
     if (!flag) {
-        mips_debug();
-//        panic("assertion failed");
+//        mips_debug();
+        panic("assertion failed");
     }
 }
 
