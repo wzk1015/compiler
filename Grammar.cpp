@@ -1178,10 +1178,15 @@ void Grammar::LoopStmt() {
         }
         add_leaf();
         next_sym();
+
+        //int idx1 = PseudoCodeList::codes.size();
+        int pos1 = pos - 1;
+        pair<string, string> cond = Condition();
+        int pos2 = pos;
+        //int idx2 = PseudoCodeList::codes.size();
+        string label_end = add_midcode(OP_JUMP_IF, cond.first, cond.second, AUTO_LABEL);
         string label_begin = PseudoCodeList::assign_label();
         add_midcode(OP_LABEL, label_begin, VACANT, VACANT);
-        pair<string, string> cond = Condition();
-        string label_end = add_midcode(OP_JUMP_IF, cond.first, cond.second, AUTO_LABEL);
         next_sym();
         if (sym != "RPARENT") {
             error("')'");
@@ -1189,7 +1194,17 @@ void Grammar::LoopStmt() {
         add_leaf();
         next_sym();
         Stmt();
-        add_midcode(OP_JUMP_UNCOND, label_begin, VACANT, VACANT);
+        cur_lex_results.insert(cur_lex_results.end(),
+                cur_lex_results.begin() + pos1, cur_lex_results.begin() + pos2);
+        string op = cond.second == "==0" ? "!=0" :
+                       cond.second == "!=0" ? "==0" :
+                       cond.second == ">0" ? "<=0" :
+                       cond.second == "<0" ? ">=0" :
+                       cond.second == ">=0" ? "<0" :
+                       cond.second == "<=0" ? ">0" : INVALID;
+        next_sym();
+        cond = Condition();
+        add_midcode(OP_JUMP_IF, cond.first, op, label_begin);
         add_midcode(OP_LABEL, label_end, VACANT, VACANT);
     } else if (sym == "FORTK") {
         add_leaf();
@@ -1220,9 +1235,9 @@ void Grammar::LoopStmt() {
         }
         add_leaf();
         next_sym();
-        string label_begin = PseudoCodeList::assign_label();
-        add_midcode(OP_LABEL, label_begin, VACANT, VACANT);
+        int pos1 = pos - 1;
         pair<string, string> cond = Condition();
+        int pos2 = pos;
         string label_end = add_midcode(OP_JUMP_IF, cond.first, cond.second, AUTO_LABEL);
         next_sym();
         if (sym != "SEMICN") {
@@ -1262,10 +1277,23 @@ void Grammar::LoopStmt() {
             error("')'");
         }
         add_leaf();
+        string label_begin = PseudoCodeList::assign_label();
+        add_midcode(OP_LABEL, label_begin, VACANT, VACANT);
         next_sym();
         Stmt();
         add_midcode(op, id2, pace_length, id);
-        add_midcode(OP_JUMP_UNCOND, label_begin, VACANT, VACANT);
+
+        cur_lex_results.insert(cur_lex_results.end(),
+                cur_lex_results.begin() + pos1, cur_lex_results.begin() + pos2);
+        string op2 = cond.second == "==0" ? "!=0" :
+                       cond.second == "!=0" ? "==0" :
+                       cond.second == ">0" ? "<=0" :
+                       cond.second == "<0" ? ">=0" :
+                       cond.second == ">=0" ? "<0" :
+                       cond.second == "<=0" ? ">0" : INVALID;
+        next_sym();
+        cond = Condition();
+        add_midcode(OP_JUMP_IF, cond.first, op2, label_begin);
         add_midcode(OP_LABEL, label_end, VACANT, VACANT);
     } else {
         error("'while' or 'for'");
@@ -1509,7 +1537,8 @@ void Grammar::SharedFuncCall() {
                 }
                 if (!flag) {
                     if (cur.type == "IDENFR" && (SymTable::try_search(func_name, cur.str, false).stiType == var
-                                             || SymTable::try_search(func_name, cur.str, false).stiType == constant)) {
+                                                 ||
+                                                 SymTable::try_search(func_name, cur.str, false).stiType == constant)) {
                         new_lex_results.emplace_back("IDENFR", prefix + cur.str);
                         continue;
                     }
@@ -1648,7 +1677,8 @@ void Grammar::ReadStmt() {
     SymTableItem item = SymTable::search(cur_func, tk);
     if (item.stiType == constant) {
         error("change const");
-    } if (item.stiType == para) {
+    }
+    if (item.stiType == para) {
         para_assigned = true;
     }
     next_sym();

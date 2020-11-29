@@ -36,15 +36,10 @@ int main() {
     //中间代码优化
 
     PseudoCodeList::refactor();
+
     PseudoCodeList::remove_redundant_assign();
     PseudoCodeList::const_broadcast();
     PseudoCodeList::remove_redundant_tmp();
-//
-//    PseudoCodeList::remove_redundant_assign();
-//
-//    PseudoCodeList::remove_tripple();
-//
-//    PseudoCodeList::const_broadcast();
 
     PseudoCodeList::divide_basic_blocks();
 
@@ -64,6 +59,5 @@ int main() {
 //    SymTable::show();
 
     //grammar.show_tree();
-
     return 0;
 }

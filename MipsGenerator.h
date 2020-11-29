@@ -69,6 +69,7 @@ public:
     vector<int> sp_size = {0};
     int call_func_sp_offset = 0;
     map<string, int> func_sp_offsets;
+    int tmp_label_idx = 1;
 
     MipsGenerator(): mid(PseudoCodeList::codes), strcons(PseudoCodeList::strcons) {};
 
@@ -80,7 +81,7 @@ public:
 
     void generate(const string &op, const string &num1, const string& num2, const string& num3);
 
-    void translate_assign(const string &num1, const string &num2);
+    void gen_assign(const string &num1, const string &num2);
 
     void translate();
 
@@ -122,6 +123,12 @@ public:
     void show_reg_status();
 
     void release(string);
+
+    string assign_label() {
+        string ret = "tmp_label_" + to_string(tmp_label_idx);
+        tmp_label_idx++;
+        return ret;
+    }
 
 //    string allocate_memory();
 };
