@@ -17,9 +17,9 @@ int main() {
 //    grammar.save_lexer_results("testfile_replace.txt");
     Errors::save_to_file("error.txt");
 
-    if (Errors::terminate()) {
-        return 0;
-    }
+//    if (Errors::terminate()) {
+//        return 0;
+//    }
 
 //    PseudoCodeList::reset();
 //    SymTable::reset();

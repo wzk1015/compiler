@@ -1194,7 +1194,7 @@ void Grammar::LoopStmt() {
         add_leaf();
         next_sym();
         Stmt();
-        cur_lex_results.insert(cur_lex_results.end(),
+        cur_lex_results.insert(cur_lex_results.begin() + pos,
                 cur_lex_results.begin() + pos1, cur_lex_results.begin() + pos2);
         string op = cond.second == "==0" ? "!=0" :
                        cond.second == "!=0" ? "==0" :
@@ -1283,8 +1283,9 @@ void Grammar::LoopStmt() {
         Stmt();
         add_midcode(op, id2, pace_length, id);
 
-        cur_lex_results.insert(cur_lex_results.end(),
+        cur_lex_results.insert(cur_lex_results.begin() + pos,
                 cur_lex_results.begin() + pos1, cur_lex_results.begin() + pos2);
+
         string op2 = cond.second == "==0" ? "!=0" :
                        cond.second == "!=0" ? "==0" :
                        cond.second == ">0" ? "<=0" :

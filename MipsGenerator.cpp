@@ -57,6 +57,14 @@ void MipsGenerator::translate() {
             generate("arr__" + item.name + "_: .space " + to_string(item.size));
         }
     }
+    for (auto &it: SymTable::local) {
+        for (auto &item: it.second) {
+            if (item.dim >= 1) {
+                generate("arr_" + it.first + "_" + item.name + "_: .space " + to_string(item.size + 4));
+            }
+        }
+    }
+
     for (int i = 0; i < strcons.size(); i++) {
         if (strcons[i][0] != '@') {
             generate("str__" + to_string(i) + ": .asciiz \"" + strcons[i] + "\"");
@@ -351,9 +359,13 @@ void MipsGenerator::translate() {
                 if (array_in_global) {
                     item_addr = "arr__" + num1 + "_+" + to_string(offset) + "($zero)";
                 } else {
-                    offset += SymTable::search(cur_func, num1).addr + call_func_sp_offset;
-                    item_addr = to_string(offset) + "($sp)";
+                    item_addr = "arr_" + cur_func + "_" + num1 + "_+" + to_string(offset) + "($zero)";
                 }
+
+//                else {
+//                    offset += SymTable::search(cur_func, num1).addr + call_func_sp_offset;
+//                    item_addr = to_string(offset) + "($sp)";
+//                }
             } else {    //下标是变量，在内存或寄存器，4*num2+sp+call_func_sp_offset
                 bool index_in_reg = in_reg(num2) || assign_reg(num2, true);
                 string index = symbol_to_addr(num2);
@@ -366,11 +378,16 @@ void MipsGenerator::translate() {
 
                 if (array_in_global) {
                     item_addr = "arr__" + num1 + "_(" + reg + ")";
-                } else {
-                    generate("addu", reg, reg, to_string(SymTable::search(cur_func, num1).addr + call_func_sp_offset));
-                    generate("addu", reg, reg, "$sp");
-                    item_addr = "0(" + reg + ")";
                 }
+                else {
+                    item_addr = "arr_" + cur_func + "_" + num1 + "_(" + reg + ")";
+                }
+
+//                else {
+//                    generate("addu", reg, reg, to_string(SymTable::search(cur_func, num1).addr + call_func_sp_offset));
+//                    generate("addu", reg, reg, "$sp");
+//                    item_addr = "0(" + reg + ")";
+//                }
             }
 
 
