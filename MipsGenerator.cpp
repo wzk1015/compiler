@@ -453,12 +453,15 @@ void MipsGenerator::translate() {
 }
 
 void MipsGenerator::gen_arithmetic(const string &instr, const string &num1, const string &num2, const string &num3) {
+    string reg3 = "$a3";
     if (is_const(num2)) {
-        if (instr == "addu" || instr == "mul") {
+        if (instr == "addu") {
+            generate("addiu", num1, num3, num2);
+        } else if (instr == "mul") {
             generate(instr, num1, num3, num2);
         } else if (instr == "div" || instr == "subu") {
             //div  a,5,b:  li reg3,5  divu a,reg3,b
-            string reg3 = "$a3";
+
             generate("li", reg3, num2);
             if (instr == "div") {
                 generate("div", reg3, num3);
@@ -485,7 +488,6 @@ void MipsGenerator::gen_arithmetic(const string &instr, const string &num1, cons
         string label = assign_label();
         string label2 = assign_label();
         generate("bgez", num2, label);
-        string reg3 = "$a3";
         generate("subu", reg3, "$zero", num2);
         generate(instr, num1, reg3, num3);
         generate("subu", num1, "$zero", num1);
@@ -493,6 +495,22 @@ void MipsGenerator::gen_arithmetic(const string &instr, const string &num1, cons
         generate(label + ":");
         generate(instr, num1, num2, num3);
         generate(label2 + ":");
+    } else if (instr == "addu" && is_const(num3)) {
+        if (num3 == "1073741824") {
+            generate("lui", reg3, "0x4000");
+            generate("addu", num1, num2, reg3);
+        } else {
+            generate("addiu", num1, num2, num3);
+        }
+    } else if (instr == "subu" && is_const(num3)) {
+        if (num3 == "1073741824") {
+            generate("lui", reg3, "0xc000");
+            generate("addu", num1, num2, reg3);
+        } else {
+            string neg = num3[0] == '+' ? '-' + num3.substr(1)
+                                        : num3[0] == '-' ? num3.substr(1) : '-' + num3;
+            generate("addiu", num1, num2, neg);
+        }
     } else {
         generate(instr, num1, num2, num3);
     }

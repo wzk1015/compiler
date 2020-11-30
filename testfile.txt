@@ -1,58 +1,88 @@
-int n, m;
-int a[100];
 
-void main() {
-    int i, j;
-    int op, l, r, delta;
-    int sum;
-    int prs = 1;
-    int t;
-    printf("18373806");
+int a[1000];
+int seed[3] = {19971231, 19981013, 1000000007};
+int staticvalue = 0;
+
+int myscanf()
+{
+    int n;
     scanf(n);
-    scanf(m);
-    for (i = n; i > 0; i = i - 1) {
-        scanf(t);
-        a[n - i + 1] = t;
+    return (n);
+}
+
+void myprintf(int n)
+{
+    printf(n);
+    return;
+}
+
+int set(int pos, int d){
+    int x[31];
+    int i = 10;
+    int v = 0;
+
+    x[0] = 1;
+    x[1] = x[0] * 2;
+    x[2] = x[1] * 2;
+    x[3] = x[2] * 2;
+    x[4] = x[3] * 2;
+    x[5] = x[4] * 2;
+    x[6] = x[5] * 2;
+    x[7] = x[6] * 2;
+    x[8] = x[7] * 2;
+    x[9] = x[8] * 2;
+    x[10] = x[9] * 2;
+
+    while (i < 30){
+        i = i + 1;
+        x[i] = x[i - 1] * 2;
     }
-    for (i = 1; i <= m; i = i + 1) {
-        scanf(op);
-        scanf(l);
-        scanf(r);
-        switch (op) {
-            case 1: {
-                scanf(delta);
-                for (j = r; j >= l; j = j - 1) {
-                    a[j] = a[j] + delta;
-                }
-            }
-            case 2: {
-                scanf(delta);
-                for (j = r; j >= l; j = j - 1) {
-                    a[j] = a[j] - delta;
-                }
-            }
-            case 3: {
-                scanf(delta);
-                for (j = r; j >= l; j = j - 1) {
-                    a[j] = a[j] * delta;
-                }
-            }
-            case 4: {
-                sum = 0;
-                for (j = r; j >= l; j = j - 1) {
-                    sum = sum + a[j];
-                }
-                if (prs < 10) {
-                    printf(sum);
-                    prs = prs + 1;
-                }
-            }
-            default: {
-                if (prs < 10) {
-                    printf("Undefined operation.");
-                    prs = prs + 1;
-                }
-            }
-        }
+
+
+    if (pos / 30 >= 1000) return(0);
+    if ((a[pos / 30] / (x[pos-pos/30*30]))-(a[pos / 30] / (x[pos-pos/30*30]))/2*2 != d){
+        if ((a[pos / 30] / (x[pos-pos/30*30]))-(a[pos / 30] / (x[pos-pos/30*30]))/2*2 == 0)
+            if (d == 1)
+                v = (x[pos-pos/30*30]);
+
+        if ((a[pos / 30] / (x[pos-pos/30*30]))-(a[pos / 30] / (x[pos-pos/30*30]))/2*2 == 1)
+            if (d == 0)
+                v = v - (x[pos-pos/30*30]);
     }
+
+    a[pos / 30] = a[pos / 30] + v;
+    return(0);
+}
+
+
+int rand(){
+    staticvalue = staticvalue * seed[0] + seed[1];
+    staticvalue = staticvalue - staticvalue / seed[2] * seed[2];
+    if (staticvalue < 0) staticvalue = seed[2] + staticvalue;
+    return(staticvalue);
+}
+
+void main(){
+
+    int n;
+    int x, y, z;
+    int tmp = 0;
+    int i = 0;
+    n = myscanf();
+    staticvalue = myscanf();
+    while (n > 0){
+        n = n - 1;
+        z = rand();
+        x = z - z / 300000 * 300000;
+        z = rand();
+        y = z - z / 2 * 2;
+        set(x, y);
+    }
+    while(i<1000){
+        tmp = tmp + (a[i] - a[i]/100000 * 100000);
+        tmp = tmp - tmp / 100000 * 100000;
+        i = i + 1;
+    }
+    myprintf(tmp);
+    return ;
 }

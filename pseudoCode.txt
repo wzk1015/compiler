@@ -1,110 +1,218 @@
-str0: 18373806\n
-str1: Undefined operation.\n
 ===============
-0: =========FUNC void main=========
-1: prs = 1
-2: PRINT 0 strcon
-3: SCANF n
-4: SCANF m
-5: i = n
-6: #T1 = i
-7: JUMP_IF #T1<=0 label_1
-8: LABEL label_2
-9: SCANF t
-10: #T2 = n - i
-11: #T3 = #T2 + 1
-12: a[#T3] = t
-13: i = i - 1
-14: #T4 = i
-15: JUMP_IF #T4>0 label_2
-16: LABEL label_1
-17: i = 1
-18: #T5 = i - m
-19: JUMP_IF #T5>0 label_3
-20: LABEL label_4
-21: SCANF op
-22: SCANF l
-23: SCANF r
-24: @V6 = op
-25: EMPTY
-26: #T7 = @V6 - 1
-27: JUMP_IF #T7!=0 label_6
-28: SCANF delta
-29: j = r
-30: #T8 = j - l
-31: JUMP_IF #T8<0 label_7
-32: LABEL label_8
-33: #T9 = a[j]
-34: #T10 = #T9 + delta
-35: a[j] = #T10
-36: j = j - 1
-37: #T11 = j - l
-38: JUMP_IF #T11>=0 label_8
-39: LABEL label_7
-40: JUMP label_5
-41: LABEL label_6
-42: #T12 = @V6 - 2
-43: JUMP_IF #T12!=0 label_9
-44: SCANF delta
-45: j = r
-46: #T13 = j - l
-47: JUMP_IF #T13<0 label_10
-48: LABEL label_11
-49: #T14 = a[j]
-50: #T15 = #T14 - delta
-51: a[j] = #T15
-52: j = j - 1
-53: #T16 = j - l
-54: JUMP_IF #T16>=0 label_11
-55: LABEL label_10
-56: JUMP label_5
-57: LABEL label_9
-58: #T17 = @V6 - 3
-59: JUMP_IF #T17!=0 label_12
-60: SCANF delta
-61: j = r
-62: #T18 = j - l
-63: JUMP_IF #T18<0 label_13
-64: LABEL label_14
-65: #T19 = a[j]
-66: #T20 = #T19 * delta
-67: a[j] = #T20
-68: j = j - 1
-69: #T21 = j - l
-70: JUMP_IF #T21>=0 label_14
-71: LABEL label_13
-72: JUMP label_5
-73: LABEL label_12
-74: #T22 = @V6 - 4
-75: JUMP_IF #T22!=0 label_15
-76: sum = 0
-77: j = r
-78: #T23 = j - l
-79: JUMP_IF #T23<0 label_16
-80: LABEL label_17
-81: #T24 = a[j]
-82: sum = sum + #T24
-83: j = j - 1
-84: #T26 = j - l
-85: JUMP_IF #T26>=0 label_17
-86: LABEL label_16
-87: #T27 = prs - 10
-88: JUMP_IF #T27>=0 label_18
-89: PRINT sum int
-90: PRINT #ENDL
-91: prs = prs + 1
-92: LABEL label_18
-93: JUMP label_5
-94: LABEL label_15
-95: #T29 = prs - 10
-96: JUMP_IF #T29>=0 label_19
-97: PRINT 1 strcon
-98: prs = prs + 1
-99: LABEL label_19
-100: LABEL label_5
-101: i = i + 1
-102: #T31 = i - m
-103: JUMP_IF #T31<=0 label_4
-104: LABEL label_3
-105: RETURN
-106: =========END_FUNC void main=========
+0: seed[0] = 19971231
+1: seed[1] = 19981013
+2: seed[2] = 1000000007
+3: staticvalue = 0
+4: =========FUNC int myscanf=========
+5: SCANF n
+6: RETURN n
+7: =========END_FUNC int myscanf=========
+8: =========FUNC void myprintf=========
+9: PRINT n int
+10: PRINT #ENDL
+11: RETURN
+12: RETURN
+13: =========END_FUNC void myprintf=========
+14: =========FUNC int set=========
+15: i = 10
+16: v = 0
+17: x[0] = 1
+18: #T1 = x[0]
+19: #T2 = #T1 * 2
+20: x[1] = #T2
+21: #T3 = x[1]
+22: #T4 = #T3 * 2
+23: x[2] = #T4
+24: #T5 = x[2]
+25: #T6 = #T5 * 2
+26: x[3] = #T6
+27: #T7 = x[3]
+28: #T8 = #T7 * 2
+29: x[4] = #T8
+30: #T9 = x[4]
+31: #T10 = #T9 * 2
+32: x[5] = #T10
+33: #T11 = x[5]
+34: #T12 = #T11 * 2
+35: x[6] = #T12
+36: #T13 = x[6]
+37: #T14 = #T13 * 2
+38: x[7] = #T14
+39: #T15 = x[7]
+40: #T16 = #T15 * 2
+41: x[8] = #T16
+42: #T17 = x[8]
+43: #T18 = #T17 * 2
+44: x[9] = #T18
+45: #T19 = x[9]
+46: #T20 = #T19 * 2
+47: x[10] = #T20
+48: #T21 = i - 30
+49: JUMP_IF #T21>=0 label_1
+50: LABEL label_2
+51: i = i + 1
+52: #T23 = i - 1
+53: #T24 = x[#T23]
+54: #T25 = #T24 * 2
+55: x[i] = #T25
+56: #T26 = i - 30
+57: JUMP_IF #T26<0 label_2
+58: LABEL label_1
+59: #T27 = pos / 30
+60: #T28 = #T27 - 1000
+61: JUMP_IF #T28<0 label_3
+62: RETURN 0
+63: LABEL label_3
+64: #T29 = pos / 30
+65: #T30 = a[#T29]
+66: #T31 = pos / 30
+67: #T32 = #T31 * 30
+68: #T33 = pos - #T32
+69: #T34 = x[#T33]
+70: #T35 = #T30 / #T34
+71: #T36 = pos / 30
+72: #T37 = a[#T36]
+73: #T38 = pos / 30
+74: #T39 = #T38 * 30
+75: #T40 = pos - #T39
+76: #T41 = x[#T40]
+77: #T42 = #T37 / #T41
+78: #T43 = #T42 / 2
+79: #T44 = #T43 * 2
+80: #T45 = #T35 - #T44
+81: #T46 = #T45 - d
+82: JUMP_IF #T46==0 label_4
+83: #T47 = pos / 30
+84: #T48 = a[#T47]
+85: #T49 = pos / 30
+86: #T50 = #T49 * 30
+87: #T51 = pos - #T50
+88: #T52 = x[#T51]
+89: #T53 = #T48 / #T52
+90: #T54 = pos / 30
+91: #T55 = a[#T54]
+92: #T56 = pos / 30
+93: #T57 = #T56 * 30
+94: #T58 = pos - #T57
+95: #T59 = x[#T58]
+96: #T60 = #T55 / #T59
+97: #T61 = #T60 / 2
+98: #T62 = #T61 * 2
+99: #T63 = #T53 - #T62
+100: #T64 = #T63
+101: JUMP_IF #T64!=0 label_5
+102: #T65 = d - 1
+103: JUMP_IF #T65!=0 label_6
+104: #T66 = pos / 30
+105: #T67 = #T66 * 30
+106: #T68 = pos - #T67
+107: v = x[#T68]
+108: LABEL label_6
+109: LABEL label_5
+110: #T70 = pos / 30
+111: #T71 = a[#T70]
+112: #T72 = pos / 30
+113: #T73 = #T72 * 30
+114: #T74 = pos - #T73
+115: #T75 = x[#T74]
+116: #T76 = #T71 / #T75
+117: #T77 = pos / 30
+118: #T78 = a[#T77]
+119: #T79 = pos / 30
+120: #T80 = #T79 * 30
+121: #T81 = pos - #T80
+122: #T82 = x[#T81]
+123: #T83 = #T78 / #T82
+124: #T84 = #T83 / 2
+125: #T85 = #T84 * 2
+126: #T86 = #T76 - #T85
+127: #T87 = #T86 - 1
+128: JUMP_IF #T87!=0 label_7
+129: #T88 = d
+130: JUMP_IF #T88!=0 label_8
+131: #T89 = pos / 30
+132: #T90 = #T89 * 30
+133: #T91 = pos - #T90
+134: #T92 = x[#T91]
+135: v = v - #T92
+136: LABEL label_8
+137: LABEL label_7
+138: LABEL label_4
+139: #T94 = pos / 30
+140: #T95 = pos / 30
+141: #T96 = a[#T95]
+142: #T97 = #T96 + v
+143: a[#T94] = #T97
+144: RETURN 0
+145: =========END_FUNC int set=========
+146: =========FUNC int rand=========
+147: #T98 = seed[0]
+148: #T99 = staticvalue * #T98
+149: #T100 = seed[1]
+150: staticvalue = #T99 + #T100
+151: #T102 = seed[2]
+152: #T103 = staticvalue / #T102
+153: #T104 = seed[2]
+154: #T105 = #T103 * #T104
+155: staticvalue = staticvalue - #T105
+156: #T107 = staticvalue
+157: JUMP_IF #T107>=0 label_9
+158: #T108 = seed[2]
+159: staticvalue = #T108 + staticvalue
+160: LABEL label_9
+161: RETURN staticvalue
+162: =========END_FUNC int rand=========
+163: =========FUNC void main=========
+164: tmp = 0
+165: i = 0
+166: PREPARE_CALL myscanf
+167: CALL myscanf
+168: n = %RET
+169: PREPARE_CALL myscanf
+170: CALL myscanf
+171: staticvalue = %RET
+172: #T112 = n
+173: JUMP_IF #T112<=0 label_10
+174: LABEL label_11
+175: n = n - 1
+176: PREPARE_CALL rand
+177: CALL rand
+178: z = %RET
+179: #T115 = z / 300000
+180: #T116 = #T115 * 300000
+181: x = z - #T116
+182: PREPARE_CALL rand
+183: CALL rand
+184: z = %RET
+185: #T119 = z / 2
+186: #T120 = #T119 * 2
+187: y = z - #T120
+188: PREPARE_CALL set
+189: PUSH_PARA x
+190: PUSH_PARA y
+191: CALL set
+192: #T122 = n
+193: JUMP_IF #T122>0 label_11
+194: LABEL label_10
+195: #T123 = i - 1000
+196: JUMP_IF #T123>=0 label_12
+197: LABEL label_13
+198: #T124 = a[i]
+199: #T125 = a[i]
+200: #T126 = #T125 / 100000
+201: #T127 = #T126 * 100000
+202: #T128 = #T124 - #T127
+203: tmp = tmp + #T128
+204: #T130 = tmp / 100000
+205: #T131 = #T130 * 100000
+206: tmp = tmp - #T131
+207: i = i + 1
+208: #T134 = i - 1000
+209: JUMP_IF #T134<0 label_13
+210: LABEL label_12
+211: PREPARE_CALL myprintf
+212: PUSH_PARA tmp
+213: CALL myprintf
+214: RETURN
+215: RETURN
+216: =========END_FUNC void main=========
