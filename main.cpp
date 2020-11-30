@@ -37,13 +37,15 @@ int main() {
 
     PseudoCodeList::refactor();
 
+    PseudoCodeList::save_to_file("pseudoCode_old.txt");
+
     PseudoCodeList::remove_redundant_assign();
     PseudoCodeList::const_broadcast();
     PseudoCodeList::remove_redundant_tmp();
 
     PseudoCodeList::divide_basic_blocks();
 
-    PseudoCodeList::save_to_file("pseudoCode_old.txt");
+
 
     //PseudoCodeList::DAG_optimize();
 
