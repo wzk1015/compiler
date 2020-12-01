@@ -87,7 +87,8 @@ void MipsGenerator::translate() {
 
     for (auto &code:mid) {
         generate("");
-        generate("# === " + to_string(idx) + " " + code.to_str() + " ===");
+        generate("# === " + code.to_str() + " ===");
+        //generate("# === " + to_string(idx) + " " + code.to_str() + " ===");
         idx++;
         string op = code.op, num1 = code.num1, num2 = code.num2, result = code.result;
         if (op == OP_FUNC) {
@@ -586,7 +587,7 @@ void MipsGenerator::save_value(const string &reg, const string &symbol) {
 }
 
 bool MipsGenerator::assign_reg(const string &symbol, bool only_para) {
-    if (!SymTable::in_global(cur_func, symbol) && optimize_assign_reg) {
+    if (!SymTable::in_global(cur_func, symbol) && optimize_assign_reg && !is_const(symbol)) {
         SymTableItem item = SymTable::search(cur_func, symbol);
         if (item.stiType == var && !only_para) {
             string sreg = assign_s_reg(symbol);

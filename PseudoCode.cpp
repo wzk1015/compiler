@@ -11,6 +11,7 @@ int PseudoCodeList::label_index = 1;
 map<string, vector<BasicBlock>> PseudoCodeList::blocks;
 vector<DAGNode> PseudoCodeList::DAGNodes;
 map<string, int> PseudoCodeList::NodesMap;
+int PseudoCodeList::call_times = 0;
 
 
 string PseudoCode::to_str() const {
@@ -809,6 +810,114 @@ void PseudoCodeList::show_DAG_tree() {
 //    for (auto &it: NodesMap) {
 //        cout << it.first << ": " << it.second << endl;
 //    }
+}
+
+void PseudoCodeList::inline_function() {
+    vector<PseudoCode> new_codes;
+    map<string, vector<PseudoCode>> func_codes;
+    string cur_func = INVALID;
+    for (auto &code: codes) {
+        if (code.op == OP_FUNC) {
+            cur_func = code.num2;
+            func_codes[cur_func] = vector<PseudoCode>();
+        }
+        else if (code.op == OP_END_FUNC) {
+            cur_func = INVALID;
+        }
+        else if (cur_func != INVALID) {
+            func_codes[cur_func].push_back(code);
+        }
+    }
+
+    vector<vector<string>> paras;
+    vector<string> call_func;
+    cur_func = GLOBAL;
+    for (auto &code: codes) {
+        if (code.op == OP_FUNC) {
+            cur_func = code.num2;
+        }
+
+        if (code.op == OP_PREPARE_CALL) {
+            if (SymTable::search_func(code.num1).recur_func) {
+                new_codes.push_back(code);
+                continue;
+            }
+            paras.emplace_back();
+            call_func.push_back(code.num1);
+            call_times++;
+            cout << "inline func: " << call_func.back() << endl;
+        } else if (code.op == OP_PUSH_PARA && !call_func.empty()) {
+            if (code.num1[0] == '#') {
+                string var_name = "@V" + to_string(code_index);
+                code_index++;
+                new_codes.emplace_back(OP_ASSIGN, var_name, code.num1, VACANT);
+                int addr = SymTable::func_size(cur_func) + 4;
+                SymTable::add(cur_func, var_name, var, SymTable::try_search(cur_func, code.num1, true).dataType, addr);
+                paras.back().push_back(var_name);
+            } else {
+                paras.back().push_back(code.num1);
+            }
+        } else if (code.op == OP_CALL && !call_func.empty()) {
+            assertion(!call_func.empty());
+            vector<pair<DataType, string>> call_paras = SymTable::search_func(call_func.back()).paras;
+            string label_end_func = assign_label();
+            vector<PseudoCode> call_codes = func_codes[call_func.back()];
+            for (int i = 0; i < call_codes.size(); i++) {
+                PseudoCode c = call_codes[i];
+                string result = rename_inline_var(c.result, call_paras, paras.back(), call_times, call_func.back(), cur_func);
+                string num1 = rename_inline_var(c.num1, call_paras, paras.back(), call_times, call_func.back(), cur_func);
+                string num2 = rename_inline_var(c.num2, call_paras, paras.back(), call_times, call_func.back(), cur_func);
+                if (c.op == OP_RETURN) {
+                    if (c.num1 != VACANT) {
+                        new_codes.emplace_back(OP_ASSIGN, "%RET", num1, VACANT);
+                    }
+                    if (i == call_codes.size() - 1
+                    || (c.op == OP_RETURN && call_codes[i+1].to_str() == c.to_str())) {
+
+                    } else {
+                        new_codes.emplace_back(OP_JUMP_UNCOND, label_end_func, VACANT, VACANT);
+                    }
+                } else {
+                    new_codes.emplace_back(c.op, num1, num2, result);
+                }
+            }
+
+            new_codes.emplace_back(OP_LABEL, label_end_func, VACANT, VACANT);
+            call_func.pop_back();
+            paras.pop_back();
+        } else  { // if (call_func.empty())
+            new_codes.push_back(code);
+        }
+    }
+
+    codes = new_codes;
+}
+
+string rename_inline_var(string name, vector<pair<DataType, string>> call_paras,
+        vector<string> real_paras, int call_times, const string& call_func, const string& cur_func) {
+    for (int i = 0; i < call_paras.size(); i++) {
+        if (call_paras[i].second == name) {
+            cout << "replace " << name << " with " << real_paras[i] << endl;
+            return real_paras[i];
+        }
+    }
+    if (begins_num(name) || SymTable::in_global(call_func, name)) {
+        return name;
+    }
+    SymTableItem item = SymTable::try_search(call_func, name, false);
+    if (item.valid) {
+        string ret =  "_" + to_string(call_times) + "_" + name;
+        if (!SymTable::try_search(cur_func, ret, false).valid) {
+            int addr = SymTable::func_size(cur_func) + 4;
+            SymTable::add(cur_func, ret, item.stiType, item.dataType, addr, item.dim1_size, item.dim2_size);
+        }
+        return ret;
+    }
+    else if (name.substr(0,5)=="label") {
+        return  name + "_" + to_string(call_times) + "_";
+    }
+
+    return name;
 }
 
 bool is_arith(const string &op) {

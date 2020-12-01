@@ -121,6 +121,7 @@ public:
     static map<string, vector<BasicBlock>> blocks;
     static vector<DAGNode> DAGNodes;
     static map<string, int> NodesMap;
+    static int call_times;
 
     static void reset() {
         codes.clear();
@@ -176,6 +177,8 @@ public:
 
     static void gen_DAG_graph(int, int);
 
+    static void inline_function();
+
     static void show() {
         cout << "========MID CODES========" << endl;
         for (auto &c: codes) {
@@ -192,7 +195,8 @@ public:
         }
         out << "===============" << endl;
         for (int i = 0; i < codes.size(); i++) {
-            out << i << ": " << codes[i].to_str() << endl;
+            //out << i << ": " << codes[i].to_str() << endl;
+            out << codes[i].to_str() << endl;
         }
         out.close();
     }
@@ -223,5 +227,8 @@ public:
 bool is_arith(const string &op);
 
 bool can_dag(const string &op);
+
+string rename_inline_var(string name, vector<pair<DataType, string>> call_paras,
+        vector<string> real_paras, int call_times, const string& call_func, const string& cur_func);
 
 #endif //COMPILER_Pseudo_H

@@ -1,220 +1,772 @@
 ===============
-0: seed[0] = 19971231
-1: seed[1] = 19981013
-2: seed[2] = 1000000007
-3: staticvalue = 0
-4: =========FUNC int myscanf=========
-5: SCANF n
-6: RETURN n
-7: =========END_FUNC int myscanf=========
-8: =========FUNC void myprintf=========
-9: PRINT n int
-10: PRINT #ENDL
-11: RETURN
-12: RETURN
-13: =========END_FUNC void myprintf=========
-14: =========FUNC int set=========
-15: i = 10
-16: v = 0
-17: x[0] = 1
-18: #T1 = x[0]
-19: #T2 = #T1 * 2
-20: x[1] = #T2
-21: #T3 = x[1]
-22: #T4 = #T3 * 2
-23: x[2] = #T4
-24: #T5 = x[2]
-25: #T6 = #T5 * 2
-26: x[3] = #T6
-27: #T7 = x[3]
-28: #T8 = #T7 * 2
-29: x[4] = #T8
-30: #T9 = x[4]
-31: #T10 = #T9 * 2
-32: x[5] = #T10
-33: #T11 = x[5]
-34: #T12 = #T11 * 2
-35: x[6] = #T12
-36: #T13 = x[6]
-37: #T14 = #T13 * 2
-38: x[7] = #T14
-39: #T15 = x[7]
-40: #T16 = #T15 * 2
-41: x[8] = #T16
-42: #T17 = x[8]
-43: #T18 = #T17 * 2
-44: x[9] = #T18
-45: #T19 = x[9]
-46: #T20 = #T19 * 2
-47: x[10] = #T20
-48: #T21 = i - 30
-49: JUMP_IF #T21>=0 label_1
-50: LABEL label_2
-51: i = i + 1
-52: #T23 = i - 1
-53: #T24 = x[#T23]
-54: #T25 = #T24 * 2
-55: x[i] = #T25
-56: #T26 = i - 30
-57: JUMP_IF #T26<0 label_2
-58: LABEL label_1
-59: #T27 = pos / 30
-60: #T28 = #T27 - 1000
-61: JUMP_IF #T28<0 label_3
-62: RETURN 0
-63: LABEL label_3
-64: #T29 = pos / 30
-65: #T30 = a[#T29]
-66: #T31 = pos / 30
-67: #T32 = #T31 * 30
-68: #T33 = pos - #T32
-69: #T34 = x[#T33]
-70: #T35 = #T30 / #T34
-71: #T36 = pos / 30
-72: #T37 = a[#T36]
-73: #T38 = pos / 30
-74: #T39 = #T38 * 30
-75: #T40 = pos - #T39
-76: #T41 = x[#T40]
-77: #T42 = #T37 / #T41
-78: #T43 = #T42 / 2
-79: #T44 = #T43 * 2
-80: #T45 = #T35 - #T44
-81: #T46 = #T45 - d
-82: JUMP_IF #T46==0 label_4
-83: #T47 = pos / 30
-84: #T48 = a[#T47]
-85: #T49 = pos / 30
-86: #T50 = #T49 * 30
-87: #T51 = pos - #T50
-88: #T52 = x[#T51]
-89: #T53 = #T48 / #T52
-90: #T54 = pos / 30
-91: #T55 = a[#T54]
-92: #T56 = pos / 30
-93: #T57 = #T56 * 30
-94: #T58 = pos - #T57
-95: #T59 = x[#T58]
-96: #T60 = #T55 / #T59
-97: #T61 = #T60 / 2
-98: #T62 = #T61 * 2
-99: #T63 = #T53 - #T62
-100: #T64 = #T63
-101: JUMP_IF #T64!=0 label_5
-102: #T65 = d - 1
-103: JUMP_IF #T65!=0 label_6
-104: #T66 = pos / 30
-105: #T67 = #T66 * 30
-106: #T68 = pos - #T67
-107: v = x[#T68]
-108: LABEL label_6
-109: LABEL label_5
-110: #T70 = pos / 30
-111: #T71 = a[#T70]
-112: #T72 = pos / 30
-113: #T73 = #T72 * 30
-114: #T74 = pos - #T73
-115: #T75 = x[#T74]
-116: #T76 = #T71 / #T75
-117: #T77 = pos / 30
-118: #T78 = a[#T77]
-119: #T79 = pos / 30
-120: #T80 = #T79 * 30
-121: #T81 = pos - #T80
-122: #T82 = x[#T81]
-123: #T83 = #T78 / #T82
-124: #T84 = #T83 / 2
-125: #T85 = #T84 * 2
-126: #T86 = #T76 - #T85
-127: #T87 = #T86 - 1
-128: JUMP_IF #T87!=0 label_7
-129: #T88 = d
-130: JUMP_IF #T88!=0 label_8
-131: #T89 = pos / 30
-132: #T90 = #T89 * 30
-133: #T91 = pos - #T90
-134: #T92 = x[#T91]
-135: v = v - #T92
-136: LABEL label_8
-137: LABEL label_7
-138: LABEL label_4
-139: #T94 = pos / 30
-140: #T95 = pos / 30
-141: #T96 = a[#T95]
-142: #T97 = #T96 + v
-143: a[#T94] = #T97
-144: RETURN 0
-145: =========END_FUNC int set=========
-146: =========FUNC int rand=========
-147: #T98 = seed[0]
-148: #T99 = staticvalue * #T98
-149: #T100 = seed[1]
-150: staticvalue = #T99 + #T100
-151: #T102 = seed[2]
-152: #T103 = staticvalue / #T102
-153: #T104 = seed[2]
-154: #T105 = #T103 * #T104
-155: staticvalue = staticvalue - #T105
-156: #T107 = staticvalue
-157: JUMP_IF #T107>=0 label_9
-158: #T108 = seed[2]
-159: staticvalue = #T108 + staticvalue
-160: LABEL label_9
-161: RETURN staticvalue
-162: =========END_FUNC int rand=========
-163: =========FUNC void main=========
-164: tmp = 0
-165: i = 0
-166: PREPARE_CALL myscanf
-167: CALL myscanf
-168: n = %RET
-169: PREPARE_CALL myscanf
-170: CALL myscanf
-171: staticvalue = %RET
-172: #T112 = n
-173: JUMP_IF #T112<=0 label_10
-174: LABEL label_11
-175: n = n - 1
-176: PREPARE_CALL rand
-177: CALL rand
-178: z = %RET
-179: #T115 = z / 300000
-180: #T116 = #T115 * 300000
-181: x = z - #T116
-182: PREPARE_CALL rand
-183: CALL rand
-184: z = %RET
-185: #T119 = z / 2
-186: #T120 = #T119 * 2
-187: y = z - #T120
-188: PREPARE_CALL set
-189: PUSH_PARA x
-190: PUSH_PARA y
-191: CALL set
-192: PRINT n int
-193: PRINT #ENDL
-194: #T122 = n
-195: JUMP_IF #T122>0 label_11
-196: LABEL label_10
-197: #T123 = i - 1000
-198: JUMP_IF #T123>=0 label_12
-199: LABEL label_13
-200: #T124 = a[i]
-201: #T125 = a[i]
-202: #T126 = #T125 / 100000
-203: #T127 = #T126 * 100000
-204: #T128 = #T124 - #T127
-205: tmp = tmp + #T128
-206: #T130 = tmp / 100000
-207: #T131 = #T130 * 100000
-208: tmp = tmp - #T131
-209: i = i + 1
-210: #T134 = i - 1000
-211: JUMP_IF #T134<0 label_13
-212: LABEL label_12
-213: PREPARE_CALL myprintf
-214: PUSH_PARA tmp
-215: CALL myprintf
-216: RETURN
-217: RETURN
-218: =========END_FUNC void main=========
+=========FUNC int myscanf=========
+SCANF n
+RETURN n
+=========END_FUNC int myscanf=========
+=========FUNC void myprintf=========
+PRINT n int
+PRINT #ENDL
+RETURN
+RETURN
+=========END_FUNC void myprintf=========
+=========FUNC int checkrange=========
+#T1 = num - 1073741824
+JUMP_IF #T1<=0 label_1
+LABEL label_2
+num = num - 1073741824
+#T3 = num - 1073741824
+JUMP_IF #T3>0 label_2
+LABEL label_1
+#T4 = num
+JUMP_IF #T4>=0 label_3
+LABEL label_4
+num = num + 1073741824
+#T6 = num
+JUMP_IF #T6<0 label_4
+LABEL label_3
+RETURN num
+=========END_FUNC int checkrange=========
+=========FUNC int reduce=========
+#T7 = kernelid
+JUMP_IF #T7!=0 label_5
+#T8 = x + y
+@V134 = #T8
+_1_#T1 = @V134 - 1073741824
+JUMP_IF _1_#T1<=0 label_1_1_
+LABEL label_2_1_
+@V134 = @V134 - 1073741824
+_1_#T3 = @V134 - 1073741824
+JUMP_IF _1_#T3>0 label_2_1_
+LABEL label_1_1_
+_1_#T4 = @V134
+JUMP_IF _1_#T4>=0 label_3_1_
+LABEL label_4_1_
+@V134 = @V134 + 1073741824
+_1_#T6 = @V134
+JUMP_IF _1_#T6<0 label_4_1_
+LABEL label_3_1_
+%RET = @V134
+LABEL label_53
+#T9 = %RET
+RETURN #T9
+LABEL label_5
+#T10 = kernelid - 1
+JUMP_IF #T10!=0 label_6
+ret = 0
+i = 1
+#T11 = i - 1073741824
+JUMP_IF #T11>=0 label_7
+LABEL label_8
+#T12 = x / i
+#T13 = x / i
+#T14 = #T13 / 2
+#T15 = #T14 * 2
+#T16 = #T12 - #T15
+#T17 = y / i
+#T18 = y / i
+#T19 = #T18 / 2
+#T20 = #T19 * 2
+#T21 = #T17 - #T20
+#T22 = #T16 - #T21
+JUMP_IF #T22!=0 label_9
+ret = ret * 2
+JUMP label_10
+LABEL label_9
+#T24 = ret * 2
+ret = #T24 + 1
+LABEL label_10
+i = i * 2
+#T27 = i - 1073741824
+JUMP_IF #T27<0 label_8
+LABEL label_7
+RETURN ret
+LABEL label_6
+#T28 = kernelid - 2
+JUMP_IF #T28!=0 label_11
+#T29 = x - y
+JUMP_IF #T29<=0 label_12
+RETURN x
+JUMP label_13
+LABEL label_12
+RETURN y
+LABEL label_13
+LABEL label_11
+#T30 = kernelid - 3
+JUMP_IF #T30!=0 label_14
+ret = 0
+i = 1
+#T31 = i - 1073741824
+JUMP_IF #T31>=0 label_15
+LABEL label_16
+#T32 = x / i
+#T33 = x / i
+#T34 = #T33 / 2
+#T35 = #T34 * 2
+#T36 = #T32 - #T35
+#T37 = #T36 - 1
+JUMP_IF #T37!=0 label_17
+#T38 = ret * 2
+ret = #T38 + 1
+JUMP label_18
+LABEL label_17
+#T40 = y / i
+#T41 = y / i
+#T42 = #T41 / 2
+#T43 = #T42 * 2
+#T44 = #T40 - #T43
+#T45 = #T44 - 1
+JUMP_IF #T45!=0 label_19
+#T46 = ret * 2
+ret = #T46 + 1
+LABEL label_19
+ret = ret * 2
+LABEL label_18
+i = i * 2
+#T50 = i - 1073741824
+JUMP_IF #T50<0 label_16
+LABEL label_15
+RETURN ret
+LABEL label_14
+#T51 = kernelid - 4
+JUMP_IF #T51!=0 label_20
+ret = 0
+i = 1
+#T52 = i - 1073741824
+JUMP_IF #T52>=0 label_21
+LABEL label_22
+#T53 = x / i
+#T54 = x / i
+#T55 = #T54 / 2
+#T56 = #T55 * 2
+#T57 = #T53 - #T56
+#T58 = #T57 - 1
+JUMP_IF #T58!=0 label_23
+#T59 = y / i
+#T60 = y / i
+#T61 = #T60 / 2
+#T62 = #T61 * 2
+#T63 = #T59 - #T62
+#T64 = #T63 - 1
+JUMP_IF #T64!=0 label_24
+#T65 = ret * 2
+ret = #T65 + 1
+JUMP label_25
+LABEL label_24
+ret = ret * 2
+LABEL label_25
+JUMP label_26
+LABEL label_23
+ret = ret * 2
+LABEL label_26
+i = i * 2
+#T70 = i - 1073741824
+JUMP_IF #T70<0 label_22
+LABEL label_21
+RETURN ret
+LABEL label_20
+RETURN 0
+=========END_FUNC int reduce=========
+=========FUNC int getvalue=========
+#T71 = x
+JUMP_IF #T71>=0 label_27
+RETURN 0
+LABEL label_27
+#T72 = y
+JUMP_IF #T72>=0 label_28
+RETURN 0
+LABEL label_28
+#T73 = x - n
+JUMP_IF #T73<0 label_29
+RETURN 0
+LABEL label_29
+#T74 = y - m
+JUMP_IF #T74<0 label_30
+RETURN 0
+LABEL label_30
+#T75 = x * m
+#T76 = #T75 + y
+#T77 = a[#T76]
+RETURN #T77
+=========END_FUNC int getvalue=========
+=========FUNC int convn=========
+i = 0
+j = 0
+flag1 = 1
+flag2 = 1
+flag3 = 1
+flag4 = 1
+#T78 = flag1 - 1
+JUMP_IF #T78!=0 label_31
+LABEL label_32
+j = 0
+#T79 = flag2 - 1
+JUMP_IF #T79!=0 label_33
+LABEL label_34
+curr = 0
+#T80 = c / 2
+x = i - #T80
+#T82 = flag3 - 1
+JUMP_IF #T82!=0 label_35
+LABEL label_36
+#T83 = c / 2
+y = j - #T83
+#T85 = flag4 - 1
+JUMP_IF #T85!=0 label_37
+LABEL label_38
+_3_#T71 = x
+JUMP_IF _3_#T71>=0 label_27_3_
+%RET = 0
+JUMP label_54
+LABEL label_27_3_
+_3_#T72 = y
+JUMP_IF _3_#T72>=0 label_28_3_
+%RET = 0
+JUMP label_54
+LABEL label_28_3_
+_3_#T73 = x - n
+JUMP_IF _3_#T73<0 label_29_3_
+%RET = 0
+JUMP label_54
+LABEL label_29_3_
+_3_#T74 = y - m
+JUMP_IF _3_#T74<0 label_30_3_
+%RET = 0
+JUMP label_54
+LABEL label_30_3_
+_3_#T75 = x * m
+_3_#T76 = _3_#T75 + y
+_3_#T77 = a[_3_#T76]
+%RET = _3_#T77
+LABEL label_54
+#T86 = %RET
+@V135 = #T86
+_3_#T7 = kernelid
+JUMP_IF _3_#T7!=0 label_5_3_
+_3_#T8 = curr + @V135
+_14_#T1 = _3_#T8 - 1073741824
+JUMP_IF _14_#T1<=0 label_1_14_
+LABEL label_2_14_
+_3_#T8 = _3_#T8 - 1073741824
+_14_#T3 = _3_#T8 - 1073741824
+JUMP_IF _14_#T3>0 label_2_14_
+LABEL label_1_14_
+_14_#T4 = _3_#T8
+JUMP_IF _14_#T4>=0 label_3_14_
+LABEL label_4_14_
+_3_#T8 = _3_#T8 + 1073741824
+_14_#T6 = _3_#T8
+JUMP_IF _14_#T6<0 label_4_14_
+LABEL label_3_14_
+%RET = _3_#T8
+LABEL label_66
+_3_#T9 = %RET
+%RET = _3_#T9
+JUMP label_55
+LABEL label_5_3_
+_3_#T10 = kernelid - 1
+JUMP_IF _3_#T10!=0 label_6_3_
+_3_ret = 0
+_3_i = 1
+_3_#T11 = _3_i - 1073741824
+JUMP_IF _3_#T11>=0 label_7_3_
+LABEL label_8_3_
+_3_#T12 = curr / _3_i
+_3_#T13 = curr / _3_i
+_3_#T14 = _3_#T13 / 2
+_3_#T15 = _3_#T14 * 2
+_3_#T16 = _3_#T12 - _3_#T15
+_3_#T17 = @V135 / _3_i
+_3_#T18 = @V135 / _3_i
+_3_#T19 = _3_#T18 / 2
+_3_#T20 = _3_#T19 * 2
+_3_#T21 = _3_#T17 - _3_#T20
+_3_#T22 = _3_#T16 - _3_#T21
+JUMP_IF _3_#T22!=0 label_9_3_
+_3_ret = _3_ret * 2
+JUMP label_10_3_
+LABEL label_9_3_
+_3_#T24 = _3_ret * 2
+_3_ret = _3_#T24 + 1
+LABEL label_10_3_
+_3_i = _3_i * 2
+_3_#T27 = _3_i - 1073741824
+JUMP_IF _3_#T27<0 label_8_3_
+LABEL label_7_3_
+%RET = _3_ret
+JUMP label_55
+LABEL label_6_3_
+_3_#T28 = kernelid - 2
+JUMP_IF _3_#T28!=0 label_11_3_
+_3_#T29 = curr - @V135
+JUMP_IF _3_#T29<=0 label_12_3_
+%RET = curr
+JUMP label_55
+JUMP label_13_3_
+LABEL label_12_3_
+%RET = @V135
+JUMP label_55
+LABEL label_13_3_
+LABEL label_11_3_
+_3_#T30 = kernelid - 3
+JUMP_IF _3_#T30!=0 label_14_3_
+_3_ret = 0
+_3_i = 1
+_3_#T31 = _3_i - 1073741824
+JUMP_IF _3_#T31>=0 label_15_3_
+LABEL label_16_3_
+_3_#T32 = curr / _3_i
+_3_#T33 = curr / _3_i
+_3_#T34 = _3_#T33 / 2
+_3_#T35 = _3_#T34 * 2
+_3_#T36 = _3_#T32 - _3_#T35
+_3_#T37 = _3_#T36 - 1
+JUMP_IF _3_#T37!=0 label_17_3_
+_3_#T38 = _3_ret * 2
+_3_ret = _3_#T38 + 1
+JUMP label_18_3_
+LABEL label_17_3_
+_3_#T40 = @V135 / _3_i
+_3_#T41 = @V135 / _3_i
+_3_#T42 = _3_#T41 / 2
+_3_#T43 = _3_#T42 * 2
+_3_#T44 = _3_#T40 - _3_#T43
+_3_#T45 = _3_#T44 - 1
+JUMP_IF _3_#T45!=0 label_19_3_
+_3_#T46 = _3_ret * 2
+_3_ret = _3_#T46 + 1
+LABEL label_19_3_
+_3_ret = _3_ret * 2
+LABEL label_18_3_
+_3_i = _3_i * 2
+_3_#T50 = _3_i - 1073741824
+JUMP_IF _3_#T50<0 label_16_3_
+LABEL label_15_3_
+%RET = _3_ret
+JUMP label_55
+LABEL label_14_3_
+_3_#T51 = kernelid - 4
+JUMP_IF _3_#T51!=0 label_20_3_
+_3_ret = 0
+_3_i = 1
+_3_#T52 = _3_i - 1073741824
+JUMP_IF _3_#T52>=0 label_21_3_
+LABEL label_22_3_
+_3_#T53 = curr / _3_i
+_3_#T54 = curr / _3_i
+_3_#T55 = _3_#T54 / 2
+_3_#T56 = _3_#T55 * 2
+_3_#T57 = _3_#T53 - _3_#T56
+_3_#T58 = _3_#T57 - 1
+JUMP_IF _3_#T58!=0 label_23_3_
+_3_#T59 = @V135 / _3_i
+_3_#T60 = @V135 / _3_i
+_3_#T61 = _3_#T60 / 2
+_3_#T62 = _3_#T61 * 2
+_3_#T63 = _3_#T59 - _3_#T62
+_3_#T64 = _3_#T63 - 1
+JUMP_IF _3_#T64!=0 label_24_3_
+_3_#T65 = _3_ret * 2
+_3_ret = _3_#T65 + 1
+JUMP label_25_3_
+LABEL label_24_3_
+_3_ret = _3_ret * 2
+LABEL label_25_3_
+JUMP label_26_3_
+LABEL label_23_3_
+_3_ret = _3_ret * 2
+LABEL label_26_3_
+_3_i = _3_i * 2
+_3_#T70 = _3_i - 1073741824
+JUMP_IF _3_#T70<0 label_22_3_
+LABEL label_21_3_
+%RET = _3_ret
+JUMP label_55
+LABEL label_20_3_
+%RET = 0
+LABEL label_55
+curr = %RET
+y = y + 1
+#T89 = c / 2
+#T90 = j + #T89
+#T91 = y - #T90
+JUMP_IF #T91<0 label_39
+flag4 = 0
+LABEL label_39
+#T92 = flag4 - 1
+JUMP_IF #T92==0 label_38
+LABEL label_37
+flag4 = 1
+x = x + 1
+#T94 = c / 2
+#T95 = i + #T94
+#T96 = x - #T95
+JUMP_IF #T96<0 label_40
+flag3 = 0
+LABEL label_40
+#T97 = flag3 - 1
+JUMP_IF #T97==0 label_36
+LABEL label_35
+flag3 = 1
+#T98 = i * m
+#T99 = #T98 + j
+b[#T99] = curr
+j = j + 1
+#T101 = j - m
+JUMP_IF #T101<0 label_41
+flag2 = 0
+LABEL label_41
+#T102 = flag2 - 1
+JUMP_IF #T102==0 label_34
+LABEL label_33
+flag2 = 1
+i = i + 1
+#T104 = i - n
+JUMP_IF #T104<0 label_42
+flag1 = 0
+LABEL label_42
+#T105 = flag1 - 1
+JUMP_IF #T105==0 label_32
+LABEL label_31
+RETURN 0
+=========END_FUNC int convn=========
+=========FUNC void mymemmove=========
+i = 0
+#T106 = i - n
+JUMP_IF #T106>=0 label_43
+LABEL label_44
+#T107 = b[i]
+a[i] = #T107
+i = i + 1
+#T109 = i - n
+JUMP_IF #T109<0 label_44
+LABEL label_43
+RETURN
+=========END_FUNC void mymemmove=========
+=========FUNC void main=========
+i = 0
+SCANF _4_n
+%RET = _4_n
+LABEL label_56
+c = %RET
+SCANF _5_n
+%RET = _5_n
+LABEL label_57
+n = %RET
+SCANF _6_n
+%RET = _6_n
+LABEL label_58
+m = %RET
+SCANF _7_n
+%RET = _7_n
+LABEL label_59
+arrlen = %RET
+#T114 = i - arrlen
+JUMP_IF #T114>=0 label_45
+LABEL label_46
+SCANF _8_n
+%RET = _8_n
+LABEL label_60
+#T115 = %RET
+a[i] = #T115
+i = i + 1
+#T117 = i - arrlen
+JUMP_IF #T117<0 label_46
+LABEL label_45
+SCANF _9_n
+%RET = _9_n
+LABEL label_61
+task = %RET
+i = 0
+#T119 = i - task
+JUMP_IF #T119>=0 label_47
+LABEL label_48
+SCANF _10_n
+%RET = _10_n
+LABEL label_62
+#T120 = %RET
+kernelid[i] = #T120
+i = i + 1
+#T122 = i - task
+JUMP_IF #T122<0 label_48
+LABEL label_47
+i = 0
+#T123 = i - task
+JUMP_IF #T123>=0 label_49
+LABEL label_50
+#T124 = kernelid[i]
+@V136 = #T124
+_11_i = 0
+_11_j = 0
+_11_flag1 = 1
+_11_flag2 = 1
+_11_flag3 = 1
+_11_flag4 = 1
+_11_#T78 = _11_flag1 - 1
+JUMP_IF _11_#T78!=0 label_31_11_
+LABEL label_32_11_
+_11_j = 0
+_11_#T79 = _11_flag2 - 1
+JUMP_IF _11_#T79!=0 label_33_11_
+LABEL label_34_11_
+_11_curr = 0
+_11_#T80 = c / 2
+_11_x = _11_i - _11_#T80
+_11_#T82 = _11_flag3 - 1
+JUMP_IF _11_#T82!=0 label_35_11_
+LABEL label_36_11_
+_11_#T83 = c / 2
+_11_y = _11_j - _11_#T83
+_11_#T85 = _11_flag4 - 1
+JUMP_IF _11_#T85!=0 label_37_11_
+LABEL label_38_11_
+_16_#T71 = _11_x
+JUMP_IF _16_#T71>=0 label_27_16_
+%RET = 0
+JUMP label_67
+LABEL label_27_16_
+_16_#T72 = _11_y
+JUMP_IF _16_#T72>=0 label_28_16_
+%RET = 0
+JUMP label_67
+LABEL label_28_16_
+_16_#T73 = _11_x - n
+JUMP_IF _16_#T73<0 label_29_16_
+%RET = 0
+JUMP label_67
+LABEL label_29_16_
+_16_#T74 = _11_y - m
+JUMP_IF _16_#T74<0 label_30_16_
+%RET = 0
+JUMP label_67
+LABEL label_30_16_
+_16_#T75 = _11_x * m
+_16_#T76 = _16_#T75 + _11_y
+_16_#T77 = a[_16_#T76]
+%RET = _16_#T77
+LABEL label_67
+_11_#T86 = %RET
+_16_#T7 = @V136
+JUMP_IF _16_#T7!=0 label_5_16_
+_16_#T8 = _11_curr + _11_#T86
+_16_@V134 = _16_#T8
+_16__1_#T1 = _16_@V134 - 1073741824
+JUMP_IF _16__1_#T1<=0 label_1_1__16_
+LABEL label_2_1__16_
+_16_@V134 = _16_@V134 - 1073741824
+_16__1_#T3 = _16_@V134 - 1073741824
+JUMP_IF _16__1_#T3>0 label_2_1__16_
+LABEL label_1_1__16_
+_16__1_#T4 = _16_@V134
+JUMP_IF _16__1_#T4>=0 label_3_1__16_
+LABEL label_4_1__16_
+_16_@V134 = _16_@V134 + 1073741824
+_16__1_#T6 = _16_@V134
+JUMP_IF _16__1_#T6<0 label_4_1__16_
+LABEL label_3_1__16_
+%RET = _16_@V134
+LABEL label_53_16_
+_16_#T9 = %RET
+%RET = _16_#T9
+JUMP label_68
+LABEL label_5_16_
+_16_#T10 = @V136 - 1
+JUMP_IF _16_#T10!=0 label_6_16_
+_16_ret = 0
+_16_i = 1
+_16_#T11 = _16_i - 1073741824
+JUMP_IF _16_#T11>=0 label_7_16_
+LABEL label_8_16_
+_16_#T12 = _11_curr / _16_i
+_16_#T13 = _11_curr / _16_i
+_16_#T14 = _16_#T13 / 2
+_16_#T15 = _16_#T14 * 2
+_16_#T16 = _16_#T12 - _16_#T15
+_16_#T17 = _11_#T86 / _16_i
+_16_#T18 = _11_#T86 / _16_i
+_16_#T19 = _16_#T18 / 2
+_16_#T20 = _16_#T19 * 2
+_16_#T21 = _16_#T17 - _16_#T20
+_16_#T22 = _16_#T16 - _16_#T21
+JUMP_IF _16_#T22!=0 label_9_16_
+_16_ret = _16_ret * 2
+JUMP label_10_16_
+LABEL label_9_16_
+_16_#T24 = _16_ret * 2
+_16_ret = _16_#T24 + 1
+LABEL label_10_16_
+_16_i = _16_i * 2
+_16_#T27 = _16_i - 1073741824
+JUMP_IF _16_#T27<0 label_8_16_
+LABEL label_7_16_
+%RET = _16_ret
+JUMP label_68
+LABEL label_6_16_
+_16_#T28 = @V136 - 2
+JUMP_IF _16_#T28!=0 label_11_16_
+_16_#T29 = _11_curr - _11_#T86
+JUMP_IF _16_#T29<=0 label_12_16_
+%RET = _11_curr
+JUMP label_68
+JUMP label_13_16_
+LABEL label_12_16_
+%RET = _11_#T86
+JUMP label_68
+LABEL label_13_16_
+LABEL label_11_16_
+_16_#T30 = @V136 - 3
+JUMP_IF _16_#T30!=0 label_14_16_
+_16_ret = 0
+_16_i = 1
+_16_#T31 = _16_i - 1073741824
+JUMP_IF _16_#T31>=0 label_15_16_
+LABEL label_16_16_
+_16_#T32 = _11_curr / _16_i
+_16_#T33 = _11_curr / _16_i
+_16_#T34 = _16_#T33 / 2
+_16_#T35 = _16_#T34 * 2
+_16_#T36 = _16_#T32 - _16_#T35
+_16_#T37 = _16_#T36 - 1
+JUMP_IF _16_#T37!=0 label_17_16_
+_16_#T38 = _16_ret * 2
+_16_ret = _16_#T38 + 1
+JUMP label_18_16_
+LABEL label_17_16_
+_16_#T40 = _11_#T86 / _16_i
+_16_#T41 = _11_#T86 / _16_i
+_16_#T42 = _16_#T41 / 2
+_16_#T43 = _16_#T42 * 2
+_16_#T44 = _16_#T40 - _16_#T43
+_16_#T45 = _16_#T44 - 1
+JUMP_IF _16_#T45!=0 label_19_16_
+_16_#T46 = _16_ret * 2
+_16_ret = _16_#T46 + 1
+LABEL label_19_16_
+_16_ret = _16_ret * 2
+LABEL label_18_16_
+_16_i = _16_i * 2
+_16_#T50 = _16_i - 1073741824
+JUMP_IF _16_#T50<0 label_16_16_
+LABEL label_15_16_
+%RET = _16_ret
+JUMP label_68
+LABEL label_14_16_
+_16_#T51 = @V136 - 4
+JUMP_IF _16_#T51!=0 label_20_16_
+_16_ret = 0
+_16_i = 1
+_16_#T52 = _16_i - 1073741824
+JUMP_IF _16_#T52>=0 label_21_16_
+LABEL label_22_16_
+_16_#T53 = _11_curr / _16_i
+_16_#T54 = _11_curr / _16_i
+_16_#T55 = _16_#T54 / 2
+_16_#T56 = _16_#T55 * 2
+_16_#T57 = _16_#T53 - _16_#T56
+_16_#T58 = _16_#T57 - 1
+JUMP_IF _16_#T58!=0 label_23_16_
+_16_#T59 = _11_#T86 / _16_i
+_16_#T60 = _11_#T86 / _16_i
+_16_#T61 = _16_#T60 / 2
+_16_#T62 = _16_#T61 * 2
+_16_#T63 = _16_#T59 - _16_#T62
+_16_#T64 = _16_#T63 - 1
+JUMP_IF _16_#T64!=0 label_24_16_
+_16_#T65 = _16_ret * 2
+_16_ret = _16_#T65 + 1
+JUMP label_25_16_
+LABEL label_24_16_
+_16_ret = _16_ret * 2
+LABEL label_25_16_
+JUMP label_26_16_
+LABEL label_23_16_
+_16_ret = _16_ret * 2
+LABEL label_26_16_
+_16_i = _16_i * 2
+_16_#T70 = _16_i - 1073741824
+JUMP_IF _16_#T70<0 label_22_16_
+LABEL label_21_16_
+%RET = _16_ret
+JUMP label_68
+LABEL label_20_16_
+%RET = 0
+LABEL label_68
+_11_curr = %RET
+_11_y = _11_y + 1
+_11_#T89 = c / 2
+_11_#T90 = _11_j + _11_#T89
+_11_#T91 = _11_y - _11_#T90
+JUMP_IF _11_#T91<0 label_39_11_
+_11_flag4 = 0
+LABEL label_39_11_
+_11_#T92 = _11_flag4 - 1
+JUMP_IF _11_#T92==0 label_38_11_
+LABEL label_37_11_
+_11_flag4 = 1
+_11_x = _11_x + 1
+_11_#T94 = c / 2
+_11_#T95 = _11_i + _11_#T94
+_11_#T96 = _11_x - _11_#T95
+JUMP_IF _11_#T96<0 label_40_11_
+_11_flag3 = 0
+LABEL label_40_11_
+_11_#T97 = _11_flag3 - 1
+JUMP_IF _11_#T97==0 label_36_11_
+LABEL label_35_11_
+_11_flag3 = 1
+_11_#T98 = _11_i * m
+_11_#T99 = _11_#T98 + _11_j
+b[_11_#T99] = _11_curr
+_11_j = _11_j + 1
+_11_#T101 = _11_j - m
+JUMP_IF _11_#T101<0 label_41_11_
+_11_flag2 = 0
+LABEL label_41_11_
+_11_#T102 = _11_flag2 - 1
+JUMP_IF _11_#T102==0 label_34_11_
+LABEL label_33_11_
+_11_flag2 = 1
+_11_i = _11_i + 1
+_11_#T104 = _11_i - n
+JUMP_IF _11_#T104<0 label_42_11_
+_11_flag1 = 0
+LABEL label_42_11_
+_11_#T105 = _11_flag1 - 1
+JUMP_IF _11_#T105==0 label_32_11_
+LABEL label_31_11_
+%RET = 0
+LABEL label_63
+#T125 = n * m
+@V137 = #T125
+_12_i = 0
+_12_#T106 = _12_i - @V137
+JUMP_IF _12_#T106>=0 label_43_12_
+LABEL label_44_12_
+_12_#T107 = b[_12_i]
+a[_12_i] = _12_#T107
+_12_i = _12_i + 1
+_12_#T109 = _12_i - @V137
+JUMP_IF _12_#T109<0 label_44_12_
+LABEL label_43_12_
+LABEL label_64
+i = i + 1
+#T127 = i - task
+JUMP_IF #T127<0 label_50
+LABEL label_49
+i = 0
+#T128 = n * m
+#T129 = i - #T128
+JUMP_IF #T129>=0 label_51
+LABEL label_52
+#T130 = a[i]
+@V138 = #T130
+PRINT @V138 int
+PRINT #ENDL
+LABEL label_65
+i = i + 1
+#T132 = n * m
+#T133 = i - #T132
+JUMP_IF #T133<0 label_52
+LABEL label_51
+RETURN
+RETURN
+=========END_FUNC void main=========

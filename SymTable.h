@@ -73,6 +73,8 @@ public:
 
     static void add(const string &func, const string &name, STIType stiType, DataType dataType, int addr);
 
+    static void add(const string &func, const string &name, STIType stiType, DataType dataType, int addr, int dim1, int dim2);
+
     static void add(const string &func, const Token &tk, STIType stiType, DataType dataType, int addr);
 
     static void add(const string &func, const Token &tk, STIType stiType, DataType dataType, int addr, int dim1, int dim2);

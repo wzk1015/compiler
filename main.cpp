@@ -17,9 +17,7 @@ int main() {
 //    grammar.save_lexer_results("testfile_replace.txt");
     Errors::save_to_file("error.txt");
 
-//    if (Errors::terminate()) {
-//        return 0;
-//    }
+
 
 //    PseudoCodeList::reset();
 //    SymTable::reset();
@@ -37,19 +35,26 @@ int main() {
 
     PseudoCodeList::refactor();
 
-    PseudoCodeList::save_to_file("pseudoCode_old.txt");
+
 
     PseudoCodeList::remove_redundant_assign();
     PseudoCodeList::const_broadcast();
     PseudoCodeList::remove_redundant_tmp();
 
     PseudoCodeList::divide_basic_blocks();
-
-
-
     //PseudoCodeList::DAG_optimize();
 
     //PseudoCodeList::const_broadcast();
+
+    PseudoCodeList::save_to_file("pseudoCode_old.txt");
+
+//    PseudoCodeList::inline_function();
+//
+//    PseudoCodeList::const_broadcast();
+//
+//    PseudoCodeList::inline_function();
+//
+//    PseudoCodeList::const_broadcast();
 
     PseudoCodeList::save_to_file("pseudoCode.txt");
 
@@ -60,8 +65,13 @@ int main() {
     mips.translate();
     mips.save_to_file("mips.txt");
 //
-//    SymTable::show();
+    //SymTable::show();
 
     //grammar.show_tree();
+
+    if (Errors::terminate()) {
+        return 0;
+    }
+
     return 0;
 }
