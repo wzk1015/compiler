@@ -10,7 +10,7 @@ int main() {
 	cout << "::                                                 ::" << endl;
 	cout << ":::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl;
 
-	//语法分析、错误处理
+	//语法分析、语义分析、错误处理
 	Grammar grammar("testfile.txt");
     grammar.analyze();
     grammar.save_to_file("output.txt");
@@ -20,8 +20,6 @@ int main() {
     //中间代码优化
 
     PseudoCodeList::refactor();
-
-
 
     PseudoCodeList::save_to_file("pseudo_code_old.txt");
 
@@ -56,6 +54,7 @@ int main() {
     mips.translate();
 //    mips.save_to_file("docs/codes/testfile" + fileid + "_18231047_王肇凯_优化后目标代码.txt");
     mips.save_to_file("mips.txt");
+    mips.show_reg_status();
 
     //SymTable::show();
 

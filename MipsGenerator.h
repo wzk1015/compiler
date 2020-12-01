@@ -19,6 +19,8 @@
 #define STACK_T_BEGIN 56
 #define STACK_RESERVED "96($sp)"
 
+#define NUM_T_REG 4
+#define NUM_S_REG 14
 
 
 class MipsGenerator {
@@ -26,11 +28,30 @@ public:
     vector<PseudoCode> mid;
     vector<string> mips;
     vector<string> strcons;
+    vector<string> s_regs = {
+            "$s0", "$s1", "$s2", "$s3",
+            "$s4", "$s5", "$s6", "$s7",
+            "$t4", "$t5", "$t6", "$t7",
+            "$t8", "$t9"
+    };
+
+    vector<string> t_regs = {
+            "$t0", "$t1", "$t2", "$t3"
+    };
+
     vector<string> s_reg_table = {
             VACANT,
             VACANT,
             VACANT,
             VACANT,
+            VACANT,
+
+            VACANT,
+            VACANT,
+            VACANT,
+            VACANT,
+            VACANT,
+
             VACANT,
             VACANT,
             VACANT,
@@ -41,12 +62,6 @@ public:
             VACANT,
             VACANT,
             VACANT,
-            VACANT,
-            VACANT,
-            VACANT,
-            VACANT,
-            VACANT,
-            VACANT
     };
     string regs[32] = {
             "$zero", "$at", "$v0", "$v1",
