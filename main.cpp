@@ -48,9 +48,9 @@ int main() {
 
     PseudoCodeList::save_to_file("pseudoCode_old.txt");
 
-//    PseudoCodeList::inline_function();
+    PseudoCodeList::inline_function();
 //
-//    PseudoCodeList::const_broadcast();
+    PseudoCodeList::const_broadcast();
 //
 //    PseudoCodeList::inline_function();
 //
