@@ -11,31 +11,25 @@ int main() {
 	cout << ":::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl;
 
 	//语法分析、错误处理
-	Grammar grammar("testfile.txt", grammar_check);
+	Grammar grammar("testfile.txt");
     grammar.analyze();
     grammar.save_to_file("output.txt");
-//    grammar.save_lexer_results("testfile_replace.txt");
     Errors::save_to_file("error.txt");
 
-
-
-//    PseudoCodeList::reset();
-//    SymTable::reset();
-//    Grammar optimizer("testfile_replace.txt", gen_inline);
-//    optimizer.analyze();
-//    optimizer.save_lexer_results("testfile_optimize.txt");
-//
-//    //语义分析、中间代码生成
-//    PseudoCodeList::reset();
-//    SymTable::reset();
-//    Grammar semantic("testfile_optimize.txt", semantic_analyze);
-//    semantic.analyze();
 
     //中间代码优化
 
     PseudoCodeList::refactor();
 
 
+
+    PseudoCodeList::save_to_file("pseudo_code_old.txt");
+
+//    string fileid = "1";
+//    PseudoCodeList::save_to_file("docs/codes/testfile" + fileid + "_18231047_王肇凯_优化前中间代码.txt");
+//    MipsGenerator mips_old;
+//    mips_old.translate();
+//    mips_old.save_to_file("docs/codes/testfile" + fileid + "_18231047_王肇凯_优化前目标代码.txt");
 
     PseudoCodeList::remove_redundant_assign();
     PseudoCodeList::const_broadcast();
@@ -46,25 +40,23 @@ int main() {
 
     //PseudoCodeList::const_broadcast();
 
-    PseudoCodeList::save_to_file("pseudoCode_old.txt");
+
+
 
     PseudoCodeList::inline_function();
-//
     PseudoCodeList::const_broadcast();
-//
-//    PseudoCodeList::inline_function();
-//
-//    PseudoCodeList::const_broadcast();
 
-    PseudoCodeList::save_to_file("pseudoCode.txt");
+    //PseudoCodeList::save_to_file("docs/codes/testfile" + fileid + "_18231047_王肇凯_优化后中间代码.txt");
+    PseudoCodeList::save_to_file("pseudo_code.txt");
 
     //目标代码生成
     MipsGenerator mips;
     mips.optimize_muldiv = true;
     mips.optimize_assign_reg = true;
     mips.translate();
+//    mips.save_to_file("docs/codes/testfile" + fileid + "_18231047_王肇凯_优化后目标代码.txt");
     mips.save_to_file("mips.txt");
-//
+
     //SymTable::show();
 
     //grammar.show_tree();

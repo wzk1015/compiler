@@ -19,40 +19,9 @@ public:
     TreeNode(string name, string type, int parent) : str(std::move(name)), type(std::move(type)), parent(parent) {}
 };
 
-enum GrammarMode {
-    grammar_check,
-    gen_inline,
-    semantic_analyze,
-};
-
-/*
- * 第一遍grammar check：
- * 分析语法，检查错误
- * 记录函数体及是否能inline（静态变量function_tokens_index）
- * 保存至新文件
- * 第二遍gen inline:
- * 有返回值函数开头增加"&RET&"声明
- * 对于能inline的函数，直接替换为函数体（以复合语句形式），其中对参数进行替换（借助符号表）；
- * 保存至新文件
- * 第三遍semantic analyze：
- * 根据生成中间代码、建立符号表（实际上为了错误检查，前两遍也有此步骤，但已经通过reset清除）
- * 针对inline替换后的代码，此时的文法允许语句列内出现复合语句
- *
- * 若不开启inline，则只进行第一遍grammar check
-*/
-
-class FunctionIndex {
-public:
-    int begin;
-    int end;
-    string name;
-
-    FunctionIndex(int begin, int end, string name) : begin(begin), end(end), name(std::move(name)) {}
-};
 
 class Grammar {
 public:
-    GrammarMode mode;
     Lexer lexer;
     vector<string> output_str;
     vector<Token> cur_lex_results;
@@ -76,13 +45,6 @@ public:
     vector<TreeNode> nodes;
     unsigned int cur_node = 0;
 
-    static vector<FunctionIndex> function_tokens_index;
-    int function_call_start_index = -1;
-    int statement_begin_index = -1;
-    int ret_index = 0;
-    bool para_assigned = false;
-    bool in_factor = false;
-
     void error(const string &expected);
 
     int next_sym(bool);
@@ -91,8 +53,7 @@ public:
 
     int analyze();
 
-    explicit Grammar(const string &in_path, GrammarMode mode) :
-            lexer(in_path, mode != grammar_check), mode(mode) {};
+    explicit Grammar(const string &in_path) : lexer(in_path){};
 
     string add_midcode(const string &op, const string &n1, const string &n2, const string &r) const;
 
@@ -185,11 +146,6 @@ public:
     void dfs_show(const TreeNode &, int);
 
     void show_tree();
-
-    void save_lexer_results(const string &path);
-
-
-    void change_name();
 };
 
 

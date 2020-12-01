@@ -41,7 +41,6 @@ public:
     int pos = 0;
     int line_num = 1;
     int col_num = 1;
-    bool replace_mode;
 
 
     Token analyze();
@@ -50,8 +49,7 @@ public:
     void retract();
     static string special(char);
     static string reserved(string);
-    explicit Lexer(const string& in_path, bool replace) {
-        replace_mode = replace;
+    explicit Lexer(const string& in_path) {
         ifstream in(in_path);
         stringstream buffer;
         buffer << in.rdbuf();

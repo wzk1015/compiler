@@ -46,18 +46,6 @@
 #define OP_PLACEHOLDER "PLACEHOLDER"
 
 
-#define OP_VAR "VAR"
-#define OP_CONST "CONST"
-#define OP_EQL "EQL"
-#define OP_NEQ "NEQ"
-#define OP_GEQ "GEQ"
-#define OP_GRE "GRE"
-#define OP_LEQ "LEQ"
-#define OP_LSS "LSS"
-#define OP_GOTO "GOTO"
-#define OP_BNZ "BNZ"
-#define OP_BZ "BZ"
-
 using namespace std;
 
 class PseudoCode {
@@ -105,11 +93,6 @@ public:
             symbols.push_back(name);
         }
     }
-
-//    DAGNode(int index, string name, bool is_leaf, const string &name2) :
-//            index(index), name(std::move(name)), is_leaf(is_leaf) {
-//        symbols.push_back(name2);
-//    }
 };
 
 class PseudoCodeList {

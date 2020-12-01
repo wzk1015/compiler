@@ -101,9 +101,6 @@ public:
         for (auto &err: errors) {
             if (err.eid > 1000 && err.line != 0) {
                 out << err.line << " " << err.err_code << endl;
-//                if (err.err_code == 'j') {
-//                    out << err.msg << endl;
-//                }
                 if (DEBUG) {
                     cout << err.line << " " << err.err_code << endl;
                 }
@@ -117,15 +114,10 @@ public:
 
 //Lexer
 #define E_UNEXPECTED_CHAR 2
-#define E_UNKNOWN_CHAR 3
-#define E_UNEXPECTED_EOF 4
+#define E_UNEXPECTED_EOF 3
 
 //Grammar
-#define E_GRAMMAR 5
-
-//Semantic
-#define E_UNDEFINED_IDENTF 6
-#define E_REDEFINED_IDENTF 7
+#define E_GRAMMAR 4
 
 
 //error process homework

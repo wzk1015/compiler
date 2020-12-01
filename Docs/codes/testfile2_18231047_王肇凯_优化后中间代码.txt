@@ -1,261 +1,273 @@
 str0: -\n
 ===============
-0: =========FUNC int min=========
-1: #T1 = a - b
-2: JUMP_IF #T1<=0 label_1
-3: RETURN b
-4: JUMP label_2
-5: LABEL label_1
-6: RETURN a
-7: LABEL label_2
-8: =========END_FUNC int min=========
-9: =========FUNC int max=========
-10: #T2 = a - b
-11: JUMP_IF #T2<=0 label_3
-12: RETURN a
-13: JUMP label_4
-14: LABEL label_3
-15: RETURN b
-16: LABEL label_4
-17: =========END_FUNC int max=========
-18: =========FUNC int compare=========
-19: i = 0
-20: #T3 = bigintlength[0]
-21: #T4 = bigintlength[1]
-22: #T5 = #T3 - #T4
-23: JUMP_IF #T5<=0 label_5
-24: RETURN 1
-25: LABEL label_5
-26: #T6 = bigintlength[0]
-27: #T7 = bigintlength[1]
-28: #T8 = #T6 - #T7
-29: JUMP_IF #T8>=0 label_6
-30: RETURN -1
-31: LABEL label_6
-32: #T10 = bigintlength[0]
-33: #T11 = i - #T10
-34: JUMP_IF #T11>=0 label_7
-35: LABEL label_8
-36: #T13 = i
-37: #T14 = bigintarr[#T13]
-38: #T16 = 100 + i
-39: #T17 = bigintarr[#T16]
-40: #T18 = #T14 - #T17
-41: JUMP_IF #T18<=0 label_9
-42: RETURN 1
-43: LABEL label_9
-44: #T20 = i
-45: #T21 = bigintarr[#T20]
-46: #T23 = 100 + i
-47: #T24 = bigintarr[#T23]
-48: #T25 = #T21 - #T24
-49: JUMP_IF #T25>=0 label_10
-50: RETURN -1
-51: LABEL label_10
-52: i = i + 1
-53: #T28 = bigintlength[0]
-54: #T29 = i - #T28
-55: JUMP_IF #T29<0 label_8
-56: LABEL label_7
-57: RETURN 0
-58: =========END_FUNC int compare=========
-59: =========FUNC int subtract=========
-60: l1 = bigintlength[0]
-61: l2 = bigintlength[1]
-62: PREPARE_CALL min
-63: PUSH_PARA l1
-64: PUSH_PARA l2
-65: CALL min
-66: k = %RET
-67: PREPARE_CALL max
-68: PUSH_PARA l1
-69: PUSH_PARA l2
-70: CALL max
-71: j = %RET
-72: PREPARE_CALL compare
-73: CALL compare
-74: #T34 = %RET
-75: #T35 = #T34
-76: JUMP_IF #T35<0 label_11
-77: flag = 0
-78: i = 0
-79: #T36 = i - l1
-80: JUMP_IF #T36>=0 label_12
-81: LABEL label_13
-82: #T37 = l1 - 1
-83: #T38 = #T37 - i
-84: #T40 = #T38
-85: #T41 = bigintarr[#T40]
-86: a[i] = #T41
-87: i = i + 1
-88: #T43 = i - l1
-89: JUMP_IF #T43<0 label_13
-90: LABEL label_12
-91: i = 0
-92: #T44 = i - l2
-93: JUMP_IF #T44>=0 label_14
-94: LABEL label_15
-95: #T45 = l2 - 1
-96: #T46 = #T45 - i
-97: #T48 = 100 + #T46
-98: #T49 = bigintarr[#T48]
-99: b[i] = #T49
-100: i = i + 1
-101: #T51 = i - l2
-102: JUMP_IF #T51<0 label_15
-103: LABEL label_14
-104: JUMP label_16
-105: LABEL label_11
-106: flag = 1
-107: i = 0
-108: #T52 = i - l2
-109: JUMP_IF #T52>=0 label_17
-110: LABEL label_18
-111: #T53 = l2 - 1
-112: #T54 = #T53 - i
-113: #T56 = 100 + #T54
-114: #T57 = bigintarr[#T56]
-115: a[i] = #T57
-116: i = i + 1
-117: #T59 = i - l2
-118: JUMP_IF #T59<0 label_18
-119: LABEL label_17
-120: i = 0
-121: #T60 = i - l1
-122: JUMP_IF #T60>=0 label_19
-123: LABEL label_20
-124: #T61 = l1 - 1
-125: #T62 = #T61 - i
-126: #T64 = #T62
-127: #T65 = bigintarr[#T64]
-128: b[i] = #T65
-129: i = i + 1
-130: #T67 = i - l1
-131: JUMP_IF #T67<0 label_20
-132: LABEL label_19
-133: LABEL label_16
-134: i = 0
-135: #T68 = i - k
-136: JUMP_IF #T68>=0 label_21
-137: LABEL label_22
-138: #T69 = a[i]
-139: #T70 = b[i]
-140: #T71 = #T69 - #T70
-141: JUMP_IF #T71<0 label_23
-142: #T72 = a[i]
-143: #T73 = b[i]
-144: #T74 = #T72 - #T73
-145: c[i] = #T74
-146: JUMP label_24
-147: LABEL label_23
-148: #T75 = a[i]
-149: #T76 = #T75 + 10
-150: #T77 = b[i]
-151: #T78 = #T76 - #T77
-152: c[i] = #T78
-153: #T79 = i + 1
-154: #T80 = i + 1
-155: #T81 = a[#T80]
-156: #T82 = #T81 - 1
-157: a[#T79] = #T82
-158: LABEL label_24
-159: i = i + 1
-160: #T84 = i - k
-161: JUMP_IF #T84<0 label_22
-162: LABEL label_21
-163: #T85 = i - j
-164: JUMP_IF #T85>=0 label_25
-165: LABEL label_26
-166: #T86 = a[i]
-167: #T87 = #T86
-168: JUMP_IF #T87<0 label_27
-169: #T88 = a[i]
-170: c[i] = #T88
-171: JUMP label_28
-172: LABEL label_27
-173: #T89 = a[i]
-174: #T90 = #T89 + 10
-175: c[i] = #T90
-176: #T91 = i + 1
-177: #T92 = i + 1
-178: #T93 = a[#T92]
-179: #T94 = #T93 - 1
-180: a[#T91] = #T94
-181: LABEL label_28
-182: i = i + 1
-183: #T96 = i - j
-184: JUMP_IF #T96<0 label_26
-185: LABEL label_25
-186: #T97 = i - 1
-187: #T98 = c[#T97]
-188: #T99 = #T98
-189: JUMP_IF #T99!=0 label_29
-190: LABEL label_30
-191: i = i - 1
-192: #T101 = i - 1
-193: #T102 = c[#T101]
-194: #T103 = #T102
-195: JUMP_IF #T103==0 label_30
-196: LABEL label_29
-197: j = 0
-198: #T104 = flag - 1
-199: JUMP_IF #T104!=0 label_31
-200: PRINT 0 strcon
-201: LABEL label_31
-202: k = i - 1
-203: #T107 = k - -1
-204: JUMP_IF #T107<=0 label_32
-205: LABEL label_33
-206: #T108 = c[k]
-207: result[j] = #T108
-208: k = k - 1
-209: j = j + 1
-210: #T112 = k - -1
-211: JUMP_IF #T112>0 label_33
-212: LABEL label_32
-213: RETURN j
-214: =========END_FUNC int subtract=========
-215: =========FUNC void main=========
-216: i = 0
-217: SCANF n
-218: bigintlength[0] = n
-219: #T113 = i - n
-220: JUMP_IF #T113>=0 label_34
-221: LABEL label_35
-222: SCANF tmp
-223: #T115 = i
-224: bigintarr[#T115] = tmp
-225: i = i + 1
-226: #T117 = i - n
-227: JUMP_IF #T117<0 label_35
-228: LABEL label_34
-229: SCANF n
-230: bigintlength[1] = n
-231: i = 0
-232: #T118 = i - n
-233: JUMP_IF #T118>=0 label_36
-234: LABEL label_37
-235: SCANF tmp
-236: #T120 = 100 + i
-237: bigintarr[#T120] = tmp
-238: i = i + 1
-239: #T122 = i - n
-240: JUMP_IF #T122<0 label_37
-241: LABEL label_36
-242: i = 0
-243: PREPARE_CALL subtract
-244: CALL subtract
-245: n = %RET
-246: #T124 = i - n
-247: JUMP_IF #T124>=0 label_38
-248: LABEL label_39
-249: #T125 = result[i]
-250: PRINT #T125 int
-251: PRINT #ENDL
-252: i = i + 1
-253: #T127 = i - n
-254: JUMP_IF #T127<0 label_39
-255: LABEL label_38
-256: RETURN
-257: RETURN
-258: =========END_FUNC void main=========
+=========FUNC int min=========
+#T1 = a - b
+JUMP_IF #T1<=0 label_1
+RETURN b
+JUMP label_2
+LABEL label_1
+RETURN a
+LABEL label_2
+=========END_FUNC int min=========
+=========FUNC int max=========
+#T2 = a - b
+JUMP_IF #T2<=0 label_3
+RETURN a
+JUMP label_4
+LABEL label_3
+RETURN b
+LABEL label_4
+=========END_FUNC int max=========
+=========FUNC int compare=========
+i = 0
+#T3 = bigintlength[0]
+#T4 = bigintlength[1]
+#T5 = #T3 - #T4
+JUMP_IF #T5<=0 label_5
+RETURN 1
+LABEL label_5
+#T6 = bigintlength[0]
+#T7 = bigintlength[1]
+#T8 = #T6 - #T7
+JUMP_IF #T8>=0 label_6
+RETURN -1
+LABEL label_6
+#T10 = bigintlength[0]
+#T11 = i - #T10
+JUMP_IF #T11>=0 label_7
+LABEL label_8
+#T13 = i
+#T14 = bigintarr[#T13]
+#T16 = 100 + i
+#T17 = bigintarr[#T16]
+#T18 = #T14 - #T17
+JUMP_IF #T18<=0 label_9
+RETURN 1
+LABEL label_9
+#T20 = i
+#T21 = bigintarr[#T20]
+#T23 = 100 + i
+#T24 = bigintarr[#T23]
+#T25 = #T21 - #T24
+JUMP_IF #T25>=0 label_10
+RETURN -1
+LABEL label_10
+i = i + 1
+#T28 = bigintlength[0]
+#T29 = i - #T28
+JUMP_IF #T29<0 label_8
+LABEL label_7
+RETURN 0
+=========END_FUNC int compare=========
+=========FUNC int subtract=========
+l1 = bigintlength[0]
+l2 = bigintlength[1]
+_1_#T1 = l1 - l2
+JUMP_IF _1_#T1<=0 label_1_1_
+%RET = l2
+JUMP label_40
+JUMP label_2_1_
+LABEL label_1_1_
+%RET = l1
+JUMP label_40
+LABEL label_2_1_
+LABEL label_40
+k = %RET
+_2_#T2 = l1 - l2
+JUMP_IF _2_#T2<=0 label_3_2_
+%RET = l1
+JUMP label_41
+JUMP label_4_2_
+LABEL label_3_2_
+%RET = l2
+JUMP label_41
+LABEL label_4_2_
+LABEL label_41
+j = %RET
+PREPARE_CALL compare
+CALL compare
+#T34 = %RET
+#T35 = #T34
+JUMP_IF #T35<0 label_11
+flag = 0
+i = 0
+#T36 = i - l1
+JUMP_IF #T36>=0 label_12
+LABEL label_13
+#T37 = l1 - 1
+#T38 = #T37 - i
+#T40 = #T38
+#T41 = bigintarr[#T40]
+a[i] = #T41
+i = i + 1
+#T43 = i - l1
+JUMP_IF #T43<0 label_13
+LABEL label_12
+i = 0
+#T44 = i - l2
+JUMP_IF #T44>=0 label_14
+LABEL label_15
+#T45 = l2 - 1
+#T46 = #T45 - i
+#T48 = 100 + #T46
+#T49 = bigintarr[#T48]
+b[i] = #T49
+i = i + 1
+#T51 = i - l2
+JUMP_IF #T51<0 label_15
+LABEL label_14
+JUMP label_16
+LABEL label_11
+flag = 1
+i = 0
+#T52 = i - l2
+JUMP_IF #T52>=0 label_17
+LABEL label_18
+#T53 = l2 - 1
+#T54 = #T53 - i
+#T56 = 100 + #T54
+#T57 = bigintarr[#T56]
+a[i] = #T57
+i = i + 1
+#T59 = i - l2
+JUMP_IF #T59<0 label_18
+LABEL label_17
+i = 0
+#T60 = i - l1
+JUMP_IF #T60>=0 label_19
+LABEL label_20
+#T61 = l1 - 1
+#T62 = #T61 - i
+#T64 = #T62
+#T65 = bigintarr[#T64]
+b[i] = #T65
+i = i + 1
+#T67 = i - l1
+JUMP_IF #T67<0 label_20
+LABEL label_19
+LABEL label_16
+i = 0
+#T68 = i - k
+JUMP_IF #T68>=0 label_21
+LABEL label_22
+#T69 = a[i]
+#T70 = b[i]
+#T71 = #T69 - #T70
+JUMP_IF #T71<0 label_23
+#T72 = a[i]
+#T73 = b[i]
+#T74 = #T72 - #T73
+c[i] = #T74
+JUMP label_24
+LABEL label_23
+#T75 = a[i]
+#T76 = #T75 + 10
+#T77 = b[i]
+#T78 = #T76 - #T77
+c[i] = #T78
+#T79 = i + 1
+#T80 = i + 1
+#T81 = a[#T80]
+#T82 = #T81 - 1
+a[#T79] = #T82
+LABEL label_24
+i = i + 1
+#T84 = i - k
+JUMP_IF #T84<0 label_22
+LABEL label_21
+#T85 = i - j
+JUMP_IF #T85>=0 label_25
+LABEL label_26
+#T86 = a[i]
+#T87 = #T86
+JUMP_IF #T87<0 label_27
+#T88 = a[i]
+c[i] = #T88
+JUMP label_28
+LABEL label_27
+#T89 = a[i]
+#T90 = #T89 + 10
+c[i] = #T90
+#T91 = i + 1
+#T92 = i + 1
+#T93 = a[#T92]
+#T94 = #T93 - 1
+a[#T91] = #T94
+LABEL label_28
+i = i + 1
+#T96 = i - j
+JUMP_IF #T96<0 label_26
+LABEL label_25
+#T97 = i - 1
+#T98 = c[#T97]
+#T99 = #T98
+JUMP_IF #T99!=0 label_29
+LABEL label_30
+i = i - 1
+#T101 = i - 1
+#T102 = c[#T101]
+#T103 = #T102
+JUMP_IF #T103==0 label_30
+LABEL label_29
+j = 0
+#T104 = flag - 1
+JUMP_IF #T104!=0 label_31
+PRINT 0 strcon
+LABEL label_31
+k = i - 1
+#T107 = k - -1
+JUMP_IF #T107<=0 label_32
+LABEL label_33
+#T108 = c[k]
+result[j] = #T108
+k = k - 1
+j = j + 1
+#T112 = k - -1
+JUMP_IF #T112>0 label_33
+LABEL label_32
+RETURN j
+=========END_FUNC int subtract=========
+=========FUNC void main=========
+i = 0
+SCANF n
+bigintlength[0] = n
+#T113 = i - n
+JUMP_IF #T113>=0 label_34
+LABEL label_35
+SCANF tmp
+#T115 = i
+bigintarr[#T115] = tmp
+i = i + 1
+#T117 = i - n
+JUMP_IF #T117<0 label_35
+LABEL label_34
+SCANF n
+bigintlength[1] = n
+i = 0
+#T118 = i - n
+JUMP_IF #T118>=0 label_36
+LABEL label_37
+SCANF tmp
+#T120 = 100 + i
+bigintarr[#T120] = tmp
+i = i + 1
+#T122 = i - n
+JUMP_IF #T122<0 label_37
+LABEL label_36
+i = 0
+PREPARE_CALL subtract
+CALL subtract
+n = %RET
+#T124 = i - n
+JUMP_IF #T124>=0 label_38
+LABEL label_39
+#T125 = result[i]
+PRINT #T125 int
+PRINT #ENDL
+i = i + 1
+#T127 = i - n
+JUMP_IF #T127<0 label_39
+LABEL label_38
+RETURN
+RETURN
+=========END_FUNC void main=========

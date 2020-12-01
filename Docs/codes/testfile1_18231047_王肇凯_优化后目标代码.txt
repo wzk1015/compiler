@@ -1,0 +1,1021 @@
+.data
+arr__a_: .space 4000
+arr__seed_: .space 12
+arr_set_x_: .space 128
+newline__: .asciiz "\n"
+.text
+
+# === seed[0] = 19971231 ===
+li $a2, 19971231
+sw $a2, arr__seed_+0($zero)
+
+# === seed[1] = 19981013 ===
+li $a2, 19981013
+sw $a2, arr__seed_+4($zero)
+
+# === seed[2] = 1000000007 ===
+li $a2, 1000000007
+sw $a2, arr__seed_+8($zero)
+
+# === staticvalue = 0 ===
+sw $zero, 0($gp)
+
+# === =========FUNC int myscanf========= ===
+addi $sp, $sp, -404
+j main
+myscanf:
+
+# === SCANF n ===
+li $v0, 5
+syscall
+move $s0, $v0
+
+# === RETURN n ===
+move $v0, $s0
+jr $ra
+
+# === =========END_FUNC int myscanf========= ===
+
+# === =========FUNC void myprintf========= ===
+myprintf:
+lw $s0, 100($sp)
+
+# === PRINT n int ===
+move $a0, $s0
+li $v0, 1
+syscall
+
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+
+# === RETURN ===
+jr $ra
+
+# === RETURN ===
+jr $ra
+
+# === =========END_FUNC void myprintf========= ===
+
+# === =========FUNC int set========= ===
+set:
+lw $s0, 100($sp)
+lw $s1, 104($sp)
+
+# === i = 10 ===
+li $s2, 10
+
+# === v = 0 ===
+move $s3, $zero
+
+# === x[0] = 1 ===
+li $a2, 1
+sw $a2, arr_set_x_+0($zero)
+
+# === #T1 = x[0] ===
+lw $t0, arr_set_x_+0($zero)
+
+# === #T2 = #T1 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[1] = #T2 ===
+sw $t1, arr_set_x_+4($zero)
+# RELEASE $t1
+
+# === #T3 = x[1] ===
+lw $t0, arr_set_x_+4($zero)
+
+# === #T4 = #T3 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[2] = #T4 ===
+sw $t1, arr_set_x_+8($zero)
+# RELEASE $t1
+
+# === #T5 = x[2] ===
+lw $t0, arr_set_x_+8($zero)
+
+# === #T6 = #T5 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[3] = #T6 ===
+sw $t1, arr_set_x_+12($zero)
+# RELEASE $t1
+
+# === #T7 = x[3] ===
+lw $t0, arr_set_x_+12($zero)
+
+# === #T8 = #T7 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[4] = #T8 ===
+sw $t1, arr_set_x_+16($zero)
+# RELEASE $t1
+
+# === #T9 = x[4] ===
+lw $t0, arr_set_x_+16($zero)
+
+# === #T10 = #T9 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[5] = #T10 ===
+sw $t1, arr_set_x_+20($zero)
+# RELEASE $t1
+
+# === #T11 = x[5] ===
+lw $t0, arr_set_x_+20($zero)
+
+# === #T12 = #T11 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[6] = #T12 ===
+sw $t1, arr_set_x_+24($zero)
+# RELEASE $t1
+
+# === #T13 = x[6] ===
+lw $t0, arr_set_x_+24($zero)
+
+# === #T14 = #T13 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[7] = #T14 ===
+sw $t1, arr_set_x_+28($zero)
+# RELEASE $t1
+
+# === #T15 = x[7] ===
+lw $t0, arr_set_x_+28($zero)
+
+# === #T16 = #T15 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[8] = #T16 ===
+sw $t1, arr_set_x_+32($zero)
+# RELEASE $t1
+
+# === #T17 = x[8] ===
+lw $t0, arr_set_x_+32($zero)
+
+# === #T18 = #T17 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[9] = #T18 ===
+sw $t1, arr_set_x_+36($zero)
+# RELEASE $t1
+
+# === #T19 = x[9] ===
+lw $t0, arr_set_x_+36($zero)
+
+# === #T20 = #T19 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[10] = #T20 ===
+sw $t1, arr_set_x_+40($zero)
+# RELEASE $t1
+
+# === #T21 = i - 30 ===
+addiu $t0, $s2, -30
+
+# === JUMP_IF #T21>=0 label_1 ===
+bgez $t0, label_1
+# RELEASE $t0
+
+# === LABEL label_2 ===
+label_2:
+
+# === i = i + 1 ===
+addiu $s2, $s2, 1
+
+# === #T23 = i - 1 ===
+addiu $t0, $s2, -1
+
+# === #T24 = x[#T23] ===
+sll $a1, $t0, 2
+# RELEASE $t0
+lw $t1, arr_set_x_($a1)
+
+# === #T25 = #T24 * 2 ===
+sll $t0, $t1, 1
+# RELEASE $t1
+
+# === x[i] = #T25 ===
+sll $a1, $s2, 2
+sw $t0, arr_set_x_($a1)
+# RELEASE $t0
+
+# === #T26 = i - 30 ===
+addiu $t0, $s2, -30
+
+# === JUMP_IF #T26<0 label_2 ===
+bltz $t0, label_2
+# RELEASE $t0
+
+# === LABEL label_1 ===
+label_1:
+
+# === #T27 = pos / 30 ===
+div $t0, $s0, 30
+
+# === #T28 = #T27 - 1000 ===
+addiu $t1, $t0, -1000
+
+# === JUMP_IF #T28<0 label_3 ===
+bltz $t1, label_3
+# RELEASE $t1
+
+# === RETURN 0 ===
+move $v0, $zero
+jr $ra
+
+# === LABEL label_3 ===
+label_3:
+
+# === #T29 = pos / 30 ===
+div $t1, $s0, 30
+
+# === #T30 = a[#T29] ===
+sll $a1, $t1, 2
+# RELEASE $t1
+lw $t2, arr__a_($a1)
+
+# === #T31 = pos / 30 ===
+div $t1, $s0, 30
+
+# === #T32 = #T31 * 30 ===
+mul $t3, $t1, 30
+# RELEASE $t1
+
+# === #T33 = pos - #T32 ===
+subu $t1, $s0, $t3
+# RELEASE $t3
+
+# === #T34 = x[#T33] ===
+sll $a1, $t1, 2
+# RELEASE $t1
+lw $t3, arr_set_x_($a1)
+
+# === #T35 = #T30 / #T34 ===
+div $t2, $t3
+# RELEASE $t3
+mflo $t1
+# RELEASE $t2
+# RELEASE $t3
+
+# === #T36 = pos / 30 ===
+div $t2, $s0, 30
+
+# === #T37 = a[#T36] ===
+sll $a1, $t2, 2
+# RELEASE $t2
+lw $t3, arr__a_($a1)
+
+# === #T38 = pos / 30 ===
+div $t2, $s0, 30
+
+# === #T39 = #T38 * 30 ===
+mul $t4, $t2, 30
+# RELEASE $t2
+
+# === #T40 = pos - #T39 ===
+subu $t2, $s0, $t4
+# RELEASE $t4
+
+# === #T41 = x[#T40] ===
+sll $a1, $t2, 2
+# RELEASE $t2
+lw $t4, arr_set_x_($a1)
+
+# === #T42 = #T37 / #T41 ===
+div $t3, $t4
+# RELEASE $t4
+mflo $t2
+# RELEASE $t3
+# RELEASE $t4
+
+# === #T43 = #T42 / 2 ===
+bgez $t2, tmp_label_1
+# RELEASE $t2
+subu $a3, $zero, $t2
+# RELEASE $t2
+sra $t3, $a3, 1
+subu $t3, $zero, $t3
+j tmp_label_2
+tmp_label_1:
+sra $t3, $t2, 1
+# RELEASE $t2
+tmp_label_2:
+
+# === #T44 = #T43 * 2 ===
+sll $t2, $t3, 1
+# RELEASE $t3
+
+# === #T45 = #T35 - #T44 ===
+subu $t3, $t1, $t2
+# RELEASE $t1
+# RELEASE $t2
+
+# === #T46 = #T45 - d ===
+subu $t1, $t3, $s1
+# RELEASE $t3
+
+# === JUMP_IF #T46==0 label_4 ===
+beq $t1, $zero, label_4
+# RELEASE $t1
+
+# === #T47 = pos / 30 ===
+div $t1, $s0, 30
+
+# === #T48 = a[#T47] ===
+sll $a1, $t1, 2
+# RELEASE $t1
+lw $t2, arr__a_($a1)
+
+# === #T49 = pos / 30 ===
+div $t1, $s0, 30
+
+# === #T50 = #T49 * 30 ===
+mul $t3, $t1, 30
+# RELEASE $t1
+
+# === #T51 = pos - #T50 ===
+subu $t1, $s0, $t3
+# RELEASE $t3
+
+# === #T52 = x[#T51] ===
+sll $a1, $t1, 2
+# RELEASE $t1
+lw $t3, arr_set_x_($a1)
+
+# === #T53 = #T48 / #T52 ===
+div $t2, $t3
+# RELEASE $t3
+mflo $t1
+# RELEASE $t2
+# RELEASE $t3
+
+# === #T54 = pos / 30 ===
+div $t2, $s0, 30
+
+# === #T55 = a[#T54] ===
+sll $a1, $t2, 2
+# RELEASE $t2
+lw $t3, arr__a_($a1)
+
+# === #T56 = pos / 30 ===
+div $t2, $s0, 30
+
+# === #T57 = #T56 * 30 ===
+mul $t4, $t2, 30
+# RELEASE $t2
+
+# === #T58 = pos - #T57 ===
+subu $t2, $s0, $t4
+# RELEASE $t4
+
+# === #T59 = x[#T58] ===
+sll $a1, $t2, 2
+# RELEASE $t2
+lw $t4, arr_set_x_($a1)
+
+# === #T60 = #T55 / #T59 ===
+div $t3, $t4
+# RELEASE $t4
+mflo $t2
+# RELEASE $t3
+# RELEASE $t4
+
+# === #T61 = #T60 / 2 ===
+bgez $t2, tmp_label_3
+# RELEASE $t2
+subu $a3, $zero, $t2
+# RELEASE $t2
+sra $t3, $a3, 1
+subu $t3, $zero, $t3
+j tmp_label_4
+tmp_label_3:
+sra $t3, $t2, 1
+# RELEASE $t2
+tmp_label_4:
+
+# === #T62 = #T61 * 2 ===
+sll $t2, $t3, 1
+# RELEASE $t3
+
+# === #T63 = #T53 - #T62 ===
+subu $t3, $t1, $t2
+# RELEASE $t1
+# RELEASE $t2
+
+# === #T64 = #T63 ===
+move $t1, $t3
+# RELEASE $t3
+
+# === JUMP_IF #T64!=0 label_5 ===
+bne $t1, $zero, label_5
+# RELEASE $t1
+
+# === #T65 = d - 1 ===
+addiu $t1, $s1, -1
+
+# === JUMP_IF #T65!=0 label_6 ===
+bne $t1, $zero, label_6
+# RELEASE $t1
+
+# === #T66 = pos / 30 ===
+div $t1, $s0, 30
+
+# === #T67 = #T66 * 30 ===
+mul $t2, $t1, 30
+# RELEASE $t1
+
+# === #T68 = pos - #T67 ===
+subu $t1, $s0, $t2
+# RELEASE $t2
+
+# === v = x[#T68] ===
+sll $a1, $t1, 2
+# RELEASE $t1
+lw $s3, arr_set_x_($a1)
+
+# === LABEL label_6 ===
+label_6:
+
+# === LABEL label_5 ===
+label_5:
+
+# === #T70 = pos / 30 ===
+div $t1, $s0, 30
+
+# === #T71 = a[#T70] ===
+sll $a1, $t1, 2
+# RELEASE $t1
+lw $t2, arr__a_($a1)
+
+# === #T72 = pos / 30 ===
+div $t1, $s0, 30
+
+# === #T73 = #T72 * 30 ===
+mul $t3, $t1, 30
+# RELEASE $t1
+
+# === #T74 = pos - #T73 ===
+subu $t1, $s0, $t3
+# RELEASE $t3
+
+# === #T75 = x[#T74] ===
+sll $a1, $t1, 2
+# RELEASE $t1
+lw $t3, arr_set_x_($a1)
+
+# === #T76 = #T71 / #T75 ===
+div $t2, $t3
+# RELEASE $t3
+mflo $t1
+# RELEASE $t2
+# RELEASE $t3
+
+# === #T77 = pos / 30 ===
+div $t2, $s0, 30
+
+# === #T78 = a[#T77] ===
+sll $a1, $t2, 2
+# RELEASE $t2
+lw $t3, arr__a_($a1)
+
+# === #T79 = pos / 30 ===
+div $t2, $s0, 30
+
+# === #T80 = #T79 * 30 ===
+mul $t4, $t2, 30
+# RELEASE $t2
+
+# === #T81 = pos - #T80 ===
+subu $t2, $s0, $t4
+# RELEASE $t4
+
+# === #T82 = x[#T81] ===
+sll $a1, $t2, 2
+# RELEASE $t2
+lw $t4, arr_set_x_($a1)
+
+# === #T83 = #T78 / #T82 ===
+div $t3, $t4
+# RELEASE $t4
+mflo $t2
+# RELEASE $t3
+# RELEASE $t4
+
+# === #T84 = #T83 / 2 ===
+bgez $t2, tmp_label_5
+# RELEASE $t2
+subu $a3, $zero, $t2
+# RELEASE $t2
+sra $t3, $a3, 1
+subu $t3, $zero, $t3
+j tmp_label_6
+tmp_label_5:
+sra $t3, $t2, 1
+# RELEASE $t2
+tmp_label_6:
+
+# === #T85 = #T84 * 2 ===
+sll $t2, $t3, 1
+# RELEASE $t3
+
+# === #T86 = #T76 - #T85 ===
+subu $t3, $t1, $t2
+# RELEASE $t1
+# RELEASE $t2
+
+# === #T87 = #T86 - 1 ===
+addiu $t1, $t3, -1
+
+# === JUMP_IF #T87!=0 label_7 ===
+bne $t1, $zero, label_7
+# RELEASE $t1
+
+# === #T88 = d ===
+move $t1, $s1
+
+# === JUMP_IF #T88!=0 label_8 ===
+bne $t1, $zero, label_8
+# RELEASE $t1
+
+# === #T89 = pos / 30 ===
+div $t1, $s0, 30
+
+# === #T90 = #T89 * 30 ===
+mul $t2, $t1, 30
+# RELEASE $t1
+
+# === #T91 = pos - #T90 ===
+subu $t1, $s0, $t2
+# RELEASE $t2
+
+# === #T92 = x[#T91] ===
+sll $a1, $t1, 2
+# RELEASE $t1
+lw $t2, arr_set_x_($a1)
+
+# === v = v - #T92 ===
+subu $s3, $s3, $t2
+# RELEASE $t2
+
+# === LABEL label_8 ===
+label_8:
+
+# === LABEL label_7 ===
+label_7:
+
+# === LABEL label_4 ===
+label_4:
+
+# === #T94 = pos / 30 ===
+div $t1, $s0, 30
+
+# === #T95 = pos / 30 ===
+div $t2, $s0, 30
+
+# === #T96 = a[#T95] ===
+sll $a1, $t2, 2
+# RELEASE $t2
+lw $t4, arr__a_($a1)
+
+# === #T97 = #T96 + v ===
+addu $t2, $t4, $s3
+# RELEASE $t4
+
+# === a[#T94] = #T97 ===
+sll $a1, $t1, 2
+# RELEASE $t1
+sw $t2, arr__a_($a1)
+# RELEASE $t2
+
+# === RETURN 0 ===
+move $v0, $zero
+jr $ra
+
+# === =========END_FUNC int set========= ===
+
+# === =========FUNC int rand========= ===
+rand:
+
+# === #T98 = seed[0] ===
+lw $t1, arr__seed_+0($zero)
+
+# === #T99 = staticvalue * #T98 ===
+lw $a1, 0($gp)
+mul $t2, $a1, $t1
+# RELEASE $t1
+
+# === #T100 = seed[1] ===
+lw $t1, arr__seed_+4($zero)
+
+# === staticvalue = #T99 + #T100 ===
+addu $a1, $t2, $t1
+# RELEASE $t2
+# RELEASE $t1
+sw $a1, 0($gp)
+
+# === #T102 = seed[2] ===
+lw $t1, arr__seed_+8($zero)
+
+# === #T103 = staticvalue / #T102 ===
+lw $a1, 0($gp)
+div $a1, $t1
+# RELEASE $t1
+mflo $t2
+# RELEASE $t1
+
+# === #T104 = seed[2] ===
+lw $t1, arr__seed_+8($zero)
+
+# === #T105 = #T103 * #T104 ===
+mul $t4, $t2, $t1
+# RELEASE $t2
+# RELEASE $t1
+
+# === staticvalue = staticvalue - #T105 ===
+lw $a1, 0($gp)
+subu $a1, $a1, $t4
+# RELEASE $t4
+sw $a1, 0($gp)
+
+# === #T107 = staticvalue ===
+lw $t1, 0($gp)
+
+# === JUMP_IF #T107>=0 label_9 ===
+bgez $t1, label_9
+# RELEASE $t1
+
+# === #T108 = seed[2] ===
+lw $t1, arr__seed_+8($zero)
+
+# === staticvalue = #T108 + staticvalue ===
+lw $a1, 0($gp)
+addu $a1, $t1, $a1
+# RELEASE $t1
+sw $a1, 0($gp)
+
+# === LABEL label_9 ===
+label_9:
+
+# === RETURN staticvalue ===
+lw $v0, 0($gp)
+jr $ra
+
+# === =========END_FUNC int rand========= ===
+
+# === =========FUNC void main========= ===
+main:
+
+# === tmp = 0 ===
+move $s0, $zero
+
+# === i = 0 ===
+move $s1, $zero
+
+# === SCANF _1_n ===
+li $v0, 5
+syscall
+move $s2, $v0
+
+# === %RET = _1_n ===
+move $v0, $s2
+
+# === LABEL label_14 ===
+label_14:
+
+# === n = %RET ===
+move $s3, $v0
+
+# === SCANF _2_n ===
+li $v0, 5
+syscall
+move $s4, $v0
+
+# === %RET = _2_n ===
+move $v0, $s4
+
+# === LABEL label_15 ===
+label_15:
+
+# === staticvalue = %RET ===
+sw $v0, 0($gp)
+
+# === #T112 = n ===
+move $t1, $s3
+
+# === JUMP_IF #T112<=0 label_10 ===
+blez $t1, label_10
+# RELEASE $t1
+
+# === LABEL label_11 ===
+label_11:
+
+# === n = n - 1 ===
+addiu $s3, $s3, -1
+
+# === _3_#T98 = seed[0] ===
+lw $t1, arr__seed_+0($zero)
+
+# === _3_#T99 = staticvalue * _3_#T98 ===
+lw $a1, 0($gp)
+mul $t2, $a1, $t1
+# RELEASE $t1
+
+# === _3_#T100 = seed[1] ===
+lw $t1, arr__seed_+4($zero)
+
+# === staticvalue = _3_#T99 + _3_#T100 ===
+addu $a1, $t2, $t1
+# RELEASE $t2
+# RELEASE $t1
+sw $a1, 0($gp)
+
+# === _3_#T102 = seed[2] ===
+lw $t1, arr__seed_+8($zero)
+
+# === _3_#T103 = staticvalue / _3_#T102 ===
+lw $a1, 0($gp)
+div $a1, $t1
+# RELEASE $t1
+mflo $t2
+# RELEASE $t1
+
+# === _3_#T104 = seed[2] ===
+lw $t1, arr__seed_+8($zero)
+
+# === _3_#T105 = _3_#T103 * _3_#T104 ===
+mul $t4, $t2, $t1
+# RELEASE $t2
+# RELEASE $t1
+
+# === staticvalue = staticvalue - _3_#T105 ===
+lw $a1, 0($gp)
+subu $a1, $a1, $t4
+# RELEASE $t4
+sw $a1, 0($gp)
+
+# === _3_#T107 = staticvalue ===
+lw $t1, 0($gp)
+
+# === JUMP_IF _3_#T107>=0 label_9_3_ ===
+bgez $t1, label_9_3_
+# RELEASE $t1
+
+# === _3_#T108 = seed[2] ===
+lw $t1, arr__seed_+8($zero)
+
+# === staticvalue = _3_#T108 + staticvalue ===
+lw $a1, 0($gp)
+addu $a1, $t1, $a1
+# RELEASE $t1
+sw $a1, 0($gp)
+
+# === LABEL label_9_3_ ===
+label_9_3_:
+
+# === %RET = staticvalue ===
+lw $v0, 0($gp)
+
+# === LABEL label_16 ===
+label_16:
+
+# === z = %RET ===
+move $s5, $v0
+
+# === #T115 = z / 300000 ===
+div $t1, $s5, 300000
+
+# === #T116 = #T115 * 300000 ===
+mul $t2, $t1, 300000
+# RELEASE $t1
+
+# === x = z - #T116 ===
+subu $s6, $s5, $t2
+# RELEASE $t2
+
+# === _4_#T98 = seed[0] ===
+lw $t1, arr__seed_+0($zero)
+
+# === _4_#T99 = staticvalue * _4_#T98 ===
+lw $a1, 0($gp)
+mul $t2, $a1, $t1
+# RELEASE $t1
+
+# === _4_#T100 = seed[1] ===
+lw $t1, arr__seed_+4($zero)
+
+# === staticvalue = _4_#T99 + _4_#T100 ===
+addu $a1, $t2, $t1
+# RELEASE $t2
+# RELEASE $t1
+sw $a1, 0($gp)
+
+# === _4_#T102 = seed[2] ===
+lw $t1, arr__seed_+8($zero)
+
+# === _4_#T103 = staticvalue / _4_#T102 ===
+lw $a1, 0($gp)
+div $a1, $t1
+# RELEASE $t1
+mflo $t2
+# RELEASE $t1
+
+# === _4_#T104 = seed[2] ===
+lw $t1, arr__seed_+8($zero)
+
+# === _4_#T105 = _4_#T103 * _4_#T104 ===
+mul $t4, $t2, $t1
+# RELEASE $t2
+# RELEASE $t1
+
+# === staticvalue = staticvalue - _4_#T105 ===
+lw $a1, 0($gp)
+subu $a1, $a1, $t4
+# RELEASE $t4
+sw $a1, 0($gp)
+
+# === _4_#T107 = staticvalue ===
+lw $t1, 0($gp)
+
+# === JUMP_IF _4_#T107>=0 label_9_4_ ===
+bgez $t1, label_9_4_
+# RELEASE $t1
+
+# === _4_#T108 = seed[2] ===
+lw $t1, arr__seed_+8($zero)
+
+# === staticvalue = _4_#T108 + staticvalue ===
+lw $a1, 0($gp)
+addu $a1, $t1, $a1
+# RELEASE $t1
+sw $a1, 0($gp)
+
+# === LABEL label_9_4_ ===
+label_9_4_:
+
+# === %RET = staticvalue ===
+lw $v0, 0($gp)
+
+# === LABEL label_17 ===
+label_17:
+
+# === z = %RET ===
+move $s5, $v0
+
+# === #T119 = z / 2 ===
+bgez $s5, tmp_label_7
+subu $a3, $zero, $s5
+sra $t1, $a3, 1
+subu $t1, $zero, $t1
+j tmp_label_8
+tmp_label_7:
+sra $t1, $s5, 1
+tmp_label_8:
+
+# === #T120 = #T119 * 2 ===
+sll $t2, $t1, 1
+# RELEASE $t1
+
+# === y = z - #T120 ===
+subu $s7, $s5, $t2
+# RELEASE $t2
+
+# === PREPARE_CALL set ===
+addi $sp, $sp, -728
+
+# === PUSH_PARA x ===
+sw $s6, 100($sp)
+
+# === PUSH_PARA y ===
+sw $s7, 104($sp)
+
+# === CALL set ===
+sw $t0, 56($sp)
+# RELEASE $t0
+sw $t3, 68($sp)
+# RELEASE $t3
+sw $s0, 24($sp)
+sw $s1, 28($sp)
+sw $s2, 32($sp)
+sw $s3, 36($sp)
+sw $s4, 40($sp)
+sw $s5, 44($sp)
+sw $s6, 48($sp)
+sw $s7, 52($sp)
+jal set
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+lw $s2, 32($sp)
+lw $s3, 36($sp)
+lw $s4, 40($sp)
+lw $s5, 44($sp)
+lw $s6, 48($sp)
+lw $s7, 52($sp)
+lw $t0, 56($sp)
+lw $t3, 68($sp)
+addi $sp, $sp, 728
+
+# === #T122 = n ===
+move $t1, $s3
+
+# === JUMP_IF #T122>0 label_11 ===
+bgtz $t1, label_11
+# RELEASE $t1
+
+# === LABEL label_10 ===
+label_10:
+
+# === #T123 = i - 1000 ===
+addiu $t1, $s1, -1000
+
+# === JUMP_IF #T123>=0 label_12 ===
+bgez $t1, label_12
+# RELEASE $t1
+
+# === LABEL label_13 ===
+label_13:
+
+# === #T124 = a[i] ===
+sll $a1, $s1, 2
+lw $t1, arr__a_($a1)
+
+# === #T125 = a[i] ===
+sll $a1, $s1, 2
+lw $t2, arr__a_($a1)
+
+# === #T126 = #T125 / 100000 ===
+div $t4, $t2, 100000
+# RELEASE $t2
+
+# === #T127 = #T126 * 100000 ===
+mul $t2, $t4, 100000
+# RELEASE $t4
+
+# === #T128 = #T124 - #T127 ===
+subu $t4, $t1, $t2
+# RELEASE $t1
+# RELEASE $t2
+
+# === tmp = tmp + #T128 ===
+addu $s0, $s0, $t4
+# RELEASE $t4
+
+# === #T130 = tmp / 100000 ===
+div $t1, $s0, 100000
+
+# === #T131 = #T130 * 100000 ===
+mul $t2, $t1, 100000
+# RELEASE $t1
+
+# === tmp = tmp - #T131 ===
+subu $s0, $s0, $t2
+# RELEASE $t2
+
+# === i = i + 1 ===
+addiu $s1, $s1, 1
+
+# === #T134 = i - 1000 ===
+addiu $t1, $s1, -1000
+
+# === JUMP_IF #T134<0 label_13 ===
+bltz $t1, label_13
+# RELEASE $t1
+
+# === LABEL label_12 ===
+label_12:
+
+# === PRINT tmp int ===
+move $a0, $s0
+li $v0, 1
+syscall
+
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+
+# === LABEL label_18 ===
+label_18:
+
+# === RETURN ===
+li $v0, 10
+syscall
+
+# === RETURN ===
+li $v0, 10
+syscall
+
+# === =========END_FUNC void main========= ===

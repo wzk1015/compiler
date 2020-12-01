@@ -1,0 +1,6 @@
+str0: Hello world!\n
+===============
+=========FUNC void main=========
+PRINT 0 strcon
+RETURN
+=========END_FUNC void main=========

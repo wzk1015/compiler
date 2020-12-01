@@ -1,0 +1,1012 @@
+.data
+arr__bigintarr_: .space 800
+arr__bigintlength_: .space 8
+arr__result_: .space 800
+arr_subtract_a_: .space 404
+arr_subtract_b_: .space 404
+arr_subtract_c_: .space 404
+str__0: .asciiz "-\n"
+newline__: .asciiz "\n"
+.text
+
+# === =========FUNC int min========= ===
+addi $sp, $sp, -272
+j main
+min:
+lw $s0, 100($sp)
+lw $s1, 104($sp)
+
+# === #T1 = a - b ===
+subu $t0, $s0, $s1
+
+# === JUMP_IF #T1<=0 label_1 ===
+blez $t0, label_1
+# RELEASE $t0
+
+# === RETURN b ===
+move $v0, $s1
+jr $ra
+
+# === JUMP label_2 ===
+j label_2
+
+# === LABEL label_1 ===
+label_1:
+
+# === RETURN a ===
+move $v0, $s0
+jr $ra
+
+# === LABEL label_2 ===
+label_2:
+
+# === =========END_FUNC int min========= ===
+
+# === =========FUNC int max========= ===
+max:
+lw $s0, 100($sp)
+lw $s1, 104($sp)
+
+# === #T2 = a - b ===
+subu $t0, $s0, $s1
+
+# === JUMP_IF #T2<=0 label_3 ===
+blez $t0, label_3
+# RELEASE $t0
+
+# === RETURN a ===
+move $v0, $s0
+jr $ra
+
+# === JUMP label_4 ===
+j label_4
+
+# === LABEL label_3 ===
+label_3:
+
+# === RETURN b ===
+move $v0, $s1
+jr $ra
+
+# === LABEL label_4 ===
+label_4:
+
+# === =========END_FUNC int max========= ===
+
+# === =========FUNC int compare========= ===
+compare:
+
+# === i = 0 ===
+move $s0, $zero
+
+# === #T3 = bigintlength[0] ===
+lw $t0, arr__bigintlength_+0($zero)
+
+# === #T4 = bigintlength[1] ===
+lw $t1, arr__bigintlength_+4($zero)
+
+# === #T5 = #T3 - #T4 ===
+subu $t2, $t0, $t1
+# RELEASE $t0
+# RELEASE $t1
+
+# === JUMP_IF #T5<=0 label_5 ===
+blez $t2, label_5
+# RELEASE $t2
+
+# === RETURN 1 ===
+li $v0, 1
+jr $ra
+
+# === LABEL label_5 ===
+label_5:
+
+# === #T6 = bigintlength[0] ===
+lw $t0, arr__bigintlength_+0($zero)
+
+# === #T7 = bigintlength[1] ===
+lw $t1, arr__bigintlength_+4($zero)
+
+# === #T8 = #T6 - #T7 ===
+subu $t2, $t0, $t1
+# RELEASE $t0
+# RELEASE $t1
+
+# === JUMP_IF #T8>=0 label_6 ===
+bgez $t2, label_6
+# RELEASE $t2
+
+# === RETURN -1 ===
+li $v0, -1
+jr $ra
+
+# === LABEL label_6 ===
+label_6:
+
+# === #T10 = bigintlength[0] ===
+lw $t0, arr__bigintlength_+0($zero)
+
+# === #T11 = i - #T10 ===
+subu $t1, $s0, $t0
+# RELEASE $t0
+
+# === JUMP_IF #T11>=0 label_7 ===
+bgez $t1, label_7
+# RELEASE $t1
+
+# === LABEL label_8 ===
+label_8:
+
+# === #T13 = i ===
+move $t0, $s0
+
+# === #T14 = bigintarr[#T13] ===
+sll $a1, $t0, 2
+# RELEASE $t0
+lw $t1, arr__bigintarr_($a1)
+
+# === #T16 = 100 + i ===
+addiu $t0, $s0, 100
+
+# === #T17 = bigintarr[#T16] ===
+sll $a1, $t0, 2
+# RELEASE $t0
+lw $t2, arr__bigintarr_($a1)
+
+# === #T18 = #T14 - #T17 ===
+subu $t0, $t1, $t2
+# RELEASE $t1
+# RELEASE $t2
+
+# === JUMP_IF #T18<=0 label_9 ===
+blez $t0, label_9
+# RELEASE $t0
+
+# === RETURN 1 ===
+li $v0, 1
+jr $ra
+
+# === LABEL label_9 ===
+label_9:
+
+# === #T20 = i ===
+move $t0, $s0
+
+# === #T21 = bigintarr[#T20] ===
+sll $a1, $t0, 2
+# RELEASE $t0
+lw $t1, arr__bigintarr_($a1)
+
+# === #T23 = 100 + i ===
+addiu $t0, $s0, 100
+
+# === #T24 = bigintarr[#T23] ===
+sll $a1, $t0, 2
+# RELEASE $t0
+lw $t2, arr__bigintarr_($a1)
+
+# === #T25 = #T21 - #T24 ===
+subu $t0, $t1, $t2
+# RELEASE $t1
+# RELEASE $t2
+
+# === JUMP_IF #T25>=0 label_10 ===
+bgez $t0, label_10
+# RELEASE $t0
+
+# === RETURN -1 ===
+li $v0, -1
+jr $ra
+
+# === LABEL label_10 ===
+label_10:
+
+# === i = i + 1 ===
+addiu $s0, $s0, 1
+
+# === #T28 = bigintlength[0] ===
+lw $t0, arr__bigintlength_+0($zero)
+
+# === #T29 = i - #T28 ===
+subu $t1, $s0, $t0
+# RELEASE $t0
+
+# === JUMP_IF #T29<0 label_8 ===
+bltz $t1, label_8
+# RELEASE $t1
+
+# === LABEL label_7 ===
+label_7:
+
+# === RETURN 0 ===
+move $v0, $zero
+jr $ra
+
+# === =========END_FUNC int compare========= ===
+
+# === =========FUNC int subtract========= ===
+subtract:
+
+# === l1 = bigintlength[0] ===
+lw $s0, arr__bigintlength_+0($zero)
+
+# === l2 = bigintlength[1] ===
+lw $s1, arr__bigintlength_+4($zero)
+
+# === _1_#T1 = l1 - l2 ===
+subu $t0, $s0, $s1
+
+# === JUMP_IF _1_#T1<=0 label_1_1_ ===
+blez $t0, label_1_1_
+# RELEASE $t0
+
+# === %RET = l2 ===
+move $v0, $s1
+
+# === JUMP label_40 ===
+j label_40
+
+# === JUMP label_2_1_ ===
+j label_2_1_
+
+# === LABEL label_1_1_ ===
+label_1_1_:
+
+# === %RET = l1 ===
+move $v0, $s0
+
+# === JUMP label_40 ===
+j label_40
+
+# === LABEL label_2_1_ ===
+label_2_1_:
+
+# === LABEL label_40 ===
+label_40:
+
+# === k = %RET ===
+move $s2, $v0
+
+# === _2_#T2 = l1 - l2 ===
+subu $t0, $s0, $s1
+
+# === JUMP_IF _2_#T2<=0 label_3_2_ ===
+blez $t0, label_3_2_
+# RELEASE $t0
+
+# === %RET = l1 ===
+move $v0, $s0
+
+# === JUMP label_41 ===
+j label_41
+
+# === JUMP label_4_2_ ===
+j label_4_2_
+
+# === LABEL label_3_2_ ===
+label_3_2_:
+
+# === %RET = l2 ===
+move $v0, $s1
+
+# === JUMP label_41 ===
+j label_41
+
+# === LABEL label_4_2_ ===
+label_4_2_:
+
+# === LABEL label_41 ===
+label_41:
+
+# === j = %RET ===
+move $s3, $v0
+
+# === PREPARE_CALL compare ===
+addi $sp, $sp, -312
+
+# === CALL compare ===
+sw $s0, 24($sp)
+sw $s1, 28($sp)
+sw $s2, 32($sp)
+sw $s3, 36($sp)
+sw $ra, 0($sp)
+jal compare
+lw $ra, 0($sp)
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+lw $s2, 32($sp)
+lw $s3, 36($sp)
+addi $sp, $sp, 312
+
+# === #T34 = %RET ===
+move $t0, $v0
+
+# === #T35 = #T34 ===
+move $t1, $t0
+# RELEASE $t0
+
+# === JUMP_IF #T35<0 label_11 ===
+bltz $t1, label_11
+# RELEASE $t1
+
+# === flag = 0 ===
+move $s4, $zero
+
+# === i = 0 ===
+move $s5, $zero
+
+# === #T36 = i - l1 ===
+subu $t0, $s5, $s0
+
+# === JUMP_IF #T36>=0 label_12 ===
+bgez $t0, label_12
+# RELEASE $t0
+
+# === LABEL label_13 ===
+label_13:
+
+# === #T37 = l1 - 1 ===
+addiu $t0, $s0, -1
+
+# === #T38 = #T37 - i ===
+subu $t1, $t0, $s5
+# RELEASE $t0
+
+# === #T40 = #T38 ===
+move $t0, $t1
+# RELEASE $t1
+
+# === #T41 = bigintarr[#T40] ===
+sll $a1, $t0, 2
+# RELEASE $t0
+lw $t1, arr__bigintarr_($a1)
+
+# === a[i] = #T41 ===
+sll $a1, $s5, 2
+sw $t1, arr_subtract_a_($a1)
+# RELEASE $t1
+
+# === i = i + 1 ===
+addiu $s5, $s5, 1
+
+# === #T43 = i - l1 ===
+subu $t0, $s5, $s0
+
+# === JUMP_IF #T43<0 label_13 ===
+bltz $t0, label_13
+# RELEASE $t0
+
+# === LABEL label_12 ===
+label_12:
+
+# === i = 0 ===
+move $s5, $zero
+
+# === #T44 = i - l2 ===
+subu $t0, $s5, $s1
+
+# === JUMP_IF #T44>=0 label_14 ===
+bgez $t0, label_14
+# RELEASE $t0
+
+# === LABEL label_15 ===
+label_15:
+
+# === #T45 = l2 - 1 ===
+addiu $t0, $s1, -1
+
+# === #T46 = #T45 - i ===
+subu $t1, $t0, $s5
+# RELEASE $t0
+
+# === #T48 = 100 + #T46 ===
+addiu $t0, $t1, 100
+
+# === #T49 = bigintarr[#T48] ===
+sll $a1, $t0, 2
+# RELEASE $t0
+lw $t2, arr__bigintarr_($a1)
+
+# === b[i] = #T49 ===
+sll $a1, $s5, 2
+sw $t2, arr_subtract_b_($a1)
+# RELEASE $t2
+
+# === i = i + 1 ===
+addiu $s5, $s5, 1
+
+# === #T51 = i - l2 ===
+subu $t0, $s5, $s1
+
+# === JUMP_IF #T51<0 label_15 ===
+bltz $t0, label_15
+# RELEASE $t0
+
+# === LABEL label_14 ===
+label_14:
+
+# === JUMP label_16 ===
+j label_16
+
+# === LABEL label_11 ===
+label_11:
+
+# === flag = 1 ===
+li $s4, 1
+
+# === i = 0 ===
+move $s5, $zero
+
+# === #T52 = i - l2 ===
+subu $t0, $s5, $s1
+
+# === JUMP_IF #T52>=0 label_17 ===
+bgez $t0, label_17
+# RELEASE $t0
+
+# === LABEL label_18 ===
+label_18:
+
+# === #T53 = l2 - 1 ===
+addiu $t0, $s1, -1
+
+# === #T54 = #T53 - i ===
+subu $t2, $t0, $s5
+# RELEASE $t0
+
+# === #T56 = 100 + #T54 ===
+addiu $t0, $t2, 100
+
+# === #T57 = bigintarr[#T56] ===
+sll $a1, $t0, 2
+# RELEASE $t0
+lw $t3, arr__bigintarr_($a1)
+
+# === a[i] = #T57 ===
+sll $a1, $s5, 2
+sw $t3, arr_subtract_a_($a1)
+# RELEASE $t3
+
+# === i = i + 1 ===
+addiu $s5, $s5, 1
+
+# === #T59 = i - l2 ===
+subu $t0, $s5, $s1
+
+# === JUMP_IF #T59<0 label_18 ===
+bltz $t0, label_18
+# RELEASE $t0
+
+# === LABEL label_17 ===
+label_17:
+
+# === i = 0 ===
+move $s5, $zero
+
+# === #T60 = i - l1 ===
+subu $t0, $s5, $s0
+
+# === JUMP_IF #T60>=0 label_19 ===
+bgez $t0, label_19
+# RELEASE $t0
+
+# === LABEL label_20 ===
+label_20:
+
+# === #T61 = l1 - 1 ===
+addiu $t0, $s0, -1
+
+# === #T62 = #T61 - i ===
+subu $t3, $t0, $s5
+# RELEASE $t0
+
+# === #T64 = #T62 ===
+move $t0, $t3
+# RELEASE $t3
+
+# === #T65 = bigintarr[#T64] ===
+sll $a1, $t0, 2
+# RELEASE $t0
+lw $t3, arr__bigintarr_($a1)
+
+# === b[i] = #T65 ===
+sll $a1, $s5, 2
+sw $t3, arr_subtract_b_($a1)
+# RELEASE $t3
+
+# === i = i + 1 ===
+addiu $s5, $s5, 1
+
+# === #T67 = i - l1 ===
+subu $t0, $s5, $s0
+
+# === JUMP_IF #T67<0 label_20 ===
+bltz $t0, label_20
+# RELEASE $t0
+
+# === LABEL label_19 ===
+label_19:
+
+# === LABEL label_16 ===
+label_16:
+
+# === i = 0 ===
+move $s5, $zero
+
+# === #T68 = i - k ===
+subu $t0, $s5, $s2
+
+# === JUMP_IF #T68>=0 label_21 ===
+bgez $t0, label_21
+# RELEASE $t0
+
+# === LABEL label_22 ===
+label_22:
+
+# === #T69 = a[i] ===
+sll $a1, $s5, 2
+lw $t0, arr_subtract_a_($a1)
+
+# === #T70 = b[i] ===
+sll $a1, $s5, 2
+lw $t3, arr_subtract_b_($a1)
+
+# === #T71 = #T69 - #T70 ===
+subu $t4, $t0, $t3
+# RELEASE $t0
+# RELEASE $t3
+
+# === JUMP_IF #T71<0 label_23 ===
+bltz $t4, label_23
+# RELEASE $t4
+
+# === #T72 = a[i] ===
+sll $a1, $s5, 2
+lw $t0, arr_subtract_a_($a1)
+
+# === #T73 = b[i] ===
+sll $a1, $s5, 2
+lw $t3, arr_subtract_b_($a1)
+
+# === #T74 = #T72 - #T73 ===
+subu $t4, $t0, $t3
+# RELEASE $t0
+# RELEASE $t3
+
+# === c[i] = #T74 ===
+sll $a1, $s5, 2
+sw $t4, arr_subtract_c_($a1)
+# RELEASE $t4
+
+# === JUMP label_24 ===
+j label_24
+
+# === LABEL label_23 ===
+label_23:
+
+# === #T75 = a[i] ===
+sll $a1, $s5, 2
+lw $t0, arr_subtract_a_($a1)
+
+# === #T76 = #T75 + 10 ===
+addiu $t3, $t0, 10
+
+# === #T77 = b[i] ===
+sll $a1, $s5, 2
+lw $t4, arr_subtract_b_($a1)
+
+# === #T78 = #T76 - #T77 ===
+subu $t5, $t3, $t4
+# RELEASE $t3
+# RELEASE $t4
+
+# === c[i] = #T78 ===
+sll $a1, $s5, 2
+sw $t5, arr_subtract_c_($a1)
+# RELEASE $t5
+
+# === #T79 = i + 1 ===
+addiu $t3, $s5, 1
+
+# === #T80 = i + 1 ===
+addiu $t4, $s5, 1
+
+# === #T81 = a[#T80] ===
+sll $a1, $t4, 2
+# RELEASE $t4
+lw $t5, arr_subtract_a_($a1)
+
+# === #T82 = #T81 - 1 ===
+addiu $t4, $t5, -1
+
+# === a[#T79] = #T82 ===
+sll $a1, $t3, 2
+# RELEASE $t3
+sw $t4, arr_subtract_a_($a1)
+# RELEASE $t4
+
+# === LABEL label_24 ===
+label_24:
+
+# === i = i + 1 ===
+addiu $s5, $s5, 1
+
+# === #T84 = i - k ===
+subu $t3, $s5, $s2
+
+# === JUMP_IF #T84<0 label_22 ===
+bltz $t3, label_22
+# RELEASE $t3
+
+# === LABEL label_21 ===
+label_21:
+
+# === #T85 = i - j ===
+subu $t3, $s5, $s3
+
+# === JUMP_IF #T85>=0 label_25 ===
+bgez $t3, label_25
+# RELEASE $t3
+
+# === LABEL label_26 ===
+label_26:
+
+# === #T86 = a[i] ===
+sll $a1, $s5, 2
+lw $t3, arr_subtract_a_($a1)
+
+# === #T87 = #T86 ===
+move $t4, $t3
+# RELEASE $t3
+
+# === JUMP_IF #T87<0 label_27 ===
+bltz $t4, label_27
+# RELEASE $t4
+
+# === #T88 = a[i] ===
+sll $a1, $s5, 2
+lw $t3, arr_subtract_a_($a1)
+
+# === c[i] = #T88 ===
+sll $a1, $s5, 2
+sw $t3, arr_subtract_c_($a1)
+# RELEASE $t3
+
+# === JUMP label_28 ===
+j label_28
+
+# === LABEL label_27 ===
+label_27:
+
+# === #T89 = a[i] ===
+sll $a1, $s5, 2
+lw $t3, arr_subtract_a_($a1)
+
+# === #T90 = #T89 + 10 ===
+addiu $t4, $t3, 10
+
+# === c[i] = #T90 ===
+sll $a1, $s5, 2
+sw $t4, arr_subtract_c_($a1)
+# RELEASE $t4
+
+# === #T91 = i + 1 ===
+addiu $t4, $s5, 1
+
+# === #T92 = i + 1 ===
+addiu $t6, $s5, 1
+
+# === #T93 = a[#T92] ===
+sll $a1, $t6, 2
+# RELEASE $t6
+lw $t7, arr_subtract_a_($a1)
+
+# === #T94 = #T93 - 1 ===
+addiu $t6, $t7, -1
+
+# === a[#T91] = #T94 ===
+sll $a1, $t4, 2
+# RELEASE $t4
+sw $t6, arr_subtract_a_($a1)
+# RELEASE $t6
+
+# === LABEL label_28 ===
+label_28:
+
+# === i = i + 1 ===
+addiu $s5, $s5, 1
+
+# === #T96 = i - j ===
+subu $t4, $s5, $s3
+
+# === JUMP_IF #T96<0 label_26 ===
+bltz $t4, label_26
+# RELEASE $t4
+
+# === LABEL label_25 ===
+label_25:
+
+# === #T97 = i - 1 ===
+addiu $t4, $s5, -1
+
+# === #T98 = c[#T97] ===
+sll $a1, $t4, 2
+# RELEASE $t4
+lw $t6, arr_subtract_c_($a1)
+
+# === #T99 = #T98 ===
+move $t4, $t6
+# RELEASE $t6
+
+# === JUMP_IF #T99!=0 label_29 ===
+bne $t4, $zero, label_29
+# RELEASE $t4
+
+# === LABEL label_30 ===
+label_30:
+
+# === i = i - 1 ===
+addiu $s5, $s5, -1
+
+# === #T101 = i - 1 ===
+addiu $t4, $s5, -1
+
+# === #T102 = c[#T101] ===
+sll $a1, $t4, 2
+# RELEASE $t4
+lw $t6, arr_subtract_c_($a1)
+
+# === #T103 = #T102 ===
+move $t4, $t6
+# RELEASE $t6
+
+# === JUMP_IF #T103==0 label_30 ===
+beq $t4, $zero, label_30
+# RELEASE $t4
+
+# === LABEL label_29 ===
+label_29:
+
+# === j = 0 ===
+move $s3, $zero
+
+# === #T104 = flag - 1 ===
+addiu $t4, $s4, -1
+
+# === JUMP_IF #T104!=0 label_31 ===
+bne $t4, $zero, label_31
+# RELEASE $t4
+
+# === PRINT 0 strcon ===
+la $a0, str__0
+li $v0, 4
+syscall
+
+# === LABEL label_31 ===
+label_31:
+
+# === k = i - 1 ===
+addiu $s2, $s5, -1
+
+# === #T107 = k - -1 ===
+addiu $t4, $s2, 1
+
+# === JUMP_IF #T107<=0 label_32 ===
+blez $t4, label_32
+# RELEASE $t4
+
+# === LABEL label_33 ===
+label_33:
+
+# === #T108 = c[k] ===
+sll $a1, $s2, 2
+lw $t4, arr_subtract_c_($a1)
+
+# === result[j] = #T108 ===
+sll $a1, $s3, 2
+sw $t4, arr__result_($a1)
+# RELEASE $t4
+
+# === k = k - 1 ===
+addiu $s2, $s2, -1
+
+# === j = j + 1 ===
+addiu $s3, $s3, 1
+
+# === #T112 = k - -1 ===
+addiu $t4, $s2, 1
+
+# === JUMP_IF #T112>0 label_33 ===
+bgtz $t4, label_33
+# RELEASE $t4
+
+# === LABEL label_32 ===
+label_32:
+
+# === RETURN j ===
+move $v0, $s3
+jr $ra
+
+# === =========END_FUNC int subtract========= ===
+
+# === =========FUNC void main========= ===
+main:
+
+# === i = 0 ===
+move $s0, $zero
+
+# === SCANF n ===
+li $v0, 5
+syscall
+move $s1, $v0
+
+# === bigintlength[0] = n ===
+sw $s1, arr__bigintlength_+0($zero)
+
+# === #T113 = i - n ===
+subu $t4, $s0, $s1
+
+# === JUMP_IF #T113>=0 label_34 ===
+bgez $t4, label_34
+# RELEASE $t4
+
+# === LABEL label_35 ===
+label_35:
+
+# === SCANF tmp ===
+li $v0, 5
+syscall
+move $s2, $v0
+
+# === #T115 = i ===
+move $t4, $s0
+
+# === bigintarr[#T115] = tmp ===
+sll $a1, $t4, 2
+# RELEASE $t4
+sw $s2, arr__bigintarr_($a1)
+
+# === i = i + 1 ===
+addiu $s0, $s0, 1
+
+# === #T117 = i - n ===
+subu $t4, $s0, $s1
+
+# === JUMP_IF #T117<0 label_35 ===
+bltz $t4, label_35
+# RELEASE $t4
+
+# === LABEL label_34 ===
+label_34:
+
+# === SCANF n ===
+li $v0, 5
+syscall
+move $s1, $v0
+
+# === bigintlength[1] = n ===
+sw $s1, arr__bigintlength_+4($zero)
+
+# === i = 0 ===
+move $s0, $zero
+
+# === #T118 = i - n ===
+subu $t4, $s0, $s1
+
+# === JUMP_IF #T118>=0 label_36 ===
+bgez $t4, label_36
+# RELEASE $t4
+
+# === LABEL label_37 ===
+label_37:
+
+# === SCANF tmp ===
+li $v0, 5
+syscall
+move $s2, $v0
+
+# === #T120 = 100 + i ===
+addiu $t4, $s0, 100
+
+# === bigintarr[#T120] = tmp ===
+sll $a1, $t4, 2
+# RELEASE $t4
+sw $s2, arr__bigintarr_($a1)
+
+# === i = i + 1 ===
+addiu $s0, $s0, 1
+
+# === #T122 = i - n ===
+subu $t4, $s0, $s1
+
+# === JUMP_IF #T122<0 label_37 ===
+bltz $t4, label_37
+# RELEASE $t4
+
+# === LABEL label_36 ===
+label_36:
+
+# === i = 0 ===
+move $s0, $zero
+
+# === PREPARE_CALL subtract ===
+addi $sp, $sp, -1764
+
+# === CALL subtract ===
+sw $t0, 56($sp)
+# RELEASE $t0
+sw $t1, 60($sp)
+# RELEASE $t1
+sw $t2, 64($sp)
+# RELEASE $t2
+sw $t3, 68($sp)
+# RELEASE $t3
+sw $t5, 76($sp)
+# RELEASE $t5
+sw $t7, 84($sp)
+# RELEASE $t7
+sw $s0, 24($sp)
+sw $s1, 28($sp)
+sw $s2, 32($sp)
+jal subtract
+lw $s0, 24($sp)
+lw $s1, 28($sp)
+lw $s2, 32($sp)
+lw $t0, 56($sp)
+lw $t1, 60($sp)
+lw $t2, 64($sp)
+lw $t3, 68($sp)
+lw $t5, 76($sp)
+lw $t7, 84($sp)
+addi $sp, $sp, 1764
+
+# === n = %RET ===
+move $s1, $v0
+
+# === #T124 = i - n ===
+subu $t4, $s0, $s1
+
+# === JUMP_IF #T124>=0 label_38 ===
+bgez $t4, label_38
+# RELEASE $t4
+
+# === LABEL label_39 ===
+label_39:
+
+# === #T125 = result[i] ===
+sll $a1, $s0, 2
+lw $t4, arr__result_($a1)
+
+# === PRINT #T125 int ===
+move $a0, $t4
+# RELEASE $t4
+li $v0, 1
+syscall
+
+# === PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+
+# === i = i + 1 ===
+addiu $s0, $s0, 1
+
+# === #T127 = i - n ===
+subu $t4, $s0, $s1
+
+# === JUMP_IF #T127<0 label_39 ===
+bltz $t4, label_39
+# RELEASE $t4
+
+# === LABEL label_38 ===
+label_38:
+
+# === RETURN ===
+li $v0, 10
+syscall
+
+# === RETURN ===
+li $v0, 10
+syscall
+
+# === =========END_FUNC void main========= ===
