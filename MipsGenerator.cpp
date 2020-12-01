@@ -58,6 +58,10 @@ void MipsGenerator::translate() {
         }
     }
     for (auto &it: SymTable::local) {
+        if (SymTable::search_func(it.first).recur_func) {
+//            cout << "recursive function: " << it.first << endl;
+            continue;
+        }
         for (auto &item: it.second) {
             if (item.dim >= 1) {
                 generate("arr_" + it.first + "_" + item.name + "_: .space " + to_string(item.size + 4));
@@ -270,7 +274,7 @@ void MipsGenerator::translate() {
             bool is_2_pow_1 = is_const(code.num1) && is_2_power(stoi(code.num1));
             bool is_2_pow_2 = is_const(code.num2) && is_2_power(stoi(code.num2));
             bool sra = false;
-            if (op == OP_MUL || op == OP_DIV) {
+            if ((op == OP_MUL || op == OP_DIV) && optimize_muldiv) {
                 if (is_2_pow_1 && op == OP_MUL) {
                     // mul a, 8, c : sll a, c, 3
                     instr = "sll";
@@ -358,14 +362,16 @@ void MipsGenerator::translate() {
                 int offset = 4 * stoi(num2);
                 if (array_in_global) {
                     item_addr = "arr__" + num1 + "_+" + to_string(offset) + "($zero)";
-                } else {
+                }
+
+                else if (!SymTable::search_func(cur_func).recur_func){
                     item_addr = "arr_" + cur_func + "_" + num1 + "_+" + to_string(offset) + "($zero)";
                 }
 
-//                else {
-//                    offset += SymTable::search(cur_func, num1).addr + call_func_sp_offset;
-//                    item_addr = to_string(offset) + "($sp)";
-//                }
+                else {
+                    offset += SymTable::search(cur_func, num1).addr + call_func_sp_offset;
+                    item_addr = to_string(offset) + "($sp)";
+                }
             } else {    //下标是变量，在内存或寄存器，4*num2+sp+call_func_sp_offset
                 bool index_in_reg = in_reg(num2) || assign_reg(num2, true);
                 string index = symbol_to_addr(num2);
@@ -379,15 +385,16 @@ void MipsGenerator::translate() {
                 if (array_in_global) {
                     item_addr = "arr__" + num1 + "_(" + reg + ")";
                 }
-                else {
+
+                else if (!SymTable::search_func(cur_func).recur_func){
                     item_addr = "arr_" + cur_func + "_" + num1 + "_(" + reg + ")";
                 }
 
-//                else {
-//                    generate("addu", reg, reg, to_string(SymTable::search(cur_func, num1).addr + call_func_sp_offset));
-//                    generate("addu", reg, reg, "$sp");
-//                    item_addr = "0(" + reg + ")";
-//                }
+                else {
+                    generate("addu", reg, reg, to_string(SymTable::search(cur_func, num1).addr + call_func_sp_offset));
+                    generate("addu", reg, reg, "$sp");
+                    item_addr = "0(" + reg + ")";
+                }
             }
 
 
@@ -463,7 +470,7 @@ void MipsGenerator::gen_arithmetic(const string &instr, const string &num1, cons
             //div  a,5,b:  li reg3,5  divu a,reg3,b
 
             generate("li", reg3, num2);
-            if (instr == "div") {
+            if (instr == "div" && optimize_muldiv) {
                 generate("div", reg3, num3);
                 generate("mflo", num1);
                 if (num1 != num3) {
@@ -475,7 +482,7 @@ void MipsGenerator::gen_arithmetic(const string &instr, const string &num1, cons
         } else {
             generate(instr, num1, num2, num3);
         }
-    } else if (instr == "div" && !is_const(num3)) {
+    } else if (instr == "div" && !is_const(num3) && optimize_muldiv) {
         generate("div", num2, num3);
         generate("mflo", num1);
         if (num1 != num2) {
@@ -579,7 +586,7 @@ void MipsGenerator::save_value(const string &reg, const string &symbol) {
 }
 
 bool MipsGenerator::assign_reg(const string &symbol, bool only_para) {
-    if (!SymTable::in_global(cur_func, symbol)) {
+    if (!SymTable::in_global(cur_func, symbol) && optimize_assign_reg) {
         SymTableItem item = SymTable::search(cur_func, symbol);
         if (item.stiType == var && !only_para) {
             string sreg = assign_s_reg(symbol);
@@ -588,7 +595,6 @@ bool MipsGenerator::assign_reg(const string &symbol, bool only_para) {
             }
         }
 
-        //TODO:参数在函数开始时load；不要放在第一次用的时候
 //        else if (item.stiType == para) {
 //            string sreg = assign_s_reg(symbol);
 //            if (sreg != INVALID) {

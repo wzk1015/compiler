@@ -51,6 +51,7 @@ public:
     int dim2_size{};
     string const_value;
     bool modified = false;
+    bool recur_func = false;
 
 
     SymTableItem(string name, STIType stiType1, DataType dataType1, int addr) :

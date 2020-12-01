@@ -55,6 +55,8 @@ int main() {
 
     //目标代码生成
     MipsGenerator mips;
+    mips.optimize_muldiv = true;
+    mips.optimize_assign_reg = true;
     mips.translate();
     mips.save_to_file("mips.txt");
 //

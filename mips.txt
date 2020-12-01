@@ -848,82 +848,92 @@ lw $t0, 56($sp)
 lw $t3, 68($sp)
 addi $sp, $sp, 728
 
-# === 192 #T122 = n ===
+# === 192 PRINT n int ===
+move $a0, $s2
+li $v0, 1
+syscall
+
+# === 193 PRINT #ENDL ===
+la $a0, newline__
+li $v0, 4
+syscall
+
+# === 194 #T122 = n ===
 move $t1, $s2
 
-# === 193 JUMP_IF #T122>0 label_11 ===
+# === 195 JUMP_IF #T122>0 label_11 ===
 bgtz $t1, label_11
 # RELEASE $t1
 
-# === 194 LABEL label_10 ===
+# === 196 LABEL label_10 ===
 label_10:
 
-# === 195 #T123 = i - 1000 ===
+# === 197 #T123 = i - 1000 ===
 addiu $t1, $s1, -1000
 
-# === 196 JUMP_IF #T123>=0 label_12 ===
+# === 198 JUMP_IF #T123>=0 label_12 ===
 bgez $t1, label_12
 # RELEASE $t1
 
-# === 197 LABEL label_13 ===
+# === 199 LABEL label_13 ===
 label_13:
 
-# === 198 #T124 = a[i] ===
+# === 200 #T124 = a[i] ===
 sll $a1, $s1, 2
 lw $t1, arr__a_($a1)
 
-# === 199 #T125 = a[i] ===
+# === 201 #T125 = a[i] ===
 sll $a1, $s1, 2
 lw $t2, arr__a_($a1)
 
-# === 200 #T126 = #T125 / 100000 ===
+# === 202 #T126 = #T125 / 100000 ===
 div $t4, $t2, 100000
 # RELEASE $t2
 
-# === 201 #T127 = #T126 * 100000 ===
+# === 203 #T127 = #T126 * 100000 ===
 mul $t2, $t4, 100000
 # RELEASE $t4
 
-# === 202 #T128 = #T124 - #T127 ===
+# === 204 #T128 = #T124 - #T127 ===
 subu $t4, $t1, $t2
 # RELEASE $t1
 # RELEASE $t2
 
-# === 203 tmp = tmp + #T128 ===
+# === 205 tmp = tmp + #T128 ===
 addu $s0, $s0, $t4
 # RELEASE $t4
 
-# === 204 #T130 = tmp / 100000 ===
+# === 206 #T130 = tmp / 100000 ===
 div $t1, $s0, 100000
 
-# === 205 #T131 = #T130 * 100000 ===
+# === 207 #T131 = #T130 * 100000 ===
 mul $t2, $t1, 100000
 # RELEASE $t1
 
-# === 206 tmp = tmp - #T131 ===
+# === 208 tmp = tmp - #T131 ===
 subu $s0, $s0, $t2
 # RELEASE $t2
 
-# === 207 i = i + 1 ===
+# === 209 i = i + 1 ===
 addiu $s1, $s1, 1
 
-# === 208 #T134 = i - 1000 ===
+# === 210 #T134 = i - 1000 ===
 addiu $t1, $s1, -1000
 
-# === 209 JUMP_IF #T134<0 label_13 ===
+# === 211 JUMP_IF #T134<0 label_13 ===
 bltz $t1, label_13
 # RELEASE $t1
 
-# === 210 LABEL label_12 ===
+# === 212 LABEL label_12 ===
 label_12:
 
-# === 211 PREPARE_CALL myprintf ===
+# === 213 PREPARE_CALL myprintf ===
 addi $sp, $sp, -200
 
-# === 212 PUSH_PARA tmp ===
+# === 214 PUSH_PARA tmp ===
 sw $s0, 100($sp)
 
-# === 213 CALL myprintf ===
+# === 215 CALL myprintf ===
 sw $t0, 56($sp)
 # RELEASE $t0
 sw $t3, 68($sp)
@@ -945,12 +955,12 @@ lw $t0, 56($sp)
 lw $t3, 68($sp)
 addi $sp, $sp, 200
 
-# === 214 RETURN ===
+# === 216 RETURN ===
 li $v0, 10
 syscall
 
-# === 215 RETURN ===
+# === 217 RETURN ===
 li $v0, 10
 syscall
 
-# === 216 =========END_FUNC void main========= ===
+# === 218 =========END_FUNC void main========= ===

@@ -204,31 +204,33 @@
 202: PUSH_PARA x
 203: PUSH_PARA y
 204: CALL set
-205: #T122 = n - 0
-206: JUMP_IF #T122>0 label_11
-207: LABEL label_10
-208: #T123 = i - 1000
-209: JUMP_IF #T123>=0 label_12
-210: LABEL label_13
-211: #T124 = a[i]
-212: #T125 = a[i]
-213: #T126 = #T125 / 100000
-214: #T127 = #T126 * 100000
-215: #T128 = #T124 - #T127
-216: #T129 = tmp + #T128
-217: tmp = #T129
-218: #T130 = tmp / 100000
-219: #T131 = #T130 * 100000
-220: #T132 = tmp - #T131
-221: tmp = #T132
-222: #T133 = i + 1
-223: i = #T133
-224: #T134 = i - 1000
-225: JUMP_IF #T134<0 label_13
-226: LABEL label_12
-227: PREPARE_CALL myprintf
-228: PUSH_PARA tmp
-229: CALL myprintf
-230: RETURN
-231: RETURN
-232: =========END_FUNC void main=========
+205: PRINT n int
+206: PRINT #ENDL
+207: #T122 = n - 0
+208: JUMP_IF #T122>0 label_11
+209: LABEL label_10
+210: #T123 = i - 1000
+211: JUMP_IF #T123>=0 label_12
+212: LABEL label_13
+213: #T124 = a[i]
+214: #T125 = a[i]
+215: #T126 = #T125 / 100000
+216: #T127 = #T126 * 100000
+217: #T128 = #T124 - #T127
+218: #T129 = tmp + #T128
+219: tmp = #T129
+220: #T130 = tmp / 100000
+221: #T131 = #T130 * 100000
+222: #T132 = tmp - #T131
+223: tmp = #T132
+224: #T133 = i + 1
+225: i = #T133
+226: #T134 = i - 1000
+227: JUMP_IF #T134<0 label_13
+228: LABEL label_12
+229: PREPARE_CALL myprintf
+230: PUSH_PARA tmp
+231: CALL myprintf
+232: RETURN
+233: RETURN
+234: =========END_FUNC void main=========

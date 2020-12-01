@@ -1418,6 +1418,11 @@ void Grammar::CaseStmt() {
 void Grammar::SharedFuncCall() {
     bool para_count_err = false;
     string func_name = Identifier();
+    if (func_name == cur_func) {
+        //递归函数
+        SymTable::ref_search(GLOBAL, cur_func).recur_func = true;
+        cout << "recur func: " << cur_func << endl;
+    }
     function_call_start_index = pos - 1;
 
     vector<pair<DataType, string>> paras = SymTable::search(cur_func, tk).paras;

@@ -1406,6 +1406,16 @@ RPARENT )
 <有返回值函数调用语句>
 SEMICN ;
 <语句>
+PRINTFTK printf
+LPARENT (
+IDENFR n
+<因子>
+<项>
+<表达式>
+RPARENT )
+<写语句>
+SEMICN ;
+<语句>
 <语句列>
 RBRACE }
 <语句>

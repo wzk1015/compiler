@@ -68,8 +68,10 @@ public:
     vector<vector<SymTableItem>> call_func_paras;
     vector<int> sp_size = {0};
     int call_func_sp_offset = 0;
-    map<string, int> func_sp_offsets;
     int tmp_label_idx = 1;
+
+    bool optimize_assign_reg = false;
+    bool optimize_muldiv = false;
 
     MipsGenerator(): mid(PseudoCodeList::codes), strcons(PseudoCodeList::strcons) {};
 
