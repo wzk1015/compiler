@@ -13,10 +13,9 @@ vector<DAGNode> PseudoCodeList::DAGNodes;
 map<string, int> PseudoCodeList::NodesMap;
 int PseudoCodeList::call_times = 0;
 
-
 string PseudoCode::to_str() const {
     if (op == OP_FUNC || op == OP_END_FUNC) {
-        return "=========" + op + " " + num1 + " " + num2 + "=========";
+        return "=============" + op + " " + num1 + " " + num2 + "==============";
     }
     if (op == OP_ASSIGN) {
         return num1 + " = " + num2;
@@ -28,7 +27,7 @@ string PseudoCode::to_str() const {
         return num1 + "[" + num2 + "] = " + result;
     }
     if (op == OP_JUMP_IF) {
-        return op + " " + num1 + num2 + " " + result;
+        return ljust(op, 7) + "  " + num1 + num2 + "  " + result;
     }
     if (result != VACANT) {
         return result + " = " + num1 + " " + op + " " + num2;
@@ -37,9 +36,9 @@ string PseudoCode::to_str() const {
         return op;
     }
     if (num2 == VACANT) {
-        return op + " " + num1;
+        return ljust(op, 7) + " " + num1;
     }
-    return op + " " + num1 + " " + num2;
+    return ljust(op, 7) + " " + num1 + " " + num2;
 }
 
 string PseudoCode::to_standard_format() const {
@@ -815,15 +814,37 @@ void PseudoCodeList::show_DAG_tree() {
 void PseudoCodeList::inline_function() {
     vector<PseudoCode> new_codes;
     map<string, vector<PseudoCode>> func_codes;
+    map<string, bool> para_assigned;
     string cur_func = INVALID;
+    vector<string> def_paras;
     for (auto &code: codes) {
         if (code.op == OP_FUNC) {
             cur_func = code.num2;
             func_codes[cur_func] = vector<PseudoCode>();
+            para_assigned[cur_func] = false;
+            for (auto &it: SymTable::search_func(cur_func).paras) {
+                def_paras.push_back(it.second);
+            }
         } else if (code.op == OP_END_FUNC) {
             cur_func = INVALID;
         } else if (cur_func != INVALID) {
             func_codes[cur_func].push_back(code);
+            if (code.op == OP_ASSIGN || code.op == OP_SCANF) {
+                for (auto &para: def_paras) {
+                    if (para == code.num1) {
+                        para_assigned[cur_func] = true;
+                        break;
+                    }
+                }
+            }
+            if (code.op == OP_ARR_LOAD || is_arith(code.op)) {
+                for (auto &para: def_paras) {
+                    if (para == code.result) {
+                        para_assigned[cur_func] = true;
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -838,16 +859,16 @@ void PseudoCodeList::inline_function() {
         if (code.op == OP_PREPARE_CALL) {
             if (SymTable::search_func(code.num1).recur_func
                 || func_codes[code.num1].size() > 20) {
-                cout << code.num1 << " size: " << func_codes[code.num1].size() << endl;
+                cout << "not inline function: "  << code.num1 << " size: " << func_codes[code.num1].size() << endl;
                 new_codes.push_back(code);
                 continue;
             }
             paras.emplace_back();
             call_func.push_back(code.num1);
             call_times++;
-            cout << "inline func: " << call_func.back() << endl;
+            cout << "inline function: " << call_func.back() << endl;
         } else if (code.op == OP_PUSH_PARA && !call_func.empty()) {
-            if (code.num1[0] == '#') {
+            if (code.num1[0] == '#' || para_assigned[call_func.back()]) {
                 string var_name = "@V" + to_string(code_index);
                 code_index++;
                 new_codes.emplace_back(OP_ASSIGN, var_name, code.num1, VACANT);

@@ -32,4 +32,8 @@ int sum(const vector<int>& arr);
 
 void mips_debug();
 
+string rjust(const string& str, int pos, char pad = ' ');
+
+string ljust(const string& str, int pos, char pad = ' ');
+
 #endif //COMPILER_UTILS_H

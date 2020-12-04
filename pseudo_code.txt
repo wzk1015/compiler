@@ -1,62 +1,68 @@
 ===============
-=========FUNC int myscanf=========
-SCANF n
-RETURN n
-=========END_FUNC int myscanf=========
-=========FUNC void myprintf=========
-PRINT n int
-PRINT #ENDL
+=============FUNC int myscanf==============
+----------scanf(n);----------
+SCANF   n
+----------return(n);----------
+RETURN  n
+=============END_FUNC int myscanf==============
+=============FUNC void myprintf==============
+----------printf(n);----------
+PRINT   n int
+PRINT   #ENDL
+----------return;----------
 RETURN
 RETURN
-=========END_FUNC void myprintf=========
-=========FUNC int checkrange=========
+=============END_FUNC void myprintf==============
+=============FUNC int checkrange==============
 #T1 = num - 1073741824
-JUMP_IF #T1<=0 label_1
-LABEL label_2
+JUMP_IF  #T1<=0  label_1
+LABEL   label_2
 num = num - 1073741824
 #T3 = num - 1073741824
-JUMP_IF #T3>0 label_2
-LABEL label_1
+JUMP_IF  #T3>0  label_2
+LABEL   label_1
 #T4 = num
-JUMP_IF #T4>=0 label_3
-LABEL label_4
+JUMP_IF  #T4>=0  label_3
+LABEL   label_4
 num = num + 1073741824
 #T6 = num
-JUMP_IF #T6<0 label_4
-LABEL label_3
-RETURN num
-=========END_FUNC int checkrange=========
-=========FUNC int reduce=========
+JUMP_IF  #T6<0  label_4
+LABEL   label_3
+----------return(num);----------
+RETURN  num
+=============END_FUNC int checkrange==============
+=============FUNC int reduce==============
 #T7 = kernelid
-JUMP_IF #T7!=0 label_5
+JUMP_IF  #T7!=0  label_5
 #T8 = x + y
 @V134 = #T8
 _1_#T1 = @V134 - 1073741824
-JUMP_IF _1_#T1<=0 label_1_1_
-LABEL label_2_1_
+JUMP_IF  _1_#T1<=0  label_1_1_
+LABEL   label_2_1_
 @V134 = @V134 - 1073741824
 _1_#T3 = @V134 - 1073741824
-JUMP_IF _1_#T3>0 label_2_1_
-LABEL label_1_1_
+JUMP_IF  _1_#T3>0  label_2_1_
+LABEL   label_1_1_
 _1_#T4 = @V134
-JUMP_IF _1_#T4>=0 label_3_1_
-LABEL label_4_1_
+JUMP_IF  _1_#T4>=0  label_3_1_
+LABEL   label_4_1_
 @V134 = @V134 + 1073741824
 _1_#T6 = @V134
-JUMP_IF _1_#T6<0 label_4_1_
-LABEL label_3_1_
+JUMP_IF  _1_#T6<0  label_4_1_
+LABEL   label_3_1_
 %RET = @V134
-LABEL label_53
+LABEL   label_53
 #T9 = %RET
-RETURN #T9
-LABEL label_5
+RETURN  #T9
+LABEL   label_5
 #T10 = kernelid - 1
-JUMP_IF #T10!=0 label_6
+JUMP_IF  #T10!=0  label_6
 ret = 0
 i = 1
 #T11 = i - 1073741824
-JUMP_IF #T11>=0 label_7
-LABEL label_8
+JUMP_IF  #T11>=0  label_7
+LABEL   label_8
+----------if(((x/i)-(x/i)/2*2)==((y/i)-(y/i)/2*2))ret=ret*2;elseret=ret*2+1;----------
 #T12 = x / i
 #T13 = x / i
 #T14 = #T13 / 2
@@ -68,127 +74,140 @@ LABEL label_8
 #T20 = #T19 * 2
 #T21 = #T17 - #T20
 #T22 = #T16 - #T21
-JUMP_IF #T22!=0 label_9
+JUMP_IF  #T22!=0  label_9
 ret = ret * 2
-JUMP label_10
-LABEL label_9
+JUMP    label_10
+LABEL   label_9
 #T24 = ret * 2
 ret = #T24 + 1
-LABEL label_10
+LABEL   label_10
 i = i * 2
 #T27 = i - 1073741824
-JUMP_IF #T27<0 label_8
-LABEL label_7
-RETURN ret
-LABEL label_6
+JUMP_IF  #T27<0  label_8
+LABEL   label_7
+----------return(ret);----------
+RETURN  ret
+LABEL   label_6
 #T28 = kernelid - 2
-JUMP_IF #T28!=0 label_11
+JUMP_IF  #T28!=0  label_11
+----------if(x>y)return(x);elsereturn(y);----------
 #T29 = x - y
-JUMP_IF #T29<=0 label_12
-RETURN x
-JUMP label_13
-LABEL label_12
-RETURN y
-LABEL label_13
-LABEL label_11
+JUMP_IF  #T29<=0  label_12
+----------return(x);----------
+RETURN  x
+JUMP    label_13
+LABEL   label_12
+----------return(y);----------
+RETURN  y
+LABEL   label_13
+LABEL   label_11
 #T30 = kernelid - 3
-JUMP_IF #T30!=0 label_14
+JUMP_IF  #T30!=0  label_14
 ret = 0
 i = 1
 #T31 = i - 1073741824
-JUMP_IF #T31>=0 label_15
-LABEL label_16
+JUMP_IF  #T31>=0  label_15
+LABEL   label_16
+----------if(((x/i)-(x/i)/2*2)==1)ret=ret*2+1;else{if(((y/i)-(y/i)/2*2)==1){ret=ret*2+1;}ret=ret*2;}----------
 #T32 = x / i
 #T33 = x / i
 #T34 = #T33 / 2
 #T35 = #T34 * 2
 #T36 = #T32 - #T35
 #T37 = #T36 - 1
-JUMP_IF #T37!=0 label_17
+JUMP_IF  #T37!=0  label_17
 #T38 = ret * 2
 ret = #T38 + 1
-JUMP label_18
-LABEL label_17
+JUMP    label_18
+LABEL   label_17
+----------if(((y/i)-(y/i)/2*2)==1){ret=ret*2+1;}----------
 #T40 = y / i
 #T41 = y / i
 #T42 = #T41 / 2
 #T43 = #T42 * 2
 #T44 = #T40 - #T43
 #T45 = #T44 - 1
-JUMP_IF #T45!=0 label_19
+JUMP_IF  #T45!=0  label_19
 #T46 = ret * 2
 ret = #T46 + 1
-LABEL label_19
+LABEL   label_19
 ret = ret * 2
-LABEL label_18
+LABEL   label_18
 i = i * 2
 #T50 = i - 1073741824
-JUMP_IF #T50<0 label_16
-LABEL label_15
-RETURN ret
-LABEL label_14
+JUMP_IF  #T50<0  label_16
+LABEL   label_15
+----------return(ret);----------
+RETURN  ret
+LABEL   label_14
 #T51 = kernelid - 4
-JUMP_IF #T51!=0 label_20
+JUMP_IF  #T51!=0  label_20
 ret = 0
 i = 1
 #T52 = i - 1073741824
-JUMP_IF #T52>=0 label_21
-LABEL label_22
+JUMP_IF  #T52>=0  label_21
+LABEL   label_22
+----------if(((x/i)-(x/i)/2*2)==1){if(((y/i)-(y/i)/2*2)==1)ret=ret*2+1;elseret=ret*2;}elseret=ret*2;----------
 #T53 = x / i
 #T54 = x / i
 #T55 = #T54 / 2
 #T56 = #T55 * 2
 #T57 = #T53 - #T56
 #T58 = #T57 - 1
-JUMP_IF #T58!=0 label_23
+JUMP_IF  #T58!=0  label_23
+----------if(((y/i)-(y/i)/2*2)==1)ret=ret*2+1;elseret=ret*2;----------
 #T59 = y / i
 #T60 = y / i
 #T61 = #T60 / 2
 #T62 = #T61 * 2
 #T63 = #T59 - #T62
 #T64 = #T63 - 1
-JUMP_IF #T64!=0 label_24
+JUMP_IF  #T64!=0  label_24
 #T65 = ret * 2
 ret = #T65 + 1
-JUMP label_25
-LABEL label_24
+JUMP    label_25
+LABEL   label_24
 ret = ret * 2
-LABEL label_25
-JUMP label_26
-LABEL label_23
+LABEL   label_25
+JUMP    label_26
+LABEL   label_23
 ret = ret * 2
-LABEL label_26
+LABEL   label_26
 i = i * 2
 #T70 = i - 1073741824
-JUMP_IF #T70<0 label_22
-LABEL label_21
-RETURN ret
-LABEL label_20
-RETURN 0
-=========END_FUNC int reduce=========
-=========FUNC int getvalue=========
+JUMP_IF  #T70<0  label_22
+LABEL   label_21
+----------return(ret);----------
+RETURN  ret
+LABEL   label_20
+RETURN  0
+=============END_FUNC int reduce==============
+=============FUNC int getvalue==============
 #T71 = x
-JUMP_IF #T71>=0 label_27
-RETURN 0
-LABEL label_27
+JUMP_IF  #T71>=0  label_27
+RETURN  0
+LABEL   label_27
 #T72 = y
-JUMP_IF #T72>=0 label_28
-RETURN 0
-LABEL label_28
+JUMP_IF  #T72>=0  label_28
+RETURN  0
+LABEL   label_28
+----------if(x>=n)return(0);----------
 #T73 = x - n
-JUMP_IF #T73<0 label_29
-RETURN 0
-LABEL label_29
+JUMP_IF  #T73<0  label_29
+RETURN  0
+LABEL   label_29
+----------if(y>=m)return(0);----------
 #T74 = y - m
-JUMP_IF #T74<0 label_30
-RETURN 0
-LABEL label_30
+JUMP_IF  #T74<0  label_30
+RETURN  0
+LABEL   label_30
+----------return(a[x*m+y]);----------
 #T75 = x * m
 #T76 = #T75 + y
 #T77 = a[#T76]
-RETURN #T77
-=========END_FUNC int getvalue=========
-=========FUNC int convn=========
+RETURN  #T77
+=============END_FUNC int getvalue==============
+=============FUNC int convn==============
 i = 0
 j = 0
 flag1 = 1
@@ -196,202 +215,214 @@ flag2 = 1
 flag3 = 1
 flag4 = 1
 #T78 = flag1 - 1
-JUMP_IF #T78!=0 label_31
-LABEL label_32
+JUMP_IF  #T78!=0  label_31
+LABEL   label_32
 j = 0
 #T79 = flag2 - 1
-JUMP_IF #T79!=0 label_33
-LABEL label_34
+JUMP_IF  #T79!=0  label_33
+LABEL   label_34
 curr = 0
 #T80 = c / 2
 x = i - #T80
 #T82 = flag3 - 1
-JUMP_IF #T82!=0 label_35
-LABEL label_36
+JUMP_IF  #T82!=0  label_35
+LABEL   label_36
 #T83 = c / 2
 y = j - #T83
 #T85 = flag4 - 1
-JUMP_IF #T85!=0 label_37
-LABEL label_38
+JUMP_IF  #T85!=0  label_37
+LABEL   label_38
+----------curr=reduce(kernelid,curr,getvalue(n,m,x,y));----------
 PREPARE_CALL reduce
 PUSH_PARA kernelid
 PUSH_PARA curr
 _2_#T71 = x
-JUMP_IF _2_#T71>=0 label_27_2_
+JUMP_IF  _2_#T71>=0  label_27_2_
 %RET = 0
-JUMP label_54
-LABEL label_27_2_
+JUMP    label_54
+LABEL   label_27_2_
 _2_#T72 = y
-JUMP_IF _2_#T72>=0 label_28_2_
+JUMP_IF  _2_#T72>=0  label_28_2_
 %RET = 0
-JUMP label_54
-LABEL label_28_2_
+JUMP    label_54
+LABEL   label_28_2_
 _2_#T73 = x - n
-JUMP_IF _2_#T73<0 label_29_2_
+JUMP_IF  _2_#T73<0  label_29_2_
 %RET = 0
-JUMP label_54
-LABEL label_29_2_
+JUMP    label_54
+LABEL   label_29_2_
 _2_#T74 = y - m
-JUMP_IF _2_#T74<0 label_30_2_
+JUMP_IF  _2_#T74<0  label_30_2_
 %RET = 0
-JUMP label_54
-LABEL label_30_2_
+JUMP    label_54
+LABEL   label_30_2_
 _2_#T75 = x * m
 _2_#T76 = _2_#T75 + y
 _2_#T77 = a[_2_#T76]
 %RET = _2_#T77
-LABEL label_54
+LABEL   label_54
 #T86 = %RET
 PUSH_PARA #T86
-CALL reduce
+CALL    reduce
 curr = %RET
 y = y + 1
 #T89 = c / 2
 #T90 = j + #T89
 #T91 = y - #T90
-JUMP_IF #T91<0 label_39
+JUMP_IF  #T91<0  label_39
 flag4 = 0
-LABEL label_39
+LABEL   label_39
 #T92 = flag4 - 1
-JUMP_IF #T92==0 label_38
-LABEL label_37
+JUMP_IF  #T92==0  label_38
+LABEL   label_37
 flag4 = 1
 x = x + 1
 #T94 = c / 2
 #T95 = i + #T94
 #T96 = x - #T95
-JUMP_IF #T96<0 label_40
+JUMP_IF  #T96<0  label_40
 flag3 = 0
-LABEL label_40
+LABEL   label_40
 #T97 = flag3 - 1
-JUMP_IF #T97==0 label_36
-LABEL label_35
+JUMP_IF  #T97==0  label_36
+LABEL   label_35
 flag3 = 1
+----------b[i*m+j]=curr;----------
 #T98 = i * m
 #T99 = #T98 + j
 b[#T99] = curr
 j = j + 1
+----------if(j>=m){flag2=0;}----------
 #T101 = j - m
-JUMP_IF #T101<0 label_41
+JUMP_IF  #T101<0  label_41
 flag2 = 0
-LABEL label_41
+LABEL   label_41
 #T102 = flag2 - 1
-JUMP_IF #T102==0 label_34
-LABEL label_33
+JUMP_IF  #T102==0  label_34
+LABEL   label_33
 flag2 = 1
 i = i + 1
+----------if(i>=n){flag1=0;}----------
 #T104 = i - n
-JUMP_IF #T104<0 label_42
+JUMP_IF  #T104<0  label_42
 flag1 = 0
-LABEL label_42
+LABEL   label_42
 #T105 = flag1 - 1
-JUMP_IF #T105==0 label_32
-LABEL label_31
-RETURN 0
-=========END_FUNC int convn=========
-=========FUNC void mymemmove=========
+JUMP_IF  #T105==0  label_32
+LABEL   label_31
+RETURN  0
+=============END_FUNC int convn==============
+=============FUNC void mymemmove==============
 i = 0
+----------while(i<n){a[i]=b[i];i=i+1;}i<n----------
 #T106 = i - n
-JUMP_IF #T106>=0 label_43
-LABEL label_44
+JUMP_IF  #T106>=0  label_43
+LABEL   label_44
+----------a[i]=b[i];----------
 #T107 = b[i]
 a[i] = #T107
 i = i + 1
 #T109 = i - n
-JUMP_IF #T109<0 label_44
-LABEL label_43
+JUMP_IF  #T109<0  label_44
+LABEL   label_43
 RETURN
-=========END_FUNC void mymemmove=========
-=========FUNC void main=========
+=============END_FUNC void mymemmove==============
+=============FUNC void main==============
 i = 0
-SCANF _3_n
+SCANF   _3_n
 %RET = _3_n
-LABEL label_55
+LABEL   label_55
 c = %RET
-SCANF _4_n
+SCANF   _4_n
 %RET = _4_n
-LABEL label_56
+LABEL   label_56
 n = %RET
-SCANF _5_n
+SCANF   _5_n
 %RET = _5_n
-LABEL label_57
+LABEL   label_57
 m = %RET
-SCANF _6_n
+SCANF   _6_n
 %RET = _6_n
-LABEL label_58
+LABEL   label_58
 arrlen = %RET
+----------while(i<arrlen){a[i]=myscanf();i=i+1;}i<arrlen----------
 #T114 = i - arrlen
-JUMP_IF #T114>=0 label_45
-LABEL label_46
-SCANF _7_n
+JUMP_IF  #T114>=0  label_45
+LABEL   label_46
+SCANF   _7_n
 %RET = _7_n
-LABEL label_59
+LABEL   label_59
 #T115 = %RET
 a[i] = #T115
 i = i + 1
 #T117 = i - arrlen
-JUMP_IF #T117<0 label_46
-LABEL label_45
-SCANF _8_n
+JUMP_IF  #T117<0  label_46
+LABEL   label_45
+SCANF   _8_n
 %RET = _8_n
-LABEL label_60
+LABEL   label_60
 task = %RET
 i = 0
+----------while(i<task){kernelid[i]=myscanf();i=i+1;}i<task----------
 #T119 = i - task
-JUMP_IF #T119>=0 label_47
-LABEL label_48
-SCANF _9_n
+JUMP_IF  #T119>=0  label_47
+LABEL   label_48
+SCANF   _9_n
 %RET = _9_n
-LABEL label_61
+LABEL   label_61
 #T120 = %RET
 kernelid[i] = #T120
 i = i + 1
 #T122 = i - task
-JUMP_IF #T122<0 label_48
-LABEL label_47
+JUMP_IF  #T122<0  label_48
+LABEL   label_47
 i = 0
+----------while(i<task){convn(kernelid[i],n,m,c);mymemmove(n*m);i=i+1;}i<task----------
 #T123 = i - task
-JUMP_IF #T123>=0 label_49
-LABEL label_50
+JUMP_IF  #T123>=0  label_49
+LABEL   label_50
+----------convn(kernelid[i],n,m,c);----------
 PREPARE_CALL convn
 #T124 = kernelid[i]
 PUSH_PARA #T124
 PUSH_PARA n
 PUSH_PARA m
 PUSH_PARA c
-CALL convn
+CALL    convn
 #T125 = n * m
 @V135 = #T125
 _10_i = 0
 _10_#T106 = _10_i - @V135
-JUMP_IF _10_#T106>=0 label_43_10_
-LABEL label_44_10_
+JUMP_IF  _10_#T106>=0  label_43_10_
+LABEL   label_44_10_
 _10_#T107 = b[_10_i]
 a[_10_i] = _10_#T107
 _10_i = _10_i + 1
 _10_#T109 = _10_i - @V135
-JUMP_IF _10_#T109<0 label_44_10_
-LABEL label_43_10_
-LABEL label_62
+JUMP_IF  _10_#T109<0  label_44_10_
+LABEL   label_43_10_
+LABEL   label_62
 i = i + 1
 #T127 = i - task
-JUMP_IF #T127<0 label_50
-LABEL label_49
+JUMP_IF  #T127<0  label_50
+LABEL   label_49
 i = 0
+----------while(i<n*m){myprintf(a[i]);i=i+1;}i<n*m----------
 #T128 = n * m
 #T129 = i - #T128
-JUMP_IF #T129>=0 label_51
-LABEL label_52
+JUMP_IF  #T129>=0  label_51
+LABEL   label_52
 #T130 = a[i]
 @V136 = #T130
-PRINT @V136 int
-PRINT #ENDL
-LABEL label_63
+PRINT   @V136 int
+PRINT   #ENDL
+LABEL   label_63
 i = i + 1
 #T132 = n * m
 #T133 = i - #T132
-JUMP_IF #T133<0 label_52
-LABEL label_51
+JUMP_IF  #T133<0  label_52
+LABEL   label_51
+----------return;----------
 RETURN
 RETURN
-=========END_FUNC void main=========
+=============END_FUNC void main==============

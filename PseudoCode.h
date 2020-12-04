@@ -54,6 +54,7 @@ public:
     string num1;
     string num2;
     string result;
+    string comment;
 
     PseudoCode(string op, string n1, string n2, string r) :
             op(std::move(op)), num1(std::move(n1)), num2(std::move(n2)), result(std::move(r)) {};
@@ -179,6 +180,9 @@ public:
         out << "===============" << endl;
         for (int i = 0; i < codes.size(); i++) {
             //out << i << ": " << codes[i].to_str() << endl;
+            if (!codes[i].comment.empty()) {
+                out << "----------" + codes[i].comment + "----------" << endl;
+            }
             out << codes[i].to_str() << endl;
         }
         out.close();

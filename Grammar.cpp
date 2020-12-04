@@ -922,6 +922,9 @@ pair<DataType, string> Grammar::Factor() {
 }
 
 void Grammar::Stmt() {
+    int stmt_start_pos = pos - 1;
+    unsigned int comment_pos = PseudoCodeList::codes.size();
+    bool stmtlist = false;
     add_node("<语句>");
     if (sym == "WHILETK" || sym == "FORTK") {
         LoopStmt();
@@ -948,6 +951,7 @@ void Grammar::Stmt() {
             error("';'");
         }
     } else if (sym == "LBRACE") {
+        stmtlist = true;
         add_leaf();
         next_sym();
         StmtList();
@@ -985,6 +989,16 @@ void Grammar::Stmt() {
         }
     } else {
         error("statement");
+    }
+    if (!stmtlist) {
+        string comment;
+        for (int i = stmt_start_pos; i < pos; i++) {
+            Token cur = cur_lex_results[i];
+            comment += cur.type == "CHARCON" ? "'" + cur.str + "'" :
+                       cur.type == "STRCON" ? "\"" + cur.str + "\"" : cur.str;
+            //comment += " ";
+        }
+        PseudoCodeList::codes[comment_pos].comment = comment;
     }
 
     output("<语句>");

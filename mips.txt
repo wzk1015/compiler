@@ -5,32 +5,32 @@ arr__kernelid_: .space 160
 newline__: .asciiz "\n"
 .text
 
-# === =========FUNC int myscanf========= ===
+# === =============FUNC int myscanf============== ===
 addi $sp, $sp, -384
 j main
 myscanf:
 
-# === SCANF n ===
+# === SCANF   n ===
 li $v0, 5
 syscall
 move $s0, $v0
 
-# === RETURN n ===
+# === RETURN  n ===
 move $v0, $s0
 jr $ra
 
-# === =========END_FUNC int myscanf========= ===
+# === =============END_FUNC int myscanf============== ===
 
-# === =========FUNC void myprintf========= ===
+# === =============FUNC void myprintf============== ===
 myprintf:
 lw $s0, 100($sp)
 
-# === PRINT n int ===
+# === PRINT   n int ===
 move $a0, $s0
 li $v0, 1
 syscall
 
-# === PRINT #ENDL ===
+# === PRINT   #ENDL ===
 la $a0, newline__
 li $v0, 4
 syscall
@@ -41,9 +41,9 @@ jr $ra
 # === RETURN ===
 jr $ra
 
-# === =========END_FUNC void myprintf========= ===
+# === =============END_FUNC void myprintf============== ===
 
-# === =========FUNC int checkrange========= ===
+# === =============FUNC int checkrange============== ===
 checkrange:
 lw $s0, 100($sp)
 
@@ -51,11 +51,11 @@ lw $s0, 100($sp)
 lui $a3, 0xc000
 addu $t0, $s0, $a3
 
-# === JUMP_IF #T1<=0 label_1 ===
+# === JUMP_IF  #T1<=0  label_1 ===
 blez $t0, label_1
 # RELEASE $t0
 
-# === LABEL label_2 ===
+# === LABEL   label_2 ===
 label_2:
 
 # === num = num - 1073741824 ===
@@ -66,21 +66,21 @@ addu $s0, $s0, $a3
 lui $a3, 0xc000
 addu $t0, $s0, $a3
 
-# === JUMP_IF #T3>0 label_2 ===
+# === JUMP_IF  #T3>0  label_2 ===
 bgtz $t0, label_2
 # RELEASE $t0
 
-# === LABEL label_1 ===
+# === LABEL   label_1 ===
 label_1:
 
 # === #T4 = num ===
 move $t0, $s0
 
-# === JUMP_IF #T4>=0 label_3 ===
+# === JUMP_IF  #T4>=0  label_3 ===
 bgez $t0, label_3
 # RELEASE $t0
 
-# === LABEL label_4 ===
+# === LABEL   label_4 ===
 label_4:
 
 # === num = num + 1073741824 ===
@@ -90,20 +90,20 @@ addu $s0, $s0, $a3
 # === #T6 = num ===
 move $t0, $s0
 
-# === JUMP_IF #T6<0 label_4 ===
+# === JUMP_IF  #T6<0  label_4 ===
 bltz $t0, label_4
 # RELEASE $t0
 
-# === LABEL label_3 ===
+# === LABEL   label_3 ===
 label_3:
 
-# === RETURN num ===
+# === RETURN  num ===
 move $v0, $s0
 jr $ra
 
-# === =========END_FUNC int checkrange========= ===
+# === =============END_FUNC int checkrange============== ===
 
-# === =========FUNC int reduce========= ===
+# === =============FUNC int reduce============== ===
 reduce:
 lw $s0, 100($sp)
 lw $s1, 104($sp)
@@ -112,7 +112,7 @@ lw $s2, 108($sp)
 # === #T7 = kernelid ===
 move $t0, $s0
 
-# === JUMP_IF #T7!=0 label_5 ===
+# === JUMP_IF  #T7!=0  label_5 ===
 bne $t0, $zero, label_5
 # RELEASE $t0
 
@@ -127,11 +127,11 @@ move $s3, $t0
 lui $a3, 0xc000
 addu $t0, $s3, $a3
 
-# === JUMP_IF _1_#T1<=0 label_1_1_ ===
+# === JUMP_IF  _1_#T1<=0  label_1_1_ ===
 blez $t0, label_1_1_
 # RELEASE $t0
 
-# === LABEL label_2_1_ ===
+# === LABEL   label_2_1_ ===
 label_2_1_:
 
 # === @V134 = @V134 - 1073741824 ===
@@ -142,21 +142,21 @@ addu $s3, $s3, $a3
 lui $a3, 0xc000
 addu $t0, $s3, $a3
 
-# === JUMP_IF _1_#T3>0 label_2_1_ ===
+# === JUMP_IF  _1_#T3>0  label_2_1_ ===
 bgtz $t0, label_2_1_
 # RELEASE $t0
 
-# === LABEL label_1_1_ ===
+# === LABEL   label_1_1_ ===
 label_1_1_:
 
 # === _1_#T4 = @V134 ===
 move $t0, $s3
 
-# === JUMP_IF _1_#T4>=0 label_3_1_ ===
+# === JUMP_IF  _1_#T4>=0  label_3_1_ ===
 bgez $t0, label_3_1_
 # RELEASE $t0
 
-# === LABEL label_4_1_ ===
+# === LABEL   label_4_1_ ===
 label_4_1_:
 
 # === @V134 = @V134 + 1073741824 ===
@@ -166,34 +166,34 @@ addu $s3, $s3, $a3
 # === _1_#T6 = @V134 ===
 move $t0, $s3
 
-# === JUMP_IF _1_#T6<0 label_4_1_ ===
+# === JUMP_IF  _1_#T6<0  label_4_1_ ===
 bltz $t0, label_4_1_
 # RELEASE $t0
 
-# === LABEL label_3_1_ ===
+# === LABEL   label_3_1_ ===
 label_3_1_:
 
 # === %RET = @V134 ===
 move $v0, $s3
 
-# === LABEL label_53 ===
+# === LABEL   label_53 ===
 label_53:
 
 # === #T9 = %RET ===
 move $t0, $v0
 
-# === RETURN #T9 ===
+# === RETURN  #T9 ===
 move $v0, $t0
 # RELEASE $t0
 jr $ra
 
-# === LABEL label_5 ===
+# === LABEL   label_5 ===
 label_5:
 
 # === #T10 = kernelid - 1 ===
 addiu $t0, $s0, -1
 
-# === JUMP_IF #T10!=0 label_6 ===
+# === JUMP_IF  #T10!=0  label_6 ===
 bne $t0, $zero, label_6
 # RELEASE $t0
 
@@ -207,11 +207,11 @@ li $s5, 1
 lui $a3, 0xc000
 addu $t0, $s5, $a3
 
-# === JUMP_IF #T11>=0 label_7 ===
+# === JUMP_IF  #T11>=0  label_7 ===
 bgez $t0, label_7
 # RELEASE $t0
 
-# === LABEL label_8 ===
+# === LABEL   label_8 ===
 label_8:
 
 # === #T12 = x / i ===
@@ -279,17 +279,17 @@ subu $t0, $t2, $t3
 # RELEASE $t2
 # RELEASE $t3
 
-# === JUMP_IF #T22!=0 label_9 ===
+# === JUMP_IF  #T22!=0  label_9 ===
 bne $t0, $zero, label_9
 # RELEASE $t0
 
 # === ret = ret * 2 ===
 sll $s4, $s4, 1
 
-# === JUMP label_10 ===
+# === JUMP    label_10 ===
 j label_10
 
-# === LABEL label_9 ===
+# === LABEL   label_9 ===
 label_9:
 
 # === #T24 = ret * 2 ===
@@ -299,7 +299,7 @@ sll $t0, $s4, 1
 addiu $s4, $t0, 1
 # RELEASE $t0
 
-# === LABEL label_10 ===
+# === LABEL   label_10 ===
 label_10:
 
 # === i = i * 2 ===
@@ -309,58 +309,58 @@ sll $s5, $s5, 1
 lui $a3, 0xc000
 addu $t0, $s5, $a3
 
-# === JUMP_IF #T27<0 label_8 ===
+# === JUMP_IF  #T27<0  label_8 ===
 bltz $t0, label_8
 # RELEASE $t0
 
-# === LABEL label_7 ===
+# === LABEL   label_7 ===
 label_7:
 
-# === RETURN ret ===
+# === RETURN  ret ===
 move $v0, $s4
 jr $ra
 
-# === LABEL label_6 ===
+# === LABEL   label_6 ===
 label_6:
 
 # === #T28 = kernelid - 2 ===
 addiu $t0, $s0, -2
 
-# === JUMP_IF #T28!=0 label_11 ===
+# === JUMP_IF  #T28!=0  label_11 ===
 bne $t0, $zero, label_11
 # RELEASE $t0
 
 # === #T29 = x - y ===
 subu $t0, $s1, $s2
 
-# === JUMP_IF #T29<=0 label_12 ===
+# === JUMP_IF  #T29<=0  label_12 ===
 blez $t0, label_12
 # RELEASE $t0
 
-# === RETURN x ===
+# === RETURN  x ===
 move $v0, $s1
 jr $ra
 
-# === JUMP label_13 ===
+# === JUMP    label_13 ===
 j label_13
 
-# === LABEL label_12 ===
+# === LABEL   label_12 ===
 label_12:
 
-# === RETURN y ===
+# === RETURN  y ===
 move $v0, $s2
 jr $ra
 
-# === LABEL label_13 ===
+# === LABEL   label_13 ===
 label_13:
 
-# === LABEL label_11 ===
+# === LABEL   label_11 ===
 label_11:
 
 # === #T30 = kernelid - 3 ===
 addiu $t0, $s0, -3
 
-# === JUMP_IF #T30!=0 label_14 ===
+# === JUMP_IF  #T30!=0  label_14 ===
 bne $t0, $zero, label_14
 # RELEASE $t0
 
@@ -374,11 +374,11 @@ li $s5, 1
 lui $a3, 0xc000
 addu $t0, $s5, $a3
 
-# === JUMP_IF #T31>=0 label_15 ===
+# === JUMP_IF  #T31>=0  label_15 ===
 bgez $t0, label_15
 # RELEASE $t0
 
-# === LABEL label_16 ===
+# === LABEL   label_16 ===
 label_16:
 
 # === #T32 = x / i ===
@@ -415,7 +415,7 @@ subu $t2, $t0, $t1
 addiu $t0, $t2, -1
 # RELEASE $t2
 
-# === JUMP_IF #T37!=0 label_17 ===
+# === JUMP_IF  #T37!=0  label_17 ===
 bne $t0, $zero, label_17
 # RELEASE $t0
 
@@ -426,10 +426,10 @@ sll $t0, $s4, 1
 addiu $s4, $t0, 1
 # RELEASE $t0
 
-# === JUMP label_18 ===
+# === JUMP    label_18 ===
 j label_18
 
-# === LABEL label_17 ===
+# === LABEL   label_17 ===
 label_17:
 
 # === #T40 = y / i ===
@@ -466,7 +466,7 @@ subu $t2, $t0, $t1
 addiu $t0, $t2, -1
 # RELEASE $t2
 
-# === JUMP_IF #T45!=0 label_19 ===
+# === JUMP_IF  #T45!=0  label_19 ===
 bne $t0, $zero, label_19
 # RELEASE $t0
 
@@ -477,13 +477,13 @@ sll $t0, $s4, 1
 addiu $s4, $t0, 1
 # RELEASE $t0
 
-# === LABEL label_19 ===
+# === LABEL   label_19 ===
 label_19:
 
 # === ret = ret * 2 ===
 sll $s4, $s4, 1
 
-# === LABEL label_18 ===
+# === LABEL   label_18 ===
 label_18:
 
 # === i = i * 2 ===
@@ -493,24 +493,24 @@ sll $s5, $s5, 1
 lui $a3, 0xc000
 addu $t0, $s5, $a3
 
-# === JUMP_IF #T50<0 label_16 ===
+# === JUMP_IF  #T50<0  label_16 ===
 bltz $t0, label_16
 # RELEASE $t0
 
-# === LABEL label_15 ===
+# === LABEL   label_15 ===
 label_15:
 
-# === RETURN ret ===
+# === RETURN  ret ===
 move $v0, $s4
 jr $ra
 
-# === LABEL label_14 ===
+# === LABEL   label_14 ===
 label_14:
 
 # === #T51 = kernelid - 4 ===
 addiu $t0, $s0, -4
 
-# === JUMP_IF #T51!=0 label_20 ===
+# === JUMP_IF  #T51!=0  label_20 ===
 bne $t0, $zero, label_20
 # RELEASE $t0
 
@@ -524,11 +524,11 @@ li $s5, 1
 lui $a3, 0xc000
 addu $t0, $s5, $a3
 
-# === JUMP_IF #T52>=0 label_21 ===
+# === JUMP_IF  #T52>=0  label_21 ===
 bgez $t0, label_21
 # RELEASE $t0
 
-# === LABEL label_22 ===
+# === LABEL   label_22 ===
 label_22:
 
 # === #T53 = x / i ===
@@ -565,7 +565,7 @@ subu $t2, $t0, $t1
 addiu $t0, $t2, -1
 # RELEASE $t2
 
-# === JUMP_IF #T58!=0 label_23 ===
+# === JUMP_IF  #T58!=0  label_23 ===
 bne $t0, $zero, label_23
 # RELEASE $t0
 
@@ -603,7 +603,7 @@ subu $t2, $t0, $t1
 addiu $t0, $t2, -1
 # RELEASE $t2
 
-# === JUMP_IF #T64!=0 label_24 ===
+# === JUMP_IF  #T64!=0  label_24 ===
 bne $t0, $zero, label_24
 # RELEASE $t0
 
@@ -614,28 +614,28 @@ sll $t0, $s4, 1
 addiu $s4, $t0, 1
 # RELEASE $t0
 
-# === JUMP label_25 ===
+# === JUMP    label_25 ===
 j label_25
 
-# === LABEL label_24 ===
+# === LABEL   label_24 ===
 label_24:
 
 # === ret = ret * 2 ===
 sll $s4, $s4, 1
 
-# === LABEL label_25 ===
+# === LABEL   label_25 ===
 label_25:
 
-# === JUMP label_26 ===
+# === JUMP    label_26 ===
 j label_26
 
-# === LABEL label_23 ===
+# === LABEL   label_23 ===
 label_23:
 
 # === ret = ret * 2 ===
 sll $s4, $s4, 1
 
-# === LABEL label_26 ===
+# === LABEL   label_26 ===
 label_26:
 
 # === i = i * 2 ===
@@ -645,27 +645,27 @@ sll $s5, $s5, 1
 lui $a3, 0xc000
 addu $t0, $s5, $a3
 
-# === JUMP_IF #T70<0 label_22 ===
+# === JUMP_IF  #T70<0  label_22 ===
 bltz $t0, label_22
 # RELEASE $t0
 
-# === LABEL label_21 ===
+# === LABEL   label_21 ===
 label_21:
 
-# === RETURN ret ===
+# === RETURN  ret ===
 move $v0, $s4
 jr $ra
 
-# === LABEL label_20 ===
+# === LABEL   label_20 ===
 label_20:
 
-# === RETURN 0 ===
+# === RETURN  0 ===
 move $v0, $zero
 jr $ra
 
-# === =========END_FUNC int reduce========= ===
+# === =============END_FUNC int reduce============== ===
 
-# === =========FUNC int getvalue========= ===
+# === =============FUNC int getvalue============== ===
 getvalue:
 lw $s0, 100($sp)
 lw $s1, 104($sp)
@@ -675,57 +675,57 @@ lw $s3, 112($sp)
 # === #T71 = x ===
 move $t0, $s2
 
-# === JUMP_IF #T71>=0 label_27 ===
+# === JUMP_IF  #T71>=0  label_27 ===
 bgez $t0, label_27
 # RELEASE $t0
 
-# === RETURN 0 ===
+# === RETURN  0 ===
 move $v0, $zero
 jr $ra
 
-# === LABEL label_27 ===
+# === LABEL   label_27 ===
 label_27:
 
 # === #T72 = y ===
 move $t0, $s3
 
-# === JUMP_IF #T72>=0 label_28 ===
+# === JUMP_IF  #T72>=0  label_28 ===
 bgez $t0, label_28
 # RELEASE $t0
 
-# === RETURN 0 ===
+# === RETURN  0 ===
 move $v0, $zero
 jr $ra
 
-# === LABEL label_28 ===
+# === LABEL   label_28 ===
 label_28:
 
 # === #T73 = x - n ===
 subu $t0, $s2, $s0
 
-# === JUMP_IF #T73<0 label_29 ===
+# === JUMP_IF  #T73<0  label_29 ===
 bltz $t0, label_29
 # RELEASE $t0
 
-# === RETURN 0 ===
+# === RETURN  0 ===
 move $v0, $zero
 jr $ra
 
-# === LABEL label_29 ===
+# === LABEL   label_29 ===
 label_29:
 
 # === #T74 = y - m ===
 subu $t0, $s3, $s1
 
-# === JUMP_IF #T74<0 label_30 ===
+# === JUMP_IF  #T74<0  label_30 ===
 bltz $t0, label_30
 # RELEASE $t0
 
-# === RETURN 0 ===
+# === RETURN  0 ===
 move $v0, $zero
 jr $ra
 
-# === LABEL label_30 ===
+# === LABEL   label_30 ===
 label_30:
 
 # === #T75 = x * m ===
@@ -740,14 +740,14 @@ sll $a1, $t1, 2
 # RELEASE $t1
 lw $t0, arr__a_($a1)
 
-# === RETURN #T77 ===
+# === RETURN  #T77 ===
 move $v0, $t0
 # RELEASE $t0
 jr $ra
 
-# === =========END_FUNC int getvalue========= ===
+# === =============END_FUNC int getvalue============== ===
 
-# === =========FUNC int convn========= ===
+# === =============FUNC int convn============== ===
 convn:
 lw $s0, 100($sp)
 lw $s1, 104($sp)
@@ -775,11 +775,11 @@ li $t5, 1
 # === #T78 = flag1 - 1 ===
 addiu $t0, $s6, -1
 
-# === JUMP_IF #T78!=0 label_31 ===
+# === JUMP_IF  #T78!=0  label_31 ===
 bne $t0, $zero, label_31
 # RELEASE $t0
 
-# === LABEL label_32 ===
+# === LABEL   label_32 ===
 label_32:
 
 # === j = 0 ===
@@ -788,11 +788,11 @@ move $s5, $zero
 # === #T79 = flag2 - 1 ===
 addiu $t0, $s7, -1
 
-# === JUMP_IF #T79!=0 label_33 ===
+# === JUMP_IF  #T79!=0  label_33 ===
 bne $t0, $zero, label_33
 # RELEASE $t0
 
-# === LABEL label_34 ===
+# === LABEL   label_34 ===
 label_34:
 
 # === curr = 0 ===
@@ -815,11 +815,11 @@ subu $t7, $s4, $t0
 # === #T82 = flag3 - 1 ===
 addiu $t0, $t4, -1
 
-# === JUMP_IF #T82!=0 label_35 ===
+# === JUMP_IF  #T82!=0  label_35 ===
 bne $t0, $zero, label_35
 # RELEASE $t0
 
-# === LABEL label_36 ===
+# === LABEL   label_36 ===
 label_36:
 
 # === #T83 = c / 2 ===
@@ -839,11 +839,11 @@ subu $t8, $s5, $t0
 # === #T85 = flag4 - 1 ===
 addiu $t0, $t5, -1
 
-# === JUMP_IF #T85!=0 label_37 ===
+# === JUMP_IF  #T85!=0  label_37 ===
 bne $t0, $zero, label_37
 # RELEASE $t0
 
-# === LABEL label_38 ===
+# === LABEL   label_38 ===
 label_38:
 
 # === PREPARE_CALL reduce ===
@@ -858,65 +858,65 @@ sw $t6, 104($sp)
 # === _2_#T71 = x ===
 move $t0, $t7
 
-# === JUMP_IF _2_#T71>=0 label_27_2_ ===
+# === JUMP_IF  _2_#T71>=0  label_27_2_ ===
 bgez $t0, label_27_2_
 # RELEASE $t0
 
 # === %RET = 0 ===
 move $v0, $zero
 
-# === JUMP label_54 ===
+# === JUMP    label_54 ===
 j label_54
 
-# === LABEL label_27_2_ ===
+# === LABEL   label_27_2_ ===
 label_27_2_:
 
 # === _2_#T72 = y ===
 move $t0, $t8
 
-# === JUMP_IF _2_#T72>=0 label_28_2_ ===
+# === JUMP_IF  _2_#T72>=0  label_28_2_ ===
 bgez $t0, label_28_2_
 # RELEASE $t0
 
 # === %RET = 0 ===
 move $v0, $zero
 
-# === JUMP label_54 ===
+# === JUMP    label_54 ===
 j label_54
 
-# === LABEL label_28_2_ ===
+# === LABEL   label_28_2_ ===
 label_28_2_:
 
 # === _2_#T73 = x - n ===
 subu $t0, $t7, $s1
 
-# === JUMP_IF _2_#T73<0 label_29_2_ ===
+# === JUMP_IF  _2_#T73<0  label_29_2_ ===
 bltz $t0, label_29_2_
 # RELEASE $t0
 
 # === %RET = 0 ===
 move $v0, $zero
 
-# === JUMP label_54 ===
+# === JUMP    label_54 ===
 j label_54
 
-# === LABEL label_29_2_ ===
+# === LABEL   label_29_2_ ===
 label_29_2_:
 
 # === _2_#T74 = y - m ===
 subu $t0, $t8, $s2
 
-# === JUMP_IF _2_#T74<0 label_30_2_ ===
+# === JUMP_IF  _2_#T74<0  label_30_2_ ===
 bltz $t0, label_30_2_
 # RELEASE $t0
 
 # === %RET = 0 ===
 move $v0, $zero
 
-# === JUMP label_54 ===
+# === JUMP    label_54 ===
 j label_54
 
-# === LABEL label_30_2_ ===
+# === LABEL   label_30_2_ ===
 label_30_2_:
 
 # === _2_#T75 = x * m ===
@@ -935,7 +935,7 @@ lw $t0, arr__a_($a1)
 move $v0, $t0
 # RELEASE $t0
 
-# === LABEL label_54 ===
+# === LABEL   label_54 ===
 label_54:
 
 # === #T86 = %RET ===
@@ -945,7 +945,7 @@ move $t0, $v0
 sw $t0, 108($sp)
 # RELEASE $t0
 
-# === CALL reduce ===
+# === CALL    reduce ===
 sw $s0, 24($sp)
 sw $s1, 28($sp)
 sw $s2, 32($sp)
@@ -1001,24 +1001,24 @@ addu $t1, $s5, $t0
 subu $t0, $t8, $t1
 # RELEASE $t1
 
-# === JUMP_IF #T91<0 label_39 ===
+# === JUMP_IF  #T91<0  label_39 ===
 bltz $t0, label_39
 # RELEASE $t0
 
 # === flag4 = 0 ===
 move $t5, $zero
 
-# === LABEL label_39 ===
+# === LABEL   label_39 ===
 label_39:
 
 # === #T92 = flag4 - 1 ===
 addiu $t0, $t5, -1
 
-# === JUMP_IF #T92==0 label_38 ===
+# === JUMP_IF  #T92==0  label_38 ===
 beq $t0, $zero, label_38
 # RELEASE $t0
 
-# === LABEL label_37 ===
+# === LABEL   label_37 ===
 label_37:
 
 # === flag4 = 1 ===
@@ -1045,24 +1045,24 @@ addu $t1, $s4, $t0
 subu $t0, $t7, $t1
 # RELEASE $t1
 
-# === JUMP_IF #T96<0 label_40 ===
+# === JUMP_IF  #T96<0  label_40 ===
 bltz $t0, label_40
 # RELEASE $t0
 
 # === flag3 = 0 ===
 move $t4, $zero
 
-# === LABEL label_40 ===
+# === LABEL   label_40 ===
 label_40:
 
 # === #T97 = flag3 - 1 ===
 addiu $t0, $t4, -1
 
-# === JUMP_IF #T97==0 label_36 ===
+# === JUMP_IF  #T97==0  label_36 ===
 beq $t0, $zero, label_36
 # RELEASE $t0
 
-# === LABEL label_35 ===
+# === LABEL   label_35 ===
 label_35:
 
 # === flag3 = 1 ===
@@ -1086,24 +1086,24 @@ addiu $s5, $s5, 1
 # === #T101 = j - m ===
 subu $t0, $s5, $s2
 
-# === JUMP_IF #T101<0 label_41 ===
+# === JUMP_IF  #T101<0  label_41 ===
 bltz $t0, label_41
 # RELEASE $t0
 
 # === flag2 = 0 ===
 move $s7, $zero
 
-# === LABEL label_41 ===
+# === LABEL   label_41 ===
 label_41:
 
 # === #T102 = flag2 - 1 ===
 addiu $t0, $s7, -1
 
-# === JUMP_IF #T102==0 label_34 ===
+# === JUMP_IF  #T102==0  label_34 ===
 beq $t0, $zero, label_34
 # RELEASE $t0
 
-# === LABEL label_33 ===
+# === LABEL   label_33 ===
 label_33:
 
 # === flag2 = 1 ===
@@ -1115,33 +1115,33 @@ addiu $s4, $s4, 1
 # === #T104 = i - n ===
 subu $t0, $s4, $s1
 
-# === JUMP_IF #T104<0 label_42 ===
+# === JUMP_IF  #T104<0  label_42 ===
 bltz $t0, label_42
 # RELEASE $t0
 
 # === flag1 = 0 ===
 move $s6, $zero
 
-# === LABEL label_42 ===
+# === LABEL   label_42 ===
 label_42:
 
 # === #T105 = flag1 - 1 ===
 addiu $t0, $s6, -1
 
-# === JUMP_IF #T105==0 label_32 ===
+# === JUMP_IF  #T105==0  label_32 ===
 beq $t0, $zero, label_32
 # RELEASE $t0
 
-# === LABEL label_31 ===
+# === LABEL   label_31 ===
 label_31:
 
-# === RETURN 0 ===
+# === RETURN  0 ===
 move $v0, $zero
 jr $ra
 
-# === =========END_FUNC int convn========= ===
+# === =============END_FUNC int convn============== ===
 
-# === =========FUNC void mymemmove========= ===
+# === =============FUNC void mymemmove============== ===
 mymemmove:
 lw $s0, 100($sp)
 
@@ -1151,11 +1151,11 @@ move $s1, $zero
 # === #T106 = i - n ===
 subu $t0, $s1, $s0
 
-# === JUMP_IF #T106>=0 label_43 ===
+# === JUMP_IF  #T106>=0  label_43 ===
 bgez $t0, label_43
 # RELEASE $t0
 
-# === LABEL label_44 ===
+# === LABEL   label_44 ===
 label_44:
 
 # === #T107 = b[i] ===
@@ -1173,25 +1173,25 @@ addiu $s1, $s1, 1
 # === #T109 = i - n ===
 subu $t0, $s1, $s0
 
-# === JUMP_IF #T109<0 label_44 ===
+# === JUMP_IF  #T109<0  label_44 ===
 bltz $t0, label_44
 # RELEASE $t0
 
-# === LABEL label_43 ===
+# === LABEL   label_43 ===
 label_43:
 
 # === RETURN ===
 jr $ra
 
-# === =========END_FUNC void mymemmove========= ===
+# === =============END_FUNC void mymemmove============== ===
 
-# === =========FUNC void main========= ===
+# === =============FUNC void main============== ===
 main:
 
 # === i = 0 ===
 move $s0, $zero
 
-# === SCANF _3_n ===
+# === SCANF   _3_n ===
 li $v0, 5
 syscall
 move $s1, $v0
@@ -1199,13 +1199,13 @@ move $s1, $v0
 # === %RET = _3_n ===
 move $v0, $s1
 
-# === LABEL label_55 ===
+# === LABEL   label_55 ===
 label_55:
 
 # === c = %RET ===
 move $s2, $v0
 
-# === SCANF _4_n ===
+# === SCANF   _4_n ===
 li $v0, 5
 syscall
 move $s3, $v0
@@ -1213,13 +1213,13 @@ move $s3, $v0
 # === %RET = _4_n ===
 move $v0, $s3
 
-# === LABEL label_56 ===
+# === LABEL   label_56 ===
 label_56:
 
 # === n = %RET ===
 move $s4, $v0
 
-# === SCANF _5_n ===
+# === SCANF   _5_n ===
 li $v0, 5
 syscall
 move $s5, $v0
@@ -1227,13 +1227,13 @@ move $s5, $v0
 # === %RET = _5_n ===
 move $v0, $s5
 
-# === LABEL label_57 ===
+# === LABEL   label_57 ===
 label_57:
 
 # === m = %RET ===
 move $s6, $v0
 
-# === SCANF _6_n ===
+# === SCANF   _6_n ===
 li $v0, 5
 syscall
 move $s7, $v0
@@ -1241,7 +1241,7 @@ move $s7, $v0
 # === %RET = _6_n ===
 move $v0, $s7
 
-# === LABEL label_58 ===
+# === LABEL   label_58 ===
 label_58:
 
 # === arrlen = %RET ===
@@ -1250,14 +1250,14 @@ move $t4, $v0
 # === #T114 = i - arrlen ===
 subu $t0, $s0, $t4
 
-# === JUMP_IF #T114>=0 label_45 ===
+# === JUMP_IF  #T114>=0  label_45 ===
 bgez $t0, label_45
 # RELEASE $t0
 
-# === LABEL label_46 ===
+# === LABEL   label_46 ===
 label_46:
 
-# === SCANF _7_n ===
+# === SCANF   _7_n ===
 li $v0, 5
 syscall
 move $t5, $v0
@@ -1265,7 +1265,7 @@ move $t5, $v0
 # === %RET = _7_n ===
 move $v0, $t5
 
-# === LABEL label_59 ===
+# === LABEL   label_59 ===
 label_59:
 
 # === #T115 = %RET ===
@@ -1282,14 +1282,14 @@ addiu $s0, $s0, 1
 # === #T117 = i - arrlen ===
 subu $t0, $s0, $t4
 
-# === JUMP_IF #T117<0 label_46 ===
+# === JUMP_IF  #T117<0  label_46 ===
 bltz $t0, label_46
 # RELEASE $t0
 
-# === LABEL label_45 ===
+# === LABEL   label_45 ===
 label_45:
 
-# === SCANF _8_n ===
+# === SCANF   _8_n ===
 li $v0, 5
 syscall
 move $t6, $v0
@@ -1297,7 +1297,7 @@ move $t6, $v0
 # === %RET = _8_n ===
 move $v0, $t6
 
-# === LABEL label_60 ===
+# === LABEL   label_60 ===
 label_60:
 
 # === task = %RET ===
@@ -1309,14 +1309,14 @@ move $s0, $zero
 # === #T119 = i - task ===
 subu $t0, $s0, $t7
 
-# === JUMP_IF #T119>=0 label_47 ===
+# === JUMP_IF  #T119>=0  label_47 ===
 bgez $t0, label_47
 # RELEASE $t0
 
-# === LABEL label_48 ===
+# === LABEL   label_48 ===
 label_48:
 
-# === SCANF _9_n ===
+# === SCANF   _9_n ===
 li $v0, 5
 syscall
 move $t8, $v0
@@ -1324,7 +1324,7 @@ move $t8, $v0
 # === %RET = _9_n ===
 move $v0, $t8
 
-# === LABEL label_61 ===
+# === LABEL   label_61 ===
 label_61:
 
 # === #T120 = %RET ===
@@ -1341,11 +1341,11 @@ addiu $s0, $s0, 1
 # === #T122 = i - task ===
 subu $t0, $s0, $t7
 
-# === JUMP_IF #T122<0 label_48 ===
+# === JUMP_IF  #T122<0  label_48 ===
 bltz $t0, label_48
 # RELEASE $t0
 
-# === LABEL label_47 ===
+# === LABEL   label_47 ===
 label_47:
 
 # === i = 0 ===
@@ -1354,11 +1354,11 @@ move $s0, $zero
 # === #T123 = i - task ===
 subu $t0, $s0, $t7
 
-# === JUMP_IF #T123>=0 label_49 ===
+# === JUMP_IF  #T123>=0  label_49 ===
 bgez $t0, label_49
 # RELEASE $t0
 
-# === LABEL label_50 ===
+# === LABEL   label_50 ===
 label_50:
 
 # === PREPARE_CALL convn ===
@@ -1381,7 +1381,7 @@ sw $s6, 108($sp)
 # === PUSH_PARA c ===
 sw $s2, 112($sp)
 
-# === CALL convn ===
+# === CALL    convn ===
 sw $s0, 24($sp)
 sw $s1, 28($sp)
 sw $s2, 32($sp)
@@ -1425,11 +1425,11 @@ sw $zero, 264($sp)
 lw $a1, 264($sp)
 subu $t0, $a1, $t9
 
-# === JUMP_IF _10_#T106>=0 label_43_10_ ===
+# === JUMP_IF  _10_#T106>=0  label_43_10_ ===
 bgez $t0, label_43_10_
 # RELEASE $t0
 
-# === LABEL label_44_10_ ===
+# === LABEL   label_44_10_ ===
 label_44_10_:
 
 # === _10_#T107 = b[_10_i] ===
@@ -1452,14 +1452,14 @@ sw $a1, 264($sp)
 lw $a1, 264($sp)
 subu $t0, $a1, $t9
 
-# === JUMP_IF _10_#T109<0 label_44_10_ ===
+# === JUMP_IF  _10_#T109<0  label_44_10_ ===
 bltz $t0, label_44_10_
 # RELEASE $t0
 
-# === LABEL label_43_10_ ===
+# === LABEL   label_43_10_ ===
 label_43_10_:
 
-# === LABEL label_62 ===
+# === LABEL   label_62 ===
 label_62:
 
 # === i = i + 1 ===
@@ -1468,11 +1468,11 @@ addiu $s0, $s0, 1
 # === #T127 = i - task ===
 subu $t0, $s0, $t7
 
-# === JUMP_IF #T127<0 label_50 ===
+# === JUMP_IF  #T127<0  label_50 ===
 bltz $t0, label_50
 # RELEASE $t0
 
-# === LABEL label_49 ===
+# === LABEL   label_49 ===
 label_49:
 
 # === i = 0 ===
@@ -1485,11 +1485,11 @@ mul $t0, $s4, $s6
 subu $t1, $s0, $t0
 # RELEASE $t0
 
-# === JUMP_IF #T129>=0 label_51 ===
+# === JUMP_IF  #T129>=0  label_51 ===
 bgez $t1, label_51
 # RELEASE $t1
 
-# === LABEL label_52 ===
+# === LABEL   label_52 ===
 label_52:
 
 # === #T130 = a[i] ===
@@ -1500,17 +1500,17 @@ lw $t0, arr__a_($a1)
 sw $t0, 280($sp)
 # RELEASE $t0
 
-# === PRINT @V136 int ===
+# === PRINT   @V136 int ===
 lw $a0, 280($sp)
 li $v0, 1
 syscall
 
-# === PRINT #ENDL ===
+# === PRINT   #ENDL ===
 la $a0, newline__
 li $v0, 4
 syscall
 
-# === LABEL label_63 ===
+# === LABEL   label_63 ===
 label_63:
 
 # === i = i + 1 ===
@@ -1523,11 +1523,11 @@ mul $t0, $s4, $s6
 subu $t1, $s0, $t0
 # RELEASE $t0
 
-# === JUMP_IF #T133<0 label_52 ===
+# === JUMP_IF  #T133<0  label_52 ===
 bltz $t1, label_52
 # RELEASE $t1
 
-# === LABEL label_51 ===
+# === LABEL   label_51 ===
 label_51:
 
 # === RETURN ===
@@ -1538,4 +1538,4 @@ syscall
 li $v0, 10
 syscall
 
-# === =========END_FUNC void main========= ===
+# === =============END_FUNC void main============== ===

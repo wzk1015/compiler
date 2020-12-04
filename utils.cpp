@@ -78,3 +78,25 @@ void mips_debug() {
     out.close();
     exit(0);
 }
+
+string ljust(const string& str, int pos, char pad) {
+    if (pos <= str.size()) {
+        return str;
+    }
+    string ret = str;
+    for (int i = 0; i < pos - str.size(); i++) {
+        ret += pad;
+    }
+    return ret;
+}
+
+string rjust(const string& str, int pos, char pad) {
+    if (pos <= str.size()) {
+        return str;
+    }
+    string ret;
+    for (int i = 0; i < pos - str.size(); i++) {
+        ret += pad;
+    }
+    return ret + str;
+}

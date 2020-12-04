@@ -33,16 +33,14 @@ int main() {
     PseudoCodeList::const_broadcast();
     PseudoCodeList::remove_redundant_tmp();
 
-    PseudoCodeList::divide_basic_blocks();
+
     //PseudoCodeList::DAG_optimize();
-
-    //PseudoCodeList::const_broadcast();
-
-
 
 
     PseudoCodeList::inline_function();
     PseudoCodeList::const_broadcast();
+
+    PseudoCodeList::divide_basic_blocks();
 
     //PseudoCodeList::save_to_file("docs/codes/testfile" + fileid + "_18231047_王肇凯_优化后中间代码.txt");
     PseudoCodeList::save_to_file("pseudo_code.txt");
