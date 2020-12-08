@@ -1165,6 +1165,7 @@ void Grammar::LoopStmt() {
         int pos2 = pos;
         vector<Token> vec_cond(cur_lex_results.begin() + pos1, cur_lex_results.begin() + pos2);
         string label_end = add_midcode(OP_JUMP_IF, cond.first, cond.second, AUTO_LABEL);
+        add_midcode(OP_EMPTY, LOOP_BEGIN, VACANT, VACANT);
         string label_begin = PseudoCodeList::assign_label();
         add_midcode(OP_LABEL, label_begin, VACANT, VACANT);
         next_sym();
@@ -1174,6 +1175,8 @@ void Grammar::LoopStmt() {
         add_leaf();
         next_sym();
         Stmt();
+        add_midcode(OP_EMPTY, LOOP_END, VACANT, VACANT);
+        cout << "loop end " << PseudoCodeList::codes.back().to_str() << endl;
         cur_lex_results.insert(cur_lex_results.begin() + pos,vec_cond.begin(), vec_cond.end());
         string op = cond.second == "==0" ? "!=0" :
                        cond.second == "!=0" ? "==0" :
@@ -1216,6 +1219,7 @@ void Grammar::LoopStmt() {
         int pos2 = pos;
         vector<Token> vec_cond(cur_lex_results.begin() + pos1, cur_lex_results.begin() + pos2);
         string label_end = add_midcode(OP_JUMP_IF, cond.first, cond.second, AUTO_LABEL);
+        PseudoCodeList::codes.back().info = LOOP_BEGIN;
         next_sym();
         if (sym != "SEMICN") {
             error("';'");
@@ -1255,6 +1259,7 @@ void Grammar::LoopStmt() {
         add_midcode(OP_LABEL, label_begin, VACANT, VACANT);
         next_sym();
         Stmt();
+        PseudoCodeList::codes.back().info = LOOP_END;
         add_midcode(op, id2, pace_length, id);
 
         cur_lex_results.insert(cur_lex_results.begin() + pos,vec_cond.begin(), vec_cond.end());

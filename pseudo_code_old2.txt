@@ -18,6 +18,7 @@ RETURN
 RETURN
 =============END_FUNC void myprintf==============
 =============FUNC int set==============
+@V135 = pos / 30
 i = 10
 v = 0
 x[0] = 1
@@ -53,33 +54,26 @@ x[9] = #T18
 x[10] = #T20
 #T21 = i - 30
 JUMP_IF  #T21>=0  label_1
------LOOP BEGIN-----
 LABEL   label_2
 i = i + 1
 #T23 = i - 1
 #T24 = x[#T23]
 #T25 = #T24 * 2
 x[i] = #T25
------LOOP END-----
 #T26 = i - 30
 JUMP_IF  #T26<0  label_2
 LABEL   label_1
-#T27 = pos / 30
-#T28 = #T27 - 1000
+#T28 = @V135 - 1000
 JUMP_IF  #T28<0  label_3
 RETURN  0
 LABEL   label_3
-#T29 = pos / 30
-#T30 = a[#T29]
-#T31 = pos / 30
-#T32 = #T31 * 30
+#T30 = a[@V135]
+#T32 = @V135 * 30
 #T33 = pos - #T32
 #T34 = x[#T33]
 #T35 = #T30 / #T34
-#T36 = pos / 30
-#T37 = a[#T36]
-#T38 = pos / 30
-#T39 = #T38 * 30
+#T37 = a[@V135]
+#T39 = @V135 * 30
 #T40 = pos - #T39
 #T41 = x[#T40]
 #T42 = #T37 / #T41
@@ -88,17 +82,13 @@ LABEL   label_3
 #T45 = #T35 - #T44
 #T46 = #T45 - d
 JUMP_IF  #T46==0  label_4
-#T47 = pos / 30
-#T48 = a[#T47]
-#T49 = pos / 30
-#T50 = #T49 * 30
+#T48 = a[@V135]
+#T50 = @V135 * 30
 #T51 = pos - #T50
 #T52 = x[#T51]
 #T53 = #T48 / #T52
-#T54 = pos / 30
-#T55 = a[#T54]
-#T56 = pos / 30
-#T57 = #T56 * 30
+#T55 = a[@V135]
+#T57 = @V135 * 30
 #T58 = pos - #T57
 #T59 = x[#T58]
 #T60 = #T55 / #T59
@@ -109,23 +99,18 @@ JUMP_IF  #T46==0  label_4
 JUMP_IF  #T64!=0  label_5
 #T65 = d - 1
 JUMP_IF  #T65!=0  label_6
-#T66 = pos / 30
-#T67 = #T66 * 30
+#T67 = @V135 * 30
 #T68 = pos - #T67
 v = x[#T68]
 LABEL   label_6
 LABEL   label_5
-#T70 = pos / 30
-#T71 = a[#T70]
-#T72 = pos / 30
-#T73 = #T72 * 30
+#T71 = a[@V135]
+#T73 = @V135 * 30
 #T74 = pos - #T73
 #T75 = x[#T74]
 #T76 = #T71 / #T75
-#T77 = pos / 30
-#T78 = a[#T77]
-#T79 = pos / 30
-#T80 = #T79 * 30
+#T78 = a[@V135]
+#T80 = @V135 * 30
 #T81 = pos - #T80
 #T82 = x[#T81]
 #T83 = #T78 / #T82
@@ -136,17 +121,15 @@ LABEL   label_5
 JUMP_IF  #T87!=0  label_7
 #T88 = d
 JUMP_IF  #T88!=0  label_8
-#T89 = pos / 30
-#T90 = #T89 * 30
+#T90 = @V135 * 30
 #T91 = pos - #T90
 #T92 = x[#T91]
 v = v - #T92
 LABEL   label_8
 LABEL   label_7
 LABEL   label_4
-#T94 = pos / 30
-#T95 = pos / 30
-#T96 = a[#T95]
+#T94 = @V135
+#T96 = a[@V135]
 #T97 = #T96 + v
 a[#T94] = #T97
 RETURN  0
@@ -182,7 +165,6 @@ LABEL   label_15
 staticvalue = %RET
 #T112 = n
 JUMP_IF  #T112<=0  label_10
------LOOP BEGIN-----
 LABEL   label_11
 n = n - 1
 _3_#T98 = seed[0]
@@ -230,13 +212,11 @@ PREPARE_CALL set
 PUSH_PARA x
 PUSH_PARA y
 CALL    set
------LOOP END-----
 #T122 = n
 JUMP_IF  #T122>0  label_11
 LABEL   label_10
 #T123 = i - 1000
 JUMP_IF  #T123>=0  label_12
------LOOP BEGIN-----
 LABEL   label_13
 ----------tmp=tmp+(a[i]-a[i]/100000*100000);----------
 #T124 = a[i]
@@ -249,7 +229,6 @@ tmp = tmp + #T128
 #T131 = #T130 * 100000
 tmp = tmp - #T131
 i = i + 1
------LOOP END-----
 #T134 = i - 1000
 JUMP_IF  #T134<0  label_13
 LABEL   label_12

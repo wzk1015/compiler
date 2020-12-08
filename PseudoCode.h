@@ -11,6 +11,7 @@
 #include <set>
 #include <fstream>
 #include <map>
+#include <cmath>
 
 #include "utils.h"
 #include "SymTable.h"
@@ -20,6 +21,8 @@
 #define AUTO_VAR "#AUTO_VAR"
 #define ENDL "#ENDL"
 #define AUTO_LABEL "#AUTO_LABEL"
+#define LOOP_BEGIN "LOOP BEGIN"
+#define LOOP_END "LOOP END"
 
 #define OP_PRINT "PRINT"
 #define OP_SCANF "SCANF"
@@ -30,6 +33,7 @@
 #define OP_DIV "/"
 #define OP_FUNC "FUNC"
 #define OP_END_FUNC "END_FUNC"
+#define OP_SRA ">>"
 
 #define OP_ARR_LOAD "ARR_LOAD"
 #define OP_ARR_SAVE "ARR_SAVE"
@@ -55,6 +59,7 @@ public:
     string num2;
     string result;
     string comment;
+    string info;
 
     PseudoCode(string op, string n1, string n2, string r) :
             op(std::move(op)), num1(std::move(n1)), num2(std::move(n2)), result(std::move(r)) {};
@@ -151,7 +156,7 @@ public:
 
     static void divide_basic_blocks();
 
-    static void dfs_show(const DAGNode &node, int depth);
+    static void dfs_show(const DAGNode &node, int depth, const string& mode, vector<string> vars=vector<string>());
 
     static void show_DAG_tree();
 
@@ -162,6 +167,12 @@ public:
     static void gen_DAG_graph(int, int);
 
     static void inline_function();
+
+    static bool remove_shared_expr();
+
+    static void loop_invariant_optimize();
+
+    static void loop_var_pow2();
 
     static void show() {
         cout << "========MID CODES========" << endl;

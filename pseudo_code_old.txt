@@ -1,4 +1,8 @@
 ===============
+seed[0] = 19971231
+seed[1] = 19981013
+seed[2] = 1000000007
+staticvalue = 0
 =============FUNC int myscanf==============
 ----------scanf(n);----------
 SCANF   n
@@ -13,471 +17,245 @@ PRINT   #ENDL
 RETURN
 RETURN
 =============END_FUNC void myprintf==============
-=============FUNC int checkrange==============
-----------while(num>max)num=num-max;num>max----------
-#T1 = num - 1073741824
-JUMP_IF  #T1<=0  label_1
-LABEL   label_2
-----------num=num-max;----------
-#T2 = num - 1073741824
-num = #T2
-#T3 = num - 1073741824
-JUMP_IF  #T3>0  label_2
-LABEL   label_1
-----------while(num<0)num=num+max;num<0----------
-#T4 = num - 0
-JUMP_IF  #T4>=0  label_3
-LABEL   label_4
-----------num=num+max;----------
-#T5 = num + 1073741824
-num = #T5
-#T6 = num - 0
-JUMP_IF  #T6<0  label_4
-LABEL   label_3
-----------return(num);----------
-RETURN  num
-=============END_FUNC int checkrange==============
-=============FUNC int reduce==============
-----------if(kernelid==0)return(checkrange(x+y));----------
-#T7 = kernelid - 0
-JUMP_IF  #T7!=0  label_5
-----------return(checkrange(x+y));----------
-PREPARE_CALL checkrange
-#T8 = x + y
-PUSH_PARA #T8
-CALL    checkrange
-#T9 = %RET + 0
-RETURN  #T9
-LABEL   label_5
-----------if(kernelid==1){ret=0;i=1;while(i<max){if(((x/i)-(x/i)/2*2)==((y/i)-(y/i)/2*2))ret=ret*2;elseret=ret*2+1;i=i*2;}i<maxreturn(ret);}----------
-#T10 = kernelid - 1
-JUMP_IF  #T10!=0  label_6
-----------ret=0;----------
-ret = 0
-----------i=1;----------
-i = 1
-----------while(i<max){if(((x/i)-(x/i)/2*2)==((y/i)-(y/i)/2*2))ret=ret*2;elseret=ret*2+1;i=i*2;}i<max----------
-#T11 = i - 1073741824
-JUMP_IF  #T11>=0  label_7
-LABEL   label_8
-----------if(((x/i)-(x/i)/2*2)==((y/i)-(y/i)/2*2))ret=ret*2;elseret=ret*2+1;----------
-#T12 = x / i
-#T13 = x / i
-#T14 = #T13 / 2
-#T15 = #T14 * 2
-#T16 = #T12 - #T15
-#T17 = y / i
-#T18 = y / i
-#T19 = #T18 / 2
+=============FUNC int set==============
+i = 10
+v = 0
+x[0] = 1
+#T1 = x[0]
+#T2 = #T1 * 2
+x[1] = #T2
+#T3 = x[1]
+#T4 = #T3 * 2
+x[2] = #T4
+#T5 = x[2]
+#T6 = #T5 * 2
+x[3] = #T6
+#T7 = x[3]
+#T8 = #T7 * 2
+x[4] = #T8
+#T9 = x[4]
+#T10 = #T9 * 2
+x[5] = #T10
+#T11 = x[5]
+#T12 = #T11 * 2
+x[6] = #T12
+#T13 = x[6]
+#T14 = #T13 * 2
+x[7] = #T14
+#T15 = x[7]
+#T16 = #T15 * 2
+x[8] = #T16
+#T17 = x[8]
+#T18 = #T17 * 2
+x[9] = #T18
+#T19 = x[9]
 #T20 = #T19 * 2
-#T21 = #T17 - #T20
-#T22 = #T16 - #T21
-JUMP_IF  #T22!=0  label_9
-----------ret=ret*2;----------
-#T23 = ret * 2
-ret = #T23
-JUMP    label_10
-LABEL   label_9
-----------ret=ret*2+1;----------
-#T24 = ret * 2
-#T25 = #T24 + 1
-ret = #T25
-LABEL   label_10
-----------i=i*2;----------
-#T26 = i * 2
-i = #T26
-#T27 = i - 1073741824
-JUMP_IF  #T27<0  label_8
-LABEL   label_7
-----------return(ret);----------
-RETURN  ret
-LABEL   label_6
-----------if(kernelid==2){if(x>y)return(x);elsereturn(y);}----------
-#T28 = kernelid - 2
-JUMP_IF  #T28!=0  label_11
-----------if(x>y)return(x);elsereturn(y);----------
-#T29 = x - y
-JUMP_IF  #T29<=0  label_12
-----------return(x);----------
-RETURN  x
-JUMP    label_13
-LABEL   label_12
-----------return(y);----------
-RETURN  y
-LABEL   label_13
-LABEL   label_11
-----------if(kernelid==3){ret=0;i=1;while(i<max){if(((x/i)-(x/i)/2*2)==1)ret=ret*2+1;else{if(((y/i)-(y/i)/2*2)==1){ret=ret*2+1;}ret=ret*2;}i=i*2;}i<maxreturn(ret);}----------
-#T30 = kernelid - 3
-JUMP_IF  #T30!=0  label_14
-----------ret=0;----------
-ret = 0
-----------i=1;----------
-i = 1
-----------while(i<max){if(((x/i)-(x/i)/2*2)==1)ret=ret*2+1;else{if(((y/i)-(y/i)/2*2)==1){ret=ret*2+1;}ret=ret*2;}i=i*2;}i<max----------
-#T31 = i - 1073741824
-JUMP_IF  #T31>=0  label_15
-LABEL   label_16
-----------if(((x/i)-(x/i)/2*2)==1)ret=ret*2+1;else{if(((y/i)-(y/i)/2*2)==1){ret=ret*2+1;}ret=ret*2;}----------
-#T32 = x / i
-#T33 = x / i
-#T34 = #T33 / 2
-#T35 = #T34 * 2
-#T36 = #T32 - #T35
-#T37 = #T36 - 1
-JUMP_IF  #T37!=0  label_17
-----------ret=ret*2+1;----------
-#T38 = ret * 2
-#T39 = #T38 + 1
-ret = #T39
-JUMP    label_18
-LABEL   label_17
-----------if(((y/i)-(y/i)/2*2)==1){ret=ret*2+1;}----------
-#T40 = y / i
-#T41 = y / i
-#T42 = #T41 / 2
-#T43 = #T42 * 2
-#T44 = #T40 - #T43
-#T45 = #T44 - 1
-JUMP_IF  #T45!=0  label_19
-----------ret=ret*2+1;----------
-#T46 = ret * 2
-#T47 = #T46 + 1
-ret = #T47
-LABEL   label_19
-----------ret=ret*2;----------
-#T48 = ret * 2
-ret = #T48
-LABEL   label_18
-----------i=i*2;----------
-#T49 = i * 2
-i = #T49
-#T50 = i - 1073741824
-JUMP_IF  #T50<0  label_16
-LABEL   label_15
-----------return(ret);----------
-RETURN  ret
-LABEL   label_14
-----------if(kernelid==4){ret=0;i=1;while(i<max){if(((x/i)-(x/i)/2*2)==1){if(((y/i)-(y/i)/2*2)==1)ret=ret*2+1;elseret=ret*2;}elseret=ret*2;i=i*2;}i<maxreturn(ret);}----------
-#T51 = kernelid - 4
-JUMP_IF  #T51!=0  label_20
-----------ret=0;----------
-ret = 0
-----------i=1;----------
-i = 1
-----------while(i<max){if(((x/i)-(x/i)/2*2)==1){if(((y/i)-(y/i)/2*2)==1)ret=ret*2+1;elseret=ret*2;}elseret=ret*2;i=i*2;}i<max----------
-#T52 = i - 1073741824
-JUMP_IF  #T52>=0  label_21
-LABEL   label_22
-----------if(((x/i)-(x/i)/2*2)==1){if(((y/i)-(y/i)/2*2)==1)ret=ret*2+1;elseret=ret*2;}elseret=ret*2;----------
-#T53 = x / i
-#T54 = x / i
-#T55 = #T54 / 2
-#T56 = #T55 * 2
-#T57 = #T53 - #T56
-#T58 = #T57 - 1
-JUMP_IF  #T58!=0  label_23
-----------if(((y/i)-(y/i)/2*2)==1)ret=ret*2+1;elseret=ret*2;----------
-#T59 = y / i
-#T60 = y / i
+x[10] = #T20
+#T21 = i - 30
+JUMP_IF  #T21>=0  label_1
+-----LOOP BEGIN-----
+LABEL   label_2
+i = i + 1
+#T23 = i - 1
+#T24 = x[#T23]
+#T25 = #T24 * 2
+x[i] = #T25
+-----LOOP END-----
+#T26 = i - 30
+JUMP_IF  #T26<0  label_2
+LABEL   label_1
+#T27 = pos / 30
+#T28 = #T27 - 1000
+JUMP_IF  #T28<0  label_3
+RETURN  0
+LABEL   label_3
+#T29 = pos / 30
+#T30 = a[#T29]
+#T31 = pos / 30
+#T32 = #T31 * 30
+#T33 = pos - #T32
+#T34 = x[#T33]
+#T35 = #T30 / #T34
+#T36 = pos / 30
+#T37 = a[#T36]
+#T38 = pos / 30
+#T39 = #T38 * 30
+#T40 = pos - #T39
+#T41 = x[#T40]
+#T42 = #T37 / #T41
+#T43 = #T42 / 2
+#T44 = #T43 * 2
+#T45 = #T35 - #T44
+#T46 = #T45 - d
+JUMP_IF  #T46==0  label_4
+#T47 = pos / 30
+#T48 = a[#T47]
+#T49 = pos / 30
+#T50 = #T49 * 30
+#T51 = pos - #T50
+#T52 = x[#T51]
+#T53 = #T48 / #T52
+#T54 = pos / 30
+#T55 = a[#T54]
+#T56 = pos / 30
+#T57 = #T56 * 30
+#T58 = pos - #T57
+#T59 = x[#T58]
+#T60 = #T55 / #T59
 #T61 = #T60 / 2
 #T62 = #T61 * 2
-#T63 = #T59 - #T62
-#T64 = #T63 - 1
-JUMP_IF  #T64!=0  label_24
-----------ret=ret*2+1;----------
-#T65 = ret * 2
-#T66 = #T65 + 1
-ret = #T66
-JUMP    label_25
-LABEL   label_24
-----------ret=ret*2;----------
-#T67 = ret * 2
-ret = #T67
-LABEL   label_25
-JUMP    label_26
-LABEL   label_23
-----------ret=ret*2;----------
-#T68 = ret * 2
-ret = #T68
-LABEL   label_26
-----------i=i*2;----------
-#T69 = i * 2
-i = #T69
-#T70 = i - 1073741824
-JUMP_IF  #T70<0  label_22
-LABEL   label_21
-----------return(ret);----------
-RETURN  ret
-LABEL   label_20
-----------return(0);----------
+#T63 = #T53 - #T62
+#T64 = #T63
+JUMP_IF  #T64!=0  label_5
+#T65 = d - 1
+JUMP_IF  #T65!=0  label_6
+#T66 = pos / 30
+#T67 = #T66 * 30
+#T68 = pos - #T67
+v = x[#T68]
+LABEL   label_6
+LABEL   label_5
+#T70 = pos / 30
+#T71 = a[#T70]
+#T72 = pos / 30
+#T73 = #T72 * 30
+#T74 = pos - #T73
+#T75 = x[#T74]
+#T76 = #T71 / #T75
+#T77 = pos / 30
+#T78 = a[#T77]
+#T79 = pos / 30
+#T80 = #T79 * 30
+#T81 = pos - #T80
+#T82 = x[#T81]
+#T83 = #T78 / #T82
+#T84 = #T83 / 2
+#T85 = #T84 * 2
+#T86 = #T76 - #T85
+#T87 = #T86 - 1
+JUMP_IF  #T87!=0  label_7
+#T88 = d
+JUMP_IF  #T88!=0  label_8
+#T89 = pos / 30
+#T90 = #T89 * 30
+#T91 = pos - #T90
+#T92 = x[#T91]
+v = v - #T92
+LABEL   label_8
+LABEL   label_7
+LABEL   label_4
+#T94 = pos / 30
+#T95 = pos / 30
+#T96 = a[#T95]
+#T97 = #T96 + v
+a[#T94] = #T97
 RETURN  0
-=============END_FUNC int reduce==============
-=============FUNC int getvalue==============
-----------if(x<0)return(0);----------
-#T71 = x - 0
-JUMP_IF  #T71>=0  label_27
-----------return(0);----------
-RETURN  0
-LABEL   label_27
-----------if(y<0)return(0);----------
-#T72 = y - 0
-JUMP_IF  #T72>=0  label_28
-----------return(0);----------
-RETURN  0
-LABEL   label_28
-----------if(x>=n)return(0);----------
-#T73 = x - n
-JUMP_IF  #T73<0  label_29
-----------return(0);----------
-RETURN  0
-LABEL   label_29
-----------if(y>=m)return(0);----------
-#T74 = y - m
-JUMP_IF  #T74<0  label_30
-----------return(0);----------
-RETURN  0
-LABEL   label_30
-----------return(a[x*m+y]);----------
-#T75 = x * m
-#T76 = #T75 + y
-#T77 = a[#T76]
-RETURN  #T77
-=============END_FUNC int getvalue==============
-=============FUNC int convn==============
+=============END_FUNC int set==============
+=============FUNC int rand==============
+#T98 = seed[0]
+#T99 = staticvalue * #T98
+#T100 = seed[1]
+staticvalue = #T99 + #T100
+#T102 = seed[2]
+#T103 = staticvalue / #T102
+#T104 = seed[2]
+#T105 = #T103 * #T104
+staticvalue = staticvalue - #T105
+#T107 = staticvalue
+JUMP_IF  #T107>=0  label_9
+#T108 = seed[2]
+staticvalue = #T108 + staticvalue
+LABEL   label_9
+----------return(staticvalue);----------
+RETURN  staticvalue
+=============END_FUNC int rand==============
+=============FUNC void main==============
+tmp = 0
 i = 0
-j = 0
-flag1 = 1
-flag2 = 1
-flag3 = 1
-flag4 = 1
-----------while(flag1==1){j=0;while(flag2==1){curr=0;x=i-c/2;while(flag3==1){y=j-c/2;while(flag4==1){curr=reduce(kernelid,curr,getvalue(n,m,x,y));y=y+1;if(y>=j+c/2){flag4=0;}}flag4==1flag4=1;x=x+1;if(x>=i+c/2){flag3=0;}}flag3==1flag3=1;b[i*m+j]=curr;j=j+1;if(j>=m){flag2=0;}}flag2==1flag2=1;i=i+1;if(i>=n){flag1=0;}}flag1==1----------
-#T78 = flag1 - 1
-JUMP_IF  #T78!=0  label_31
-LABEL   label_32
-----------j=0;----------
-j = 0
-----------while(flag2==1){curr=0;x=i-c/2;while(flag3==1){y=j-c/2;while(flag4==1){curr=reduce(kernelid,curr,getvalue(n,m,x,y));y=y+1;if(y>=j+c/2){flag4=0;}}flag4==1flag4=1;x=x+1;if(x>=i+c/2){flag3=0;}}flag3==1flag3=1;b[i*m+j]=curr;j=j+1;if(j>=m){flag2=0;}}flag2==1----------
-#T79 = flag2 - 1
-JUMP_IF  #T79!=0  label_33
-LABEL   label_34
-----------curr=0;----------
-curr = 0
-----------x=i-c/2;----------
-#T80 = c / 2
-#T81 = i - #T80
-x = #T81
-----------while(flag3==1){y=j-c/2;while(flag4==1){curr=reduce(kernelid,curr,getvalue(n,m,x,y));y=y+1;if(y>=j+c/2){flag4=0;}}flag4==1flag4=1;x=x+1;if(x>=i+c/2){flag3=0;}}flag3==1----------
-#T82 = flag3 - 1
-JUMP_IF  #T82!=0  label_35
-LABEL   label_36
-----------y=j-c/2;----------
-#T83 = c / 2
-#T84 = j - #T83
-y = #T84
-----------while(flag4==1){curr=reduce(kernelid,curr,getvalue(n,m,x,y));y=y+1;if(y>=j+c/2){flag4=0;}}flag4==1----------
-#T85 = flag4 - 1
-JUMP_IF  #T85!=0  label_37
-LABEL   label_38
-----------curr=reduce(kernelid,curr,getvalue(n,m,x,y));----------
-PREPARE_CALL reduce
-PUSH_PARA kernelid
-PUSH_PARA curr
-PREPARE_CALL getvalue
-PUSH_PARA n
-PUSH_PARA m
+SCANF   _1_n
+%RET = _1_n
+LABEL   label_14
+n = %RET
+SCANF   _2_n
+%RET = _2_n
+LABEL   label_15
+staticvalue = %RET
+#T112 = n
+JUMP_IF  #T112<=0  label_10
+-----LOOP BEGIN-----
+LABEL   label_11
+n = n - 1
+_3_#T98 = seed[0]
+_3_#T99 = staticvalue * _3_#T98
+_3_#T100 = seed[1]
+staticvalue = _3_#T99 + _3_#T100
+_3_#T102 = seed[2]
+_3_#T103 = staticvalue / _3_#T102
+_3_#T104 = seed[2]
+_3_#T105 = _3_#T103 * _3_#T104
+staticvalue = staticvalue - _3_#T105
+_3_#T107 = staticvalue
+JUMP_IF  _3_#T107>=0  label_9_3_
+_3_#T108 = seed[2]
+staticvalue = _3_#T108 + staticvalue
+LABEL   label_9_3_
+%RET = staticvalue
+LABEL   label_16
+z = %RET
+#T115 = z / 300000
+#T116 = #T115 * 300000
+x = z - #T116
+_4_#T98 = seed[0]
+_4_#T99 = staticvalue * _4_#T98
+_4_#T100 = seed[1]
+staticvalue = _4_#T99 + _4_#T100
+_4_#T102 = seed[2]
+_4_#T103 = staticvalue / _4_#T102
+_4_#T104 = seed[2]
+_4_#T105 = _4_#T103 * _4_#T104
+staticvalue = staticvalue - _4_#T105
+_4_#T107 = staticvalue
+JUMP_IF  _4_#T107>=0  label_9_4_
+_4_#T108 = seed[2]
+staticvalue = _4_#T108 + staticvalue
+LABEL   label_9_4_
+%RET = staticvalue
+LABEL   label_17
+z = %RET
+#T119 = z / 2
+#T120 = #T119 * 2
+y = z - #T120
+----------set(x,y);----------
+PREPARE_CALL set
 PUSH_PARA x
 PUSH_PARA y
-CALL    getvalue
-#T86 = %RET + 0
-PUSH_PARA #T86
-CALL    reduce
-#T87 = %RET + 0
-curr = #T87
-----------y=y+1;----------
-#T88 = y + 1
-y = #T88
-----------if(y>=j+c/2){flag4=0;}----------
-#T89 = c / 2
-#T90 = j + #T89
-#T91 = y - #T90
-JUMP_IF  #T91<0  label_39
-----------flag4=0;----------
-flag4 = 0
-LABEL   label_39
-#T92 = flag4 - 1
-JUMP_IF  #T92==0  label_38
-LABEL   label_37
-----------flag4=1;----------
-flag4 = 1
-----------x=x+1;----------
-#T93 = x + 1
-x = #T93
-----------if(x>=i+c/2){flag3=0;}----------
-#T94 = c / 2
-#T95 = i + #T94
-#T96 = x - #T95
-JUMP_IF  #T96<0  label_40
-----------flag3=0;----------
-flag3 = 0
-LABEL   label_40
-#T97 = flag3 - 1
-JUMP_IF  #T97==0  label_36
-LABEL   label_35
-----------flag3=1;----------
-flag3 = 1
-----------b[i*m+j]=curr;----------
-#T98 = i * m
-#T99 = #T98 + j
-b[#T99] = curr
-----------j=j+1;----------
-#T100 = j + 1
-j = #T100
-----------if(j>=m){flag2=0;}----------
-#T101 = j - m
-JUMP_IF  #T101<0  label_41
-----------flag2=0;----------
-flag2 = 0
-LABEL   label_41
-#T102 = flag2 - 1
-JUMP_IF  #T102==0  label_34
-LABEL   label_33
-----------flag2=1;----------
-flag2 = 1
-----------i=i+1;----------
-#T103 = i + 1
-i = #T103
-----------if(i>=n){flag1=0;}----------
-#T104 = i - n
-JUMP_IF  #T104<0  label_42
-----------flag1=0;----------
-flag1 = 0
-LABEL   label_42
-#T105 = flag1 - 1
-JUMP_IF  #T105==0  label_32
-LABEL   label_31
-----------return(0);----------
-RETURN  0
-=============END_FUNC int convn==============
-=============FUNC void mymemmove==============
-i = 0
-----------while(i<n){a[i]=b[i];i=i+1;}i<n----------
-#T106 = i - n
-JUMP_IF  #T106>=0  label_43
-LABEL   label_44
-----------a[i]=b[i];----------
-#T107 = b[i]
-a[i] = #T107
-----------i=i+1;----------
-#T108 = i + 1
-i = #T108
-#T109 = i - n
-JUMP_IF  #T109<0  label_44
-LABEL   label_43
-RETURN
-=============END_FUNC void mymemmove==============
-=============FUNC void main==============
-i = 0
-----------c=myscanf();----------
-PREPARE_CALL myscanf
-CALL    myscanf
-#T110 = %RET + 0
-c = #T110
-----------n=myscanf();----------
-PREPARE_CALL myscanf
-CALL    myscanf
-#T111 = %RET + 0
-n = #T111
-----------m=myscanf();----------
-PREPARE_CALL myscanf
-CALL    myscanf
-#T112 = %RET + 0
-m = #T112
-----------arrlen=myscanf();----------
-PREPARE_CALL myscanf
-CALL    myscanf
-#T113 = %RET + 0
-arrlen = #T113
-----------while(i<arrlen){a[i]=myscanf();i=i+1;}i<arrlen----------
-#T114 = i - arrlen
-JUMP_IF  #T114>=0  label_45
-LABEL   label_46
-----------a[i]=myscanf();----------
-PREPARE_CALL myscanf
-CALL    myscanf
-#T115 = %RET + 0
-a[i] = #T115
-----------i=i+1;----------
-#T116 = i + 1
-i = #T116
-#T117 = i - arrlen
-JUMP_IF  #T117<0  label_46
-LABEL   label_45
-----------task=myscanf();----------
-PREPARE_CALL myscanf
-CALL    myscanf
-#T118 = %RET + 0
-task = #T118
-----------i=0;----------
-i = 0
-----------while(i<task){kernelid[i]=myscanf();i=i+1;}i<task----------
-#T119 = i - task
-JUMP_IF  #T119>=0  label_47
-LABEL   label_48
-----------kernelid[i]=myscanf();----------
-PREPARE_CALL myscanf
-CALL    myscanf
-#T120 = %RET + 0
-kernelid[i] = #T120
-----------i=i+1;----------
-#T121 = i + 1
-i = #T121
-#T122 = i - task
-JUMP_IF  #T122<0  label_48
-LABEL   label_47
-----------i=0;----------
-i = 0
-----------while(i<task){convn(kernelid[i],n,m,c);mymemmove(n*m);i=i+1;}i<task----------
-#T123 = i - task
-JUMP_IF  #T123>=0  label_49
-LABEL   label_50
-----------convn(kernelid[i],n,m,c);----------
-PREPARE_CALL convn
-#T124 = kernelid[i]
-PUSH_PARA #T124
-PUSH_PARA n
-PUSH_PARA m
-PUSH_PARA c
-CALL    convn
-----------mymemmove(n*m);----------
-PREPARE_CALL mymemmove
-#T125 = n * m
-PUSH_PARA #T125
-CALL    mymemmove
-----------i=i+1;----------
-#T126 = i + 1
-i = #T126
-#T127 = i - task
-JUMP_IF  #T127<0  label_50
-LABEL   label_49
-----------i=0;----------
-i = 0
-----------while(i<n*m){myprintf(a[i]);i=i+1;}i<n*m----------
-#T128 = n * m
-#T129 = i - #T128
-JUMP_IF  #T129>=0  label_51
-LABEL   label_52
-----------myprintf(a[i]);----------
-PREPARE_CALL myprintf
-#T130 = a[i]
-PUSH_PARA #T130
-CALL    myprintf
-----------i=i+1;----------
-#T131 = i + 1
-i = #T131
-#T132 = n * m
-#T133 = i - #T132
-JUMP_IF  #T133<0  label_52
-LABEL   label_51
+CALL    set
+-----LOOP END-----
+#T122 = n
+JUMP_IF  #T122>0  label_11
+LABEL   label_10
+#T123 = i - 1000
+JUMP_IF  #T123>=0  label_12
+-----LOOP BEGIN-----
+LABEL   label_13
+----------tmp=tmp+(a[i]-a[i]/100000*100000);----------
+#T124 = a[i]
+#T125 = a[i]
+#T126 = #T125 / 100000
+#T127 = #T126 * 100000
+#T128 = #T124 - #T127
+tmp = tmp + #T128
+#T130 = tmp / 100000
+#T131 = #T130 * 100000
+tmp = tmp - #T131
+i = i + 1
+-----LOOP END-----
+#T134 = i - 1000
+JUMP_IF  #T134<0  label_13
+LABEL   label_12
+PRINT   tmp int
+PRINT   #ENDL
+LABEL   label_18
 ----------return;----------
 RETURN
 RETURN

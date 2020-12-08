@@ -13,7 +13,25 @@ vector<DAGNode> PseudoCodeList::DAGNodes;
 map<string, int> PseudoCodeList::NodesMap;
 int PseudoCodeList::call_times = 0;
 
+bool var_modified(vector<PseudoCode> codes, int func_begin, int end, const string &var_name) {
+    for (int j = func_begin; j < end; j++) {
+        if ((is_arith(codes[j].op) || codes[j].op == OP_ARR_LOAD) && codes[j].result == var_name) {
+            return true;
+        }
+        if ((codes[j].op == OP_SCANF || codes[j].op == OP_ASSIGN) && codes[j].num1 == var_name) {
+            return true;
+        }
+        if (codes[j].op == OP_CALL) {
+            return true;
+        }
+    }
+    return false;
+}
+
 string PseudoCode::to_str() const {
+    if (op == OP_EMPTY && !num1.empty()) {
+        return "-----" + num1 + "-----";
+    }
     if (op == OP_FUNC || op == OP_END_FUNC) {
         return "=============" + op + " " + num1 + " " + num2 + "==============";
     }
@@ -112,7 +130,7 @@ void PseudoCodeList::remove_redundant_assign() {
             new_codes.emplace_back(c2.op, c1.num2, c2.num2, c2.result);
             i++;
         } else if (c1.op == OP_ASSIGN && c1.num1[0] == '#' && c1.num1 == c2.num2 &&
-                   (is_arith(c2.op) || c2.op == OP_ARR_SAVE)) {
+                   (is_arith(c2.op) || c2.op == OP_ARR_SAVE || c2.op == OP_ARR_LOAD)) {
             new_codes.emplace_back(c2.op, c2.num1, c1.num2, c2.result);
             i++;
         } else if (c1.op == OP_PRINT && c2.op == OP_PRINT && c1.num2 == "strcon" && c2.num1 == ENDL) {
@@ -521,6 +539,9 @@ void PseudoCodeList::divide_basic_blocks() {
 void PseudoCodeList::gen_DAG_graph(int begin, int end) {
     for (int idx = begin; idx <= end; idx++) {
         PseudoCode c = codes[idx];
+        if (!can_dag(c.op)) {
+            continue;
+        }
         string num1 = c.op == OP_ARR_SAVE ? c.num2 : c.num1;
         string num2 = c.op == OP_ARR_SAVE ? c.result : c.num2;
         string result = c.op == OP_ARR_SAVE ? c.num1 : c.result;
@@ -779,22 +800,30 @@ void PseudoCodeList::DAG_optimize() {
     codes = new_codes;
 }
 
-void PseudoCodeList::dfs_show(const DAGNode &node, int depth) {
-    for (int i = 0; i < depth - 1; i++) {
-        cout << "|     ";
-    }
-    if (depth != 0) {
-        cout << "|-----";
-    }
-    cout << "'" << node.name << "' " << node.primary_symbol << "(" << node.index << ") [";
-    for (auto &s: node.symbols) {
-        if (s != node.primary_symbol) {
-            cout << s << ",";
+void PseudoCodeList::dfs_show(const DAGNode &node, int depth, const string &mode, vector<string> vars) {
+    if (mode == "show") {
+        for (int i = 0; i < depth - 1; i++) {
+            cout << "|     ";
         }
+        if (depth != 0) {
+            cout << "|-----";
+        }
+        cout << "'" << node.name << "' " << node.primary_symbol << "(" << node.index << ") [";
+        for (auto &s: node.symbols) {
+            if (s != node.primary_symbol) {
+                cout << s << ",";
+            }
+        }
+        cout << "]" << (node.is_leaf ? " LEAF" : "") << endl;
     }
-    cout << "]" << (node.is_leaf ? " LEAF" : "") << endl;
+    //TODO
+//    else if (mode == "loop") {
+//        for (auto &name: node.symbols) {
+//            if (name)
+//        }
+//    }
     for (auto &child: node.children) {
-        dfs_show(DAGNodes[child], depth + 1);
+        dfs_show(DAGNodes[child], depth + 1, mode);
     }
 }
 
@@ -805,7 +834,7 @@ void PseudoCodeList::show_DAG_tree() {
             root.children.push_back(node.index);
         }
     }
-    dfs_show(root, 0);
+    dfs_show(root, 0, "show");
 //    for (auto &it: NodesMap) {
 //        cout << it.first << ": " << it.second << endl;
 //    }
@@ -859,7 +888,7 @@ void PseudoCodeList::inline_function() {
         if (code.op == OP_PREPARE_CALL) {
             if (SymTable::search_func(code.num1).recur_func
                 || func_codes[code.num1].size() > 20) {
-                cout << "not inline function: "  << code.num1 << " size: " << func_codes[code.num1].size() << endl;
+                cout << "not inline function: " << code.num1 << " size: " << func_codes[code.num1].size() << endl;
                 new_codes.push_back(code);
                 continue;
             }
@@ -921,7 +950,7 @@ string rename_inline_var(string name, vector<pair<DataType, string>> call_paras,
                          vector<string> real_paras, int call_times, const string &call_func, const string &cur_func) {
     for (int i = 0; i < call_paras.size(); i++) {
         if (call_paras[i].second == name) {
-            cout << "replace " << name << " with " << real_paras[i] << endl;
+//            cout << "replace " << name << " with " << real_paras[i] << endl;
             return real_paras[i];
         }
     }
@@ -942,6 +971,179 @@ string rename_inline_var(string name, vector<pair<DataType, string>> call_paras,
 
     return name;
 }
+
+bool PseudoCodeList::remove_shared_expr() {
+//    cout << "remove shared expr called" << endl;
+//    bool modified = false;
+//    do {
+    bool ret = false;
+    int cur_func_begin = 0;
+    int cur_func_end = 0;
+    int cur_func_nonshared_begin = 0;
+    string cur_func = GLOBAL;
+    vector<PseudoCode> added_code;
+    vector<PseudoCode> new_codes;
+    for (int i = 0; i < codes.size(); i++) {
+        PseudoCode c = codes[i];
+        if (c.op == OP_FUNC) {
+            if (cur_func == GLOBAL) {
+                for (int j = 0; j < i; j++) {
+                    new_codes.push_back(codes[j]);
+                }
+            }
+            cur_func_begin = i;
+            cur_func_nonshared_begin = cur_func_begin + 1;
+            while (is_arith(codes[cur_func_nonshared_begin].op)
+                   && codes[cur_func_nonshared_begin].result[0] == '@')
+                cur_func_nonshared_begin++;
+//            cout << "begin " << cur_func_begin << " nonshared begin " << cur_func_nonshared_begin << endl;
+            cur_func = c.num2;
+            for (int j = cur_func_begin;; j++) {
+                if (codes[j].op == OP_END_FUNC) {
+                    cur_func_end = j;
+                    break;
+                }
+            }
+        }
+        if (c.op == OP_END_FUNC) {
+            new_codes.push_back(codes[cur_func_begin]);
+            bool find_insert = false;
+            for (int j = cur_func_begin + 1; j <= i; j++) {
+                if (!find_insert && !(is_arith(codes[j].op) && codes[j].result[0] == '@')) {
+                    new_codes.insert(new_codes.end(), added_code.begin(), added_code.end());
+                    added_code.clear();
+                    find_insert = true;
+                }
+                new_codes.push_back(codes[j]);
+            }
+        }
+//        if (is_arith(c.op)) {
+        if (c.op == OP_DIV) {
+
+            bool num1_const = true;
+            bool num2_const = true;
+            STIType num1_type = SymTable::try_search(cur_func, c.num1, false).stiType;
+            STIType num2_type = SymTable::try_search(cur_func, c.num2, false).stiType;
+
+            if (num2_type == var || num2_type == para) {
+                num2_const = !var_modified(codes, cur_func_nonshared_begin, cur_func_end, c.num2);
+            }
+            if (num1_type == var || num1_type == para) {
+                num1_const = !var_modified(codes, cur_func_nonshared_begin, cur_func_end, c.num1);
+            }
+            if ((num1_const || begins_num(c.num1)) && (num2_const || begins_num(c.num2))) {
+                //替换所有等式右端相同的中间代码
+                int replace_count = 0;
+                for (int j = cur_func_begin; codes[j].op != OP_END_FUNC; j++) {
+                    if (codes[j].op == c.op && codes[j].num2 == c.num2 && codes[j].num1 == c.num1) {
+                        replace_count++;
+                    }
+                }
+                if (replace_count > 5) {
+                    ret = true;
+                    cout << "replace expr: " << c.num1 << c.op << c.num2 << endl;
+                    string var_name = "@V" + to_string(code_index);
+                    code_index++;
+                    int addr = SymTable::func_size(cur_func) + 4;
+                    added_code.emplace_back(c.op, c.num1, c.num2, var_name);
+                    SymTable::add(cur_func, var_name, var, integer, addr);
+                    for (int j = cur_func_begin; codes[j].op != OP_END_FUNC; j++) {
+                        if (codes[j].op == c.op && codes[j].num2 == c.num2 && codes[j].num1 == c.num1) {
+                            cout << "replace " << codes[j].to_str();
+                            codes[j] = PseudoCode(OP_ASSIGN, codes[j].result, var_name, VACANT);
+                            cout << " with " << codes[j].to_str() << endl;
+                        }
+                    }
+                    //                    modified = true;
+                }
+
+            }
+        }
+    }
+    codes = new_codes;
+    return ret;
+//    } while (modified);
+}
+
+void PseudoCodeList::loop_invariant_optimize() {
+    for (int i = 0; i < codes.size(); i++) {
+        if (codes[i].info == LOOP_BEGIN) {
+            int j;
+            for (j = i; codes[j].info != LOOP_END; j++);
+            vector<string> modified_vars;
+            for (int k = i + 1; k <= j; k++) {
+                if (codes[k].op == OP_SCANF) {
+                    modified_vars.push_back(codes[k].num1);
+                } else if (codes[k].op == OP_ARR_LOAD) {
+                    modified_vars.push_back(codes[k].result);
+                } else if (is_arith(codes[k].op) &&
+                           (codes[k].result == codes[k].num1 || codes[k].result == codes[k].num2)) {
+                    modified_vars.push_back(codes[k].result);
+                }
+            }
+            gen_DAG_graph(i + 1, j - 1);
+            //TODO
+            DAGNodes.clear();
+            NodesMap.clear();
+        }
+    }
+}
+
+void PseudoCodeList::loop_var_pow2() {
+    for (int i = 0; i < codes.size(); i++) {
+        PseudoCode ci = codes[i];
+        if (ci.num1 == LOOP_BEGIN) {
+            int j;
+            for (j = i; codes[j].num1 != LOOP_END; j++);
+            string loop_var;
+            if (codes[j - 1].result == codes[j - 1].num1 &&
+                codes[j - 1].op == OP_MUL && codes[j - 1].num2 == "2") {
+                loop_var = codes[j - 1].result;
+            }
+            if (loop_var.empty() || var_modified(codes, i + 1, j - 1, loop_var)) {
+                continue;
+            }
+            int k;
+            int init_value = 0;
+            for (k = i; k >= 0; k--) {
+                if (codes[k].op == OP_ASSIGN && codes[k].num1 == loop_var && begins_num(codes[k].num2)) {
+                    init_value = stoi(codes[k].num2);
+                    break;
+                }
+            }
+            if (init_value != 1 || !begins_num(codes[j + 1].num2) || !is_2_power(stoi(codes[j + 1].num2))) {
+                continue;
+            }
+            bool ref_not_div = false;
+            for (int l = i + 1; l < j - 1; l++) {
+                if (codes[l].op != OP_DIV
+                    && (codes[l].result == loop_var || codes[l].num1 == loop_var || codes[l].num2 == loop_var)) {
+                    ref_not_div = true;
+                    break;
+                }
+                else if (codes[l].op == OP_DIV && (codes[l].result == loop_var || codes[l].num1 == loop_var)) {
+                    ref_not_div = true;
+                    break;
+                }
+            }
+            if (ref_not_div) {
+                continue;
+            }
+            codes[k].num2 = to_string(init_value - 1);
+            codes[i - 2].num2 = to_string(int(log2(stoi(codes[j + 1].num2))));
+            codes[j + 1].num2 = to_string(int(log2(stoi(codes[j + 1].num2))));
+            codes[j - 1] = PseudoCode(OP_ADD, loop_var, "1", loop_var);
+            for (k = i + 1; k < j - 1; k++) {
+                if (codes[k].op == OP_DIV && codes[k].num2 == loop_var && !begins_num(codes[k].num1)) {
+                    cout << "replace div " << codes[k].to_str() << " with ";
+                    codes[k].op = OP_SRA;
+                    cout << codes[k].to_str() << endl;
+                }
+            }
+        }
+    }
+}
+
 
 bool is_arith(const string &op) {
     return (op == OP_ADD || op == OP_SUB || op == OP_MUL || op == OP_DIV);

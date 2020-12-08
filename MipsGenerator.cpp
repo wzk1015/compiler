@@ -250,7 +250,7 @@ void MipsGenerator::translate() {
             save_value("$v0", num1);
         } else if (op == OP_ASSIGN) {
             gen_assign(num1, num2);
-        } else if (is_arith(op)) {
+        } else if (is_arith(op) || op == OP_SRA) {
             /* 对于a=b+c:
              * abc都在寄存器/常量：                add a,b,c
              * ab在寄存器/常量，c在内存（或反过来）： lw reg2,c  add a,b,reg2
@@ -485,7 +485,7 @@ void MipsGenerator::gen_arithmetic(const string &instr, const string &num1, cons
         if (num1 != num3) {
             release(num3);
         }
-    } else if (instr == "sra") {
+    } else if (instr == "sra" || instr == "srav") {
         string label = assign_label();
         string label2 = assign_label();
         generate("bgez", num2, label);

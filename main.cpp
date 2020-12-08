@@ -40,10 +40,29 @@ int main() {
     PseudoCodeList::inline_function();
     PseudoCodeList::const_broadcast();
 
-    PseudoCodeList::divide_basic_blocks();
+    PseudoCodeList::save_to_file("pseudo_code_old.txt");
+
+//    PseudoCodeList::loop_var_pow2();
+
+    //PseudoCodeList::divide_basic_blocks();
 
     //PseudoCodeList::save_to_file("docs/codes/testfile" + fileid + "_18231047_王肇凯_优化后中间代码.txt");
     PseudoCodeList::save_to_file("pseudo_code.txt");
+
+//    MipsGenerator mips2;
+//    mips2.optimize_muldiv = true;
+//    mips2.optimize_assign_reg = true;
+//    mips2.translate();
+////    mips.save_to_file("docs/codes/testfile" + fileid + "_18231047_王肇凯_优化后目标代码.txt");
+//    mips2.save_to_file("mips_old.txt");
+
+    while (PseudoCodeList::remove_shared_expr()) {
+        PseudoCodeList::remove_redundant_assign();
+    }
+
+
+
+
 
     //目标代码生成
     MipsGenerator mips;

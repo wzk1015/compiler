@@ -78,6 +78,7 @@ public:
             {OP_SUB, "subu"},
             {OP_MUL, "mul"},
             {OP_DIV, "div"},
+            {OP_SRA, "srav"}
     };
     string cur_func = GLOBAL;
     vector<vector<SymTableItem>> call_func_paras;
