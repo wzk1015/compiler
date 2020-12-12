@@ -8,8 +8,6 @@
 
 #include <utility>
 
-//TODO：用a寄存器且不区分ast；sp直接硬编码；
-
 void MipsGenerator::generate(const string &code) {
     mips.push_back(code);
     if (DEBUG) {
@@ -116,9 +114,9 @@ void MipsGenerator::translate() {
             call_func_sp_offset = 0;
             generate(num2 + ":");
             //被调用者保护s
-            for (int i = 0; i < NUM_S_REG; i++) {
-                s_reg_table[i] = VACANT;
-            }
+//            for (int i = 0; i < NUM_S_REG; i++) {
+//                s_reg_table[i] = VACANT;
+//            }
             for (auto &it: SymTable::search_func(cur_func).paras) {
                 string sreg = assign_s_reg(it.second);
                 if (sreg != INVALID) {
@@ -187,15 +185,27 @@ void MipsGenerator::translate() {
                     t_reg_table[i] = VACANT;
                 }
             }
-
-            s_old = s_reg_table;
-            for (int i = 0; i < min(NUM_S_REG, call_func_sregs); i++) {
-                if (s_reg_table[i] != VACANT) {
+//            assertion(s_reg_table[SymTable::func_var_paras(cur_func)] == VACANT);
+            if (call_func_sregs + s_used() <= NUM_S_REG) {
+                s_assign_begin = 0;
+            } else {
+                int num_save = call_func_sregs + s_used() - NUM_S_REG;
+                for (int i = 0; i < num_save; i++) {
                     saved_s.push_back(i);
                     generate("sw", s_regs[i], to_string(STACK_S_BEGIN + 4 * i) + "($sp)");
                     s_reg_table[i] = VACANT;
                 }
+                s_assign_begin = 0;
             }
+
+//            s_old = s_reg_table;
+//            for (int i = 0; i < min(NUM_S_REG, call_func_sregs); i++) {
+//                if (s_reg_table[i] != VACANT) {
+//                    saved_s.push_back(i);
+//                    generate("sw", s_regs[i], to_string(STACK_S_BEGIN + 4 * i) + "($sp)");
+//                    s_reg_table[i] = VACANT;
+//                }
+//            }
             if (cur_func != "main") {
                 generate("sw", "$ra", STACK_RA);
             }
@@ -208,7 +218,7 @@ void MipsGenerator::translate() {
             for (int i: saved_s) {
                 generate("lw", s_regs[i], to_string(STACK_S_BEGIN + 4 * i) + "($sp)");
             }
-            s_reg_table = s_old;
+//            s_reg_table = s_old;
 
             //调用者恢复t
             for (int i: saved_t) {
@@ -657,7 +667,7 @@ bool MipsGenerator::in_reg(const string &symbol) {
         }
     }
     for (int i = 0; i < NUM_S_REG; i++) {
-        if (s_reg_table[i] == symbol) {
+        if (s_reg_table[i] == cur_func + "*" + symbol) {
             return true;
         }
     }
@@ -694,7 +704,7 @@ string MipsGenerator::symbol_to_addr(const string &symbol) {
         }
     }
     for (int i = 0; i < NUM_S_REG; i++) {
-        if (s_reg_table[i] == symbol) {
+        if (s_reg_table[i] == cur_func + "*" + symbol) {
             s_reg_last_use[i] = clock++;
             return s_regs[i];
         }
@@ -726,22 +736,23 @@ string MipsGenerator::assign_t_reg(const string &name) {
 string MipsGenerator::assign_s_reg(const string &name) {
     int min_clock = -1;
     int min_reg = -1;
-    for (int i = 0; i < NUM_S_REG; i++) {
+    for (int i = s_assign_begin; i < NUM_S_REG; i++) {
         if (s_reg_table[i] == VACANT) {
-            s_reg_table[i] = name;
+            s_reg_table[i] = cur_func + "*" + name;
             return s_regs[i];
         }
-        if (s_reg_last_use[i] < min_clock) {
+        if (s_reg_last_use[i] < min_clock || min_clock == -1) {
             min_clock = s_reg_last_use[i];
             min_reg = i;
         }
     }
-    SymTableItem item = SymTable::search(cur_func, s_reg_table[min_reg]);
-    generate("# REPLACE " + s_regs[min_reg]);
-    generate("sw", s_regs[min_reg], to_string(item.addr + call_func_sp_offset) + "($sp)");
-    s_reg_table[min_reg] = name;
-    s_reg_last_use[min_reg] = clock++;
-    return s_regs[min_reg];
+//    SymTableItem item = SymTable::search(cur_func, s_reg_table[min_reg]);
+//    generate("# REPLACE " + s_regs[min_reg]);
+//    generate("sw", s_regs[min_reg], to_string(item.addr + call_func_sp_offset) + "($sp)");
+//    s_reg_table[min_reg] = name;
+//    s_reg_last_use[min_reg] = clock++;
+//    return s_regs[min_reg];
+    return INVALID;
 }
 
 void MipsGenerator::show_reg_status() {

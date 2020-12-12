@@ -64,6 +64,7 @@ public:
             "$gp", "$sp", "$fp", "$ra"
     };
     string fp_content = INVALID;
+    int s_assign_begin = 0;
 
 
     map<string, string> op_to_instr = {
@@ -143,6 +144,16 @@ public:
     string assign_label() {
         string ret = "tmp_label_" + to_string(tmp_label_idx);
         tmp_label_idx++;
+        return ret;
+    }
+
+    int s_used() {
+        int ret = 0;
+        for (int i = 0; i < NUM_S_REG; i++) {
+            if (s_reg_table[i] == VACANT) {
+                ret++;
+            }
+        }
         return ret;
     }
 

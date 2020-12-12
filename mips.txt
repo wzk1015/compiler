@@ -1,13 +1,28 @@
 .data
 arr__a_: .space 4000
-arr__b_: .space 4000
-arr__kernelid_: .space 160
+arr__seed_: .space 12
+arr_set_x_: .space 128
 newline__: .asciiz "\n"
 .text
 li $v1, 31
 
+# === seed[0] = 19971231 ===
+li $a2, 19971231
+sw $a2, arr__seed_+0($zero)
+
+# === seed[1] = 19981013 ===
+li $a2, 19981013
+sw $a2, arr__seed_+4($zero)
+
+# === seed[2] = 1000000007 ===
+li $a2, 1000000007
+sw $a2, arr__seed_+8($zero)
+
+# === staticvalue = 0 ===
+sw $zero, 0($gp)
+
 # === =============FUNC int myscanf============== ===
-addi $sp, $sp, -384
+addi $sp, $sp, -404
 j main
 myscanf:
 
@@ -24,10 +39,10 @@ jr $ra
 
 # === =============FUNC void myprintf============== ===
 myprintf:
-lw $s0, 100($sp)
+lw $s1, 100($sp)
 
 # === PRINT   n int ===
-move $a0, $s0
+move $a0, $s1
 li $v0, 1
 syscall
 
@@ -44,16 +59,139 @@ jr $ra
 
 # === =============END_FUNC void myprintf============== ===
 
-# === =============FUNC int checkrange============== ===
-checkrange:
-lw $s0, 100($sp)
+# === =============FUNC int set============== ===
+set:
+lw $s2, 100($sp)
+lw $s3, 104($sp)
 
-# === #T1 = num - 1073741824 ===
-lui $a2, 0xc000
-addu $t0, $s0, $a2
+# === @V135 = pos / 30 ===
+div $s4, $s2, 30
 
-# === JUMP_IF  #T1<=0  label_1 ===
-blez $t0, label_1
+# === i = 10 ===
+li $s5, 10
+
+# === v = 0 ===
+move $s6, $zero
+
+# === x[0] = 1 ===
+li $a2, 1
+sw $a2, arr_set_x_+0($zero)
+
+# === #T1 = x[0] ===
+lw $t0, arr_set_x_+0($zero)
+
+# === #T2 = #T1 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[1] = #T2 ===
+sw $t1, arr_set_x_+4($zero)
+# RELEASE $t1
+
+# === #T3 = x[1] ===
+lw $t0, arr_set_x_+4($zero)
+
+# === #T4 = #T3 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[2] = #T4 ===
+sw $t1, arr_set_x_+8($zero)
+# RELEASE $t1
+
+# === #T5 = x[2] ===
+lw $t0, arr_set_x_+8($zero)
+
+# === #T6 = #T5 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[3] = #T6 ===
+sw $t1, arr_set_x_+12($zero)
+# RELEASE $t1
+
+# === #T7 = x[3] ===
+lw $t0, arr_set_x_+12($zero)
+
+# === #T8 = #T7 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[4] = #T8 ===
+sw $t1, arr_set_x_+16($zero)
+# RELEASE $t1
+
+# === #T9 = x[4] ===
+lw $t0, arr_set_x_+16($zero)
+
+# === #T10 = #T9 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[5] = #T10 ===
+sw $t1, arr_set_x_+20($zero)
+# RELEASE $t1
+
+# === #T11 = x[5] ===
+lw $t0, arr_set_x_+20($zero)
+
+# === #T12 = #T11 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[6] = #T12 ===
+sw $t1, arr_set_x_+24($zero)
+# RELEASE $t1
+
+# === #T13 = x[6] ===
+lw $t0, arr_set_x_+24($zero)
+
+# === #T14 = #T13 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[7] = #T14 ===
+sw $t1, arr_set_x_+28($zero)
+# RELEASE $t1
+
+# === #T15 = x[7] ===
+lw $t0, arr_set_x_+28($zero)
+
+# === #T16 = #T15 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[8] = #T16 ===
+sw $t1, arr_set_x_+32($zero)
+# RELEASE $t1
+
+# === #T17 = x[8] ===
+lw $t0, arr_set_x_+32($zero)
+
+# === #T18 = #T17 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[9] = #T18 ===
+sw $t1, arr_set_x_+36($zero)
+# RELEASE $t1
+
+# === #T19 = x[9] ===
+lw $t0, arr_set_x_+36($zero)
+
+# === #T20 = #T19 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === x[10] = #T20 ===
+sw $t1, arr_set_x_+40($zero)
+# RELEASE $t1
+
+# === #T21 = i - 30 ===
+addiu $t0, $s5, -30
+
+# === JUMP_IF  #T21>=0  label_1 ===
+bgez $t0, label_1
 # RELEASE $t0
 
 # === -----LOOP BEGIN----- ===
@@ -61,1614 +199,815 @@ blez $t0, label_1
 # === LABEL   label_2 ===
 label_2:
 
-# === num = num - 1073741824 ===
-lui $a2, 0xc000
-addu $s0, $s0, $a2
+# === i = i + 1 ===
+addiu $s5, $s5, 1
+
+# === #T23 = i - 1 ===
+addiu $t0, $s5, -1
+
+# === #T24 = x[#T23] ===
+sll $a1, $t0, 2
+# RELEASE $t0
+lw $t1, arr_set_x_($a1)
+
+# === #T25 = #T24 * 2 ===
+sll $t0, $t1, 1
+# RELEASE $t1
+
+# === x[i] = #T25 ===
+sll $a1, $s5, 2
+sw $t0, arr_set_x_($a1)
+# RELEASE $t0
 
 # === -----LOOP END----- ===
 
-# === #T3 = num - 1073741824 ===
-lui $a2, 0xc000
-addu $t0, $s0, $a2
+# === #T26 = i - 30 ===
+addiu $t0, $s5, -30
 
-# === JUMP_IF  #T3>0  label_2 ===
-bgtz $t0, label_2
+# === JUMP_IF  #T26<0  label_2 ===
+bltz $t0, label_2
 # RELEASE $t0
 
 # === LABEL   label_1 ===
 label_1:
 
-# === #T4 = num ===
-move $t0, $s0
+# === #T28 = @V135 - 1000 ===
+addiu $t0, $s4, -1000
 
-# === JUMP_IF  #T4>=0  label_3 ===
-bgez $t0, label_3
+# === JUMP_IF  #T28<0  label_3 ===
+bltz $t0, label_3
 # RELEASE $t0
 
-# === -----LOOP BEGIN----- ===
-
-# === LABEL   label_4 ===
-label_4:
-
-# === num = num + 1073741824 ===
-lui $a2, 0x4000
-addu $s0, $s0, $a2
-
-# === -----LOOP END----- ===
-
-# === #T6 = num ===
-move $t0, $s0
-
-# === JUMP_IF  #T6<0  label_4 ===
-bltz $t0, label_4
-# RELEASE $t0
+# === RETURN  0 ===
+move $v0, $zero
+jr $ra
 
 # === LABEL   label_3 ===
 label_3:
 
-# === RETURN  num ===
-move $v0, $s0
-jr $ra
+# === #T30 = a[@V135] ===
+sll $a1, $s4, 2
+lw $t0, arr__a_($a1)
 
-# === =============END_FUNC int checkrange============== ===
+# === #T32 = @V135 * 30 ===
+mul $t1, $s4, 30
 
-# === =============FUNC int reduce============== ===
-reduce:
-lw $s0, 100($sp)
-lw $s1, 104($sp)
-lw $s2, 108($sp)
+# === #T33 = pos - #T32 ===
+subu $t2, $s2, $t1
+# RELEASE $t1
 
-# === #T7 = kernelid ===
-move $t0, $s0
+# === #T34 = x[#T33] ===
+sll $a1, $t2, 2
+# RELEASE $t2
+lw $t1, arr_set_x_($a1)
 
-# === JUMP_IF  #T7!=0  label_5 ===
-bne $t0, $zero, label_5
+# === #T35 = #T30 / #T34 ===
+bltz $t0, tmp_label_1
+addiu $a3, $t1, -1
+and $a3, $t1, $a3
+bne $a3, $zero, tmp_label_1
+clz $a3, $t1
+subu $a3, $v1, $a3
+srav $t2, $t0, $a3
+j tmp_label_2
+tmp_label_1:
+div $t0, $t1
+# RELEASE $t1
+mflo $t2
+tmp_label_2:
+# RELEASE $t0
+# RELEASE $t1
+
+# === #T37 = a[@V135] ===
+sll $a1, $s4, 2
+lw $t0, arr__a_($a1)
+
+# === #T39 = @V135 * 30 ===
+mul $t1, $s4, 30
+
+# === #T40 = pos - #T39 ===
+subu $t3, $s2, $t1
+# RELEASE $t1
+
+# === #T41 = x[#T40] ===
+sll $a1, $t3, 2
+# RELEASE $t3
+lw $t1, arr_set_x_($a1)
+
+# === #T42 = #T37 / #T41 ===
+bltz $t0, tmp_label_3
+addiu $a3, $t1, -1
+and $a3, $t1, $a3
+bne $a3, $zero, tmp_label_3
+clz $a3, $t1
+subu $a3, $v1, $a3
+srav $t3, $t0, $a3
+j tmp_label_4
+tmp_label_3:
+div $t0, $t1
+# RELEASE $t1
+mflo $t3
+tmp_label_4:
+# RELEASE $t0
+# RELEASE $t1
+
+# === #T43 = #T42 / 2 ===
+bgez $t3, tmp_label_5
+# RELEASE $t3
+subu $a2, $zero, $t3
+# RELEASE $t3
+sra $t0, $a2, 1
+subu $t0, $zero, $t0
+j tmp_label_6
+tmp_label_5:
+sra $t0, $t3, 1
+# RELEASE $t3
+tmp_label_6:
+
+# === #T44 = #T43 * 2 ===
+sll $t1, $t0, 1
 # RELEASE $t0
 
-# === #T8 = x + y ===
-addu $t0, $s1, $s2
+# === #T45 = #T35 - #T44 ===
+subu $t0, $t2, $t1
+# RELEASE $t2
+# RELEASE $t1
 
-# === @V134 = #T8 ===
-move $s3, $t0
+# === #T46 = #T45 - d ===
+subu $t1, $t0, $s3
 # RELEASE $t0
 
-# === _1_#T1 = @V134 - 1073741824 ===
-lui $a2, 0xc000
-addu $t0, $s3, $a2
+# === JUMP_IF  #T46==0  label_4 ===
+beq $t1, $zero, label_4
+# RELEASE $t1
 
-# === JUMP_IF  _1_#T1<=0  label_1_1_ ===
-blez $t0, label_1_1_
+# === #T48 = a[@V135] ===
+sll $a1, $s4, 2
+lw $t0, arr__a_($a1)
+
+# === #T50 = @V135 * 30 ===
+mul $t1, $s4, 30
+
+# === #T51 = pos - #T50 ===
+subu $t2, $s2, $t1
+# RELEASE $t1
+
+# === #T52 = x[#T51] ===
+sll $a1, $t2, 2
+# RELEASE $t2
+lw $t1, arr_set_x_($a1)
+
+# === #T53 = #T48 / #T52 ===
+bltz $t0, tmp_label_7
+addiu $a3, $t1, -1
+and $a3, $t1, $a3
+bne $a3, $zero, tmp_label_7
+clz $a3, $t1
+subu $a3, $v1, $a3
+srav $t2, $t0, $a3
+j tmp_label_8
+tmp_label_7:
+div $t0, $t1
+# RELEASE $t1
+mflo $t2
+tmp_label_8:
+# RELEASE $t0
+# RELEASE $t1
+
+# === #T55 = a[@V135] ===
+sll $a1, $s4, 2
+lw $t0, arr__a_($a1)
+
+# === #T57 = @V135 * 30 ===
+mul $t1, $s4, 30
+
+# === #T58 = pos - #T57 ===
+subu $t3, $s2, $t1
+# RELEASE $t1
+
+# === #T59 = x[#T58] ===
+sll $a1, $t3, 2
+# RELEASE $t3
+lw $t1, arr_set_x_($a1)
+
+# === #T60 = #T55 / #T59 ===
+bltz $t0, tmp_label_9
+addiu $a3, $t1, -1
+and $a3, $t1, $a3
+bne $a3, $zero, tmp_label_9
+clz $a3, $t1
+subu $a3, $v1, $a3
+srav $t3, $t0, $a3
+j tmp_label_10
+tmp_label_9:
+div $t0, $t1
+# RELEASE $t1
+mflo $t3
+tmp_label_10:
+# RELEASE $t0
+# RELEASE $t1
+
+# === #T61 = #T60 / 2 ===
+bgez $t3, tmp_label_11
+# RELEASE $t3
+subu $a2, $zero, $t3
+# RELEASE $t3
+sra $t0, $a2, 1
+subu $t0, $zero, $t0
+j tmp_label_12
+tmp_label_11:
+sra $t0, $t3, 1
+# RELEASE $t3
+tmp_label_12:
+
+# === #T62 = #T61 * 2 ===
+sll $t1, $t0, 1
 # RELEASE $t0
 
-# === -----LOOP BEGIN----- ===
+# === #T63 = #T53 - #T62 ===
+subu $t0, $t2, $t1
+# RELEASE $t2
+# RELEASE $t1
 
-# === LABEL   label_2_1_ ===
-label_2_1_:
-
-# === @V134 = @V134 - 1073741824 ===
-lui $a2, 0xc000
-addu $s3, $s3, $a2
-
-# === -----LOOP END----- ===
-
-# === _1_#T3 = @V134 - 1073741824 ===
-lui $a2, 0xc000
-addu $t0, $s3, $a2
-
-# === JUMP_IF  _1_#T3>0  label_2_1_ ===
-bgtz $t0, label_2_1_
+# === #T64 = #T63 ===
+move $t1, $t0
 # RELEASE $t0
 
-# === LABEL   label_1_1_ ===
-label_1_1_:
+# === JUMP_IF  #T64!=0  label_5 ===
+bne $t1, $zero, label_5
+# RELEASE $t1
 
-# === _1_#T4 = @V134 ===
-move $t0, $s3
+# === #T65 = d - 1 ===
+addiu $t0, $s3, -1
 
-# === JUMP_IF  _1_#T4>=0  label_3_1_ ===
-bgez $t0, label_3_1_
+# === JUMP_IF  #T65!=0  label_6 ===
+bne $t0, $zero, label_6
 # RELEASE $t0
 
-# === -----LOOP BEGIN----- ===
+# === #T67 = @V135 * 30 ===
+mul $t0, $s4, 30
 
-# === LABEL   label_4_1_ ===
-label_4_1_:
-
-# === @V134 = @V134 + 1073741824 ===
-lui $a2, 0x4000
-addu $s3, $s3, $a2
-
-# === -----LOOP END----- ===
-
-# === _1_#T6 = @V134 ===
-move $t0, $s3
-
-# === JUMP_IF  _1_#T6<0  label_4_1_ ===
-bltz $t0, label_4_1_
+# === #T68 = pos - #T67 ===
+subu $t1, $s2, $t0
 # RELEASE $t0
 
-# === LABEL   label_3_1_ ===
-label_3_1_:
+# === v = x[#T68] ===
+sll $a1, $t1, 2
+# RELEASE $t1
+lw $s6, arr_set_x_($a1)
 
-# === %RET = @V134 ===
-move $v0, $s3
-
-# === LABEL   label_53 ===
-label_53:
-
-# === #T9 = %RET ===
-move $t0, $v0
-
-# === RETURN  #T9 ===
-move $v0, $t0
-# RELEASE $t0
-jr $ra
+# === LABEL   label_6 ===
+label_6:
 
 # === LABEL   label_5 ===
 label_5:
 
-# === #T10 = kernelid - 1 ===
-addiu $t0, $s0, -1
+# === #T71 = a[@V135] ===
+sll $a1, $s4, 2
+lw $t0, arr__a_($a1)
 
-# === JUMP_IF  #T10!=0  label_6 ===
-bne $t0, $zero, label_6
+# === #T73 = @V135 * 30 ===
+mul $t1, $s4, 30
+
+# === #T74 = pos - #T73 ===
+subu $t2, $s2, $t1
+# RELEASE $t1
+
+# === #T75 = x[#T74] ===
+sll $a1, $t2, 2
+# RELEASE $t2
+lw $t1, arr_set_x_($a1)
+
+# === #T76 = #T71 / #T75 ===
+bltz $t0, tmp_label_13
+addiu $a3, $t1, -1
+and $a3, $t1, $a3
+bne $a3, $zero, tmp_label_13
+clz $a3, $t1
+subu $a3, $v1, $a3
+srav $t2, $t0, $a3
+j tmp_label_14
+tmp_label_13:
+div $t0, $t1
+# RELEASE $t1
+mflo $t2
+tmp_label_14:
+# RELEASE $t0
+# RELEASE $t1
+
+# === #T78 = a[@V135] ===
+sll $a1, $s4, 2
+lw $t0, arr__a_($a1)
+
+# === #T80 = @V135 * 30 ===
+mul $t1, $s4, 30
+
+# === #T81 = pos - #T80 ===
+subu $t3, $s2, $t1
+# RELEASE $t1
+
+# === #T82 = x[#T81] ===
+sll $a1, $t3, 2
+# RELEASE $t3
+lw $t1, arr_set_x_($a1)
+
+# === #T83 = #T78 / #T82 ===
+bltz $t0, tmp_label_15
+addiu $a3, $t1, -1
+and $a3, $t1, $a3
+bne $a3, $zero, tmp_label_15
+clz $a3, $t1
+subu $a3, $v1, $a3
+srav $t3, $t0, $a3
+j tmp_label_16
+tmp_label_15:
+div $t0, $t1
+# RELEASE $t1
+mflo $t3
+tmp_label_16:
+# RELEASE $t0
+# RELEASE $t1
+
+# === #T84 = #T83 / 2 ===
+bgez $t3, tmp_label_17
+# RELEASE $t3
+subu $a2, $zero, $t3
+# RELEASE $t3
+sra $t0, $a2, 1
+subu $t0, $zero, $t0
+j tmp_label_18
+tmp_label_17:
+sra $t0, $t3, 1
+# RELEASE $t3
+tmp_label_18:
+
+# === #T85 = #T84 * 2 ===
+sll $t1, $t0, 1
 # RELEASE $t0
 
-# === ret = 0 ===
-move $s4, $zero
+# === #T86 = #T76 - #T85 ===
+subu $t0, $t2, $t1
+# RELEASE $t2
+# RELEASE $t1
 
-# === i = 1 ===
-li $s5, 1
-
-# === #T11 = i - 1073741824 ===
-lui $a2, 0xc000
-addu $t0, $s5, $a2
-
-# === JUMP_IF  #T11>=0  label_7 ===
-bgez $t0, label_7
+# === #T87 = #T86 - 1 ===
+addiu $t1, $t0, -1
 # RELEASE $t0
 
-# === -----LOOP BEGIN----- ===
+# === JUMP_IF  #T87!=0  label_7 ===
+bne $t1, $zero, label_7
+# RELEASE $t1
+
+# === #T88 = d ===
+move $t0, $s3
+
+# === JUMP_IF  #T88!=0  label_8 ===
+bne $t0, $zero, label_8
+# RELEASE $t0
+
+# === #T90 = @V135 * 30 ===
+mul $t0, $s4, 30
+
+# === #T91 = pos - #T90 ===
+subu $t1, $s2, $t0
+# RELEASE $t0
+
+# === #T92 = x[#T91] ===
+sll $a1, $t1, 2
+# RELEASE $t1
+lw $t0, arr_set_x_($a1)
+
+# === v = v - #T92 ===
+subu $s6, $s6, $t0
+# RELEASE $t0
 
 # === LABEL   label_8 ===
 label_8:
 
-# === #T12 = x / i ===
-bltz $s1, tmp_label_1
-addiu $a3, $s5, -1
-and $a3, $s5, $a3
-bne $a3, $zero, tmp_label_1
-clz $a3, $s5
-subu $a3, $v1, $a3
-srav $t0, $s1, $a3
-j tmp_label_2
-tmp_label_1:
-div $s1, $s5
-mflo $t0
-tmp_label_2:
+# === LABEL   label_7 ===
+label_7:
 
-# === #T13 = x / i ===
-bltz $s1, tmp_label_3
-addiu $a3, $s5, -1
-and $a3, $s5, $a3
-bne $a3, $zero, tmp_label_3
-clz $a3, $s5
-subu $a3, $v1, $a3
-srav $t1, $s1, $a3
-j tmp_label_4
-tmp_label_3:
-div $s1, $s5
-mflo $t1
-tmp_label_4:
+# === LABEL   label_4 ===
+label_4:
 
-# === #T14 = #T13 / 2 ===
-bgez $t1, tmp_label_5
-# RELEASE $t1
-subu $a2, $zero, $t1
-# RELEASE $t1
-sra $t2, $a2, 1
-subu $t2, $zero, $t2
-j tmp_label_6
-tmp_label_5:
-sra $t2, $t1, 1
-# RELEASE $t1
-tmp_label_6:
+# === #T94 = @V135 ===
+move $t0, $s4
 
-# === #T15 = #T14 * 2 ===
-sll $t1, $t2, 1
+# === #T96 = a[@V135] ===
+sll $a1, $s4, 2
+lw $t1, arr__a_($a1)
+
+# === #T97 = #T96 + v ===
+addu $t2, $t1, $s6
+# RELEASE $t1
+
+# === a[#T94] = #T97 ===
+sll $a1, $t0, 2
+# RELEASE $t0
+sw $t2, arr__a_($a1)
 # RELEASE $t2
 
-# === #T16 = #T12 - #T15 ===
-subu $t2, $t0, $t1
+# === RETURN  0 ===
+move $v0, $zero
+jr $ra
+
+# === =============END_FUNC int set============== ===
+
+# === =============FUNC int rand============== ===
+rand:
+
+# === #T98 = seed[0] ===
+lw $t0, arr__seed_+0($zero)
+
+# === #T99 = staticvalue * #T98 ===
+lw $a1, 0($gp)
+mul $t1, $a1, $t0
 # RELEASE $t0
+
+# === #T100 = seed[1] ===
+lw $t0, arr__seed_+4($zero)
+
+# === staticvalue = #T99 + #T100 ===
+addu $a1, $t1, $t0
 # RELEASE $t1
+# RELEASE $t0
+sw $a1, 0($gp)
 
-# === #T17 = y / i ===
-bltz $s2, tmp_label_7
-addiu $a3, $s5, -1
-and $a3, $s5, $a3
-bne $a3, $zero, tmp_label_7
-clz $a3, $s5
-subu $a3, $v1, $a3
-srav $t0, $s2, $a3
-j tmp_label_8
-tmp_label_7:
-div $s2, $s5
-mflo $t0
-tmp_label_8:
+# === #T102 = seed[2] ===
+lw $t0, arr__seed_+8($zero)
 
-# === #T18 = y / i ===
-bltz $s2, tmp_label_9
-addiu $a3, $s5, -1
-and $a3, $s5, $a3
-bne $a3, $zero, tmp_label_9
-clz $a3, $s5
+# === #T103 = staticvalue / #T102 ===
+lw $a1, 0($gp)
+bltz $a1, tmp_label_19
+addiu $a3, $t0, -1
+and $a3, $t0, $a3
+bne $a3, $zero, tmp_label_19
+clz $a3, $t0
 subu $a3, $v1, $a3
-srav $t1, $s2, $a3
-j tmp_label_10
-tmp_label_9:
-div $s2, $s5
+srav $t1, $a1, $a3
+j tmp_label_20
+tmp_label_19:
+div $a1, $t0
+# RELEASE $t0
 mflo $t1
-tmp_label_10:
-
-# === #T19 = #T18 / 2 ===
-bgez $t1, tmp_label_11
-# RELEASE $t1
-subu $a2, $zero, $t1
-# RELEASE $t1
-sra $t3, $a2, 1
-subu $t3, $zero, $t3
-j tmp_label_12
-tmp_label_11:
-sra $t3, $t1, 1
-# RELEASE $t1
-tmp_label_12:
-
-# === #T20 = #T19 * 2 ===
-sll $t1, $t3, 1
-# RELEASE $t3
-
-# === #T21 = #T17 - #T20 ===
-subu $t3, $t0, $t1
+tmp_label_20:
 # RELEASE $t0
-# RELEASE $t1
 
-# === #T22 = #T16 - #T21 ===
-subu $t0, $t2, $t3
+# === #T104 = seed[2] ===
+lw $t0, arr__seed_+8($zero)
+
+# === #T105 = #T103 * #T104 ===
+mul $t2, $t1, $t0
+# RELEASE $t1
+# RELEASE $t0
+
+# === staticvalue = staticvalue - #T105 ===
+lw $a1, 0($gp)
+subu $a1, $a1, $t2
 # RELEASE $t2
-# RELEASE $t3
+sw $a1, 0($gp)
 
-# === JUMP_IF  #T22!=0  label_9 ===
-bne $t0, $zero, label_9
+# === #T107 = staticvalue ===
+lw $t0, 0($gp)
+
+# === JUMP_IF  #T107>=0  label_9 ===
+bgez $t0, label_9
 # RELEASE $t0
 
-# === ret = ret * 2 ===
-sll $s4, $s4, 1
+# === #T108 = seed[2] ===
+lw $t0, arr__seed_+8($zero)
 
-# === JUMP    label_10 ===
-j label_10
+# === staticvalue = #T108 + staticvalue ===
+lw $a1, 0($gp)
+addu $a1, $t0, $a1
+# RELEASE $t0
+sw $a1, 0($gp)
 
 # === LABEL   label_9 ===
 label_9:
 
-# === #T24 = ret * 2 ===
-sll $t0, $s4, 1
+# === RETURN  staticvalue ===
+lw $v0, 0($gp)
+jr $ra
 
-# === ret = #T24 + 1 ===
-addiu $s4, $t0, 1
+# === =============END_FUNC int rand============== ===
+
+# === =============FUNC void main============== ===
+lw $fp, 0($gp)
+main:
+
+# === tmp = 0 ===
+move $s7, $zero
+
+# === i = 0 ===
+move $t4, $zero
+
+# === SCANF   _1_n ===
+li $v0, 5
+syscall
+move $t5, $v0
+
+# === %RET = _1_n ===
+move $v0, $t5
+
+# === LABEL   label_14 ===
+label_14:
+
+# === n = %RET ===
+move $t6, $v0
+
+# === SCANF   _2_n ===
+li $v0, 5
+syscall
+move $t7, $v0
+
+# === %RET = _2_n ===
+move $v0, $t7
+
+# === LABEL   label_15 ===
+label_15:
+
+# === staticvalue = %RET ===
+move $fp, $v0
+
+# === #T112 = n ===
+move $t0, $t6
+
+# === JUMP_IF  #T112<=0  label_10 ===
+blez $t0, label_10
+# RELEASE $t0
+
+# === -----LOOP BEGIN----- ===
+
+# === LABEL   label_11 ===
+label_11:
+
+# === n = n - 1 ===
+addiu $t6, $t6, -1
+
+# === _3_#T98 = seed[0] ===
+lw $t0, arr__seed_+0($zero)
+
+# === _3_#T99 = staticvalue * _3_#T98 ===
+mul $t1, $fp, $t0
+# RELEASE $t0
+
+# === _3_#T100 = seed[1] ===
+lw $t0, arr__seed_+4($zero)
+
+# === staticvalue = _3_#T99 + _3_#T100 ===
+addu $fp, $t1, $t0
+# RELEASE $t1
+# RELEASE $t0
+
+# === _3_#T102 = seed[2] ===
+lw $t0, arr__seed_+8($zero)
+
+# === _3_#T103 = staticvalue / _3_#T102 ===
+bltz $fp, tmp_label_21
+addiu $a3, $t0, -1
+and $a3, $t0, $a3
+bne $a3, $zero, tmp_label_21
+clz $a3, $t0
+subu $a3, $v1, $a3
+srav $t1, $fp, $a3
+j tmp_label_22
+tmp_label_21:
+div $fp, $t0
+# RELEASE $t0
+mflo $t1
+tmp_label_22:
+# RELEASE $t0
+
+# === _3_#T104 = seed[2] ===
+lw $t0, arr__seed_+8($zero)
+
+# === _3_#T105 = _3_#T103 * _3_#T104 ===
+mul $t2, $t1, $t0
+# RELEASE $t1
+# RELEASE $t0
+
+# === staticvalue = staticvalue - _3_#T105 ===
+subu $fp, $fp, $t2
+# RELEASE $t2
+
+# === _3_#T107 = staticvalue ===
+move $t0, $fp
+
+# === JUMP_IF  _3_#T107>=0  label_9_3_ ===
+bgez $t0, label_9_3_
+# RELEASE $t0
+
+# === _3_#T108 = seed[2] ===
+lw $t0, arr__seed_+8($zero)
+
+# === staticvalue = _3_#T108 + staticvalue ===
+addu $fp, $t0, $fp
+# RELEASE $t0
+
+# === LABEL   label_9_3_ ===
+label_9_3_:
+
+# === %RET = staticvalue ===
+move $v0, $fp
+
+# === LABEL   label_16 ===
+label_16:
+
+# === z = %RET ===
+move $t8, $v0
+
+# === #T115 = z / 300000 ===
+div $t0, $t8, 300000
+
+# === #T116 = #T115 * 300000 ===
+mul $t1, $t0, 300000
+# RELEASE $t0
+
+# === x = z - #T116 ===
+subu $t9, $t8, $t1
+# RELEASE $t1
+
+# === _4_#T98 = seed[0] ===
+lw $t0, arr__seed_+0($zero)
+
+# === _4_#T99 = staticvalue * _4_#T98 ===
+mul $t1, $fp, $t0
+# RELEASE $t0
+
+# === _4_#T100 = seed[1] ===
+lw $t0, arr__seed_+4($zero)
+
+# === staticvalue = _4_#T99 + _4_#T100 ===
+addu $fp, $t1, $t0
+# RELEASE $t1
+# RELEASE $t0
+
+# === _4_#T102 = seed[2] ===
+lw $t0, arr__seed_+8($zero)
+
+# === _4_#T103 = staticvalue / _4_#T102 ===
+bltz $fp, tmp_label_23
+addiu $a3, $t0, -1
+and $a3, $t0, $a3
+bne $a3, $zero, tmp_label_23
+clz $a3, $t0
+subu $a3, $v1, $a3
+srav $t1, $fp, $a3
+j tmp_label_24
+tmp_label_23:
+div $fp, $t0
+# RELEASE $t0
+mflo $t1
+tmp_label_24:
+# RELEASE $t0
+
+# === _4_#T104 = seed[2] ===
+lw $t0, arr__seed_+8($zero)
+
+# === _4_#T105 = _4_#T103 * _4_#T104 ===
+mul $t2, $t1, $t0
+# RELEASE $t1
+# RELEASE $t0
+
+# === staticvalue = staticvalue - _4_#T105 ===
+subu $fp, $fp, $t2
+# RELEASE $t2
+
+# === _4_#T107 = staticvalue ===
+move $t0, $fp
+
+# === JUMP_IF  _4_#T107>=0  label_9_4_ ===
+bgez $t0, label_9_4_
+# RELEASE $t0
+
+# === _4_#T108 = seed[2] ===
+lw $t0, arr__seed_+8($zero)
+
+# === staticvalue = _4_#T108 + staticvalue ===
+addu $fp, $t0, $fp
+# RELEASE $t0
+
+# === LABEL   label_9_4_ ===
+label_9_4_:
+
+# === %RET = staticvalue ===
+move $v0, $fp
+
+# === LABEL   label_17 ===
+label_17:
+
+# === z = %RET ===
+move $t8, $v0
+
+# === #T119 = z / 2 ===
+bgez $t8, tmp_label_25
+subu $a2, $zero, $t8
+sra $t0, $a2, 1
+subu $t0, $zero, $t0
+j tmp_label_26
+tmp_label_25:
+sra $t0, $t8, 1
+tmp_label_26:
+
+# === #T120 = #T119 * 2 ===
+sll $t1, $t0, 1
+# RELEASE $t0
+
+# === y = z - #T120 ===
+subu $k0, $t8, $t1
+# RELEASE $t1
+
+# === PREPARE_CALL set ===
+addi $sp, $sp, -736
+
+# === PUSH_PARA x ===
+sw $t9, 100($sp)
+
+# === PUSH_PARA y ===
+sw $k0, 104($sp)
+
+# === CALL    set ===
+jal set
+addi $sp, $sp, 736
+
+# === -----LOOP END----- ===
+
+# === #T122 = n ===
+move $t0, $t6
+
+# === JUMP_IF  #T122>0  label_11 ===
+bgtz $t0, label_11
 # RELEASE $t0
 
 # === LABEL   label_10 ===
 label_10:
 
-# === i = i * 2 ===
-sll $s5, $s5, 1
+# === #T123 = i - 1000 ===
+addiu $t0, $t4, -1000
 
-# === -----LOOP END----- ===
-
-# === #T27 = i - 1073741824 ===
-lui $a2, 0xc000
-addu $t0, $s5, $a2
-
-# === JUMP_IF  #T27<0  label_8 ===
-bltz $t0, label_8
+# === JUMP_IF  #T123>=0  label_12 ===
+bgez $t0, label_12
 # RELEASE $t0
 
-# === LABEL   label_7 ===
-label_7:
-
-# === RETURN  ret ===
-move $v0, $s4
-jr $ra
-
-# === LABEL   label_6 ===
-label_6:
-
-# === #T28 = kernelid - 2 ===
-addiu $t0, $s0, -2
-
-# === JUMP_IF  #T28!=0  label_11 ===
-bne $t0, $zero, label_11
-# RELEASE $t0
-
-# === #T29 = x - y ===
-subu $t0, $s1, $s2
-
-# === JUMP_IF  #T29<=0  label_12 ===
-blez $t0, label_12
-# RELEASE $t0
-
-# === RETURN  x ===
-move $v0, $s1
-jr $ra
-
-# === JUMP    label_13 ===
-j label_13
-
-# === LABEL   label_12 ===
-label_12:
-
-# === RETURN  y ===
-move $v0, $s2
-jr $ra
+# === -----LOOP BEGIN----- ===
 
 # === LABEL   label_13 ===
 label_13:
 
-# === LABEL   label_11 ===
-label_11:
-
-# === #T30 = kernelid - 3 ===
-addiu $t0, $s0, -3
-
-# === JUMP_IF  #T30!=0  label_14 ===
-bne $t0, $zero, label_14
-# RELEASE $t0
-
-# === ret = 0 ===
-move $s4, $zero
-
-# === i = 1 ===
-li $s5, 1
-
-# === #T31 = i - 1073741824 ===
-lui $a2, 0xc000
-addu $t0, $s5, $a2
-
-# === JUMP_IF  #T31>=0  label_15 ===
-bgez $t0, label_15
-# RELEASE $t0
-
-# === -----LOOP BEGIN----- ===
-
-# === LABEL   label_16 ===
-label_16:
-
-# === #T32 = x / i ===
-bltz $s1, tmp_label_13
-addiu $a3, $s5, -1
-and $a3, $s5, $a3
-bne $a3, $zero, tmp_label_13
-clz $a3, $s5
-subu $a3, $v1, $a3
-srav $t0, $s1, $a3
-j tmp_label_14
-tmp_label_13:
-div $s1, $s5
-mflo $t0
-tmp_label_14:
-
-# === #T33 = x / i ===
-bltz $s1, tmp_label_15
-addiu $a3, $s5, -1
-and $a3, $s5, $a3
-bne $a3, $zero, tmp_label_15
-clz $a3, $s5
-subu $a3, $v1, $a3
-srav $t1, $s1, $a3
-j tmp_label_16
-tmp_label_15:
-div $s1, $s5
-mflo $t1
-tmp_label_16:
-
-# === #T34 = #T33 / 2 ===
-bgez $t1, tmp_label_17
-# RELEASE $t1
-subu $a2, $zero, $t1
-# RELEASE $t1
-sra $t2, $a2, 1
-subu $t2, $zero, $t2
-j tmp_label_18
-tmp_label_17:
-sra $t2, $t1, 1
-# RELEASE $t1
-tmp_label_18:
-
-# === #T35 = #T34 * 2 ===
-sll $t1, $t2, 1
-# RELEASE $t2
-
-# === #T36 = #T32 - #T35 ===
-subu $t2, $t0, $t1
-# RELEASE $t0
-# RELEASE $t1
-
-# === #T37 = #T36 - 1 ===
-addiu $t0, $t2, -1
-# RELEASE $t2
-
-# === JUMP_IF  #T37!=0  label_17 ===
-bne $t0, $zero, label_17
-# RELEASE $t0
-
-# === #T38 = ret * 2 ===
-sll $t0, $s4, 1
-
-# === ret = #T38 + 1 ===
-addiu $s4, $t0, 1
-# RELEASE $t0
-
-# === JUMP    label_18 ===
-j label_18
-
-# === LABEL   label_17 ===
-label_17:
-
-# === #T40 = y / i ===
-bltz $s2, tmp_label_19
-addiu $a3, $s5, -1
-and $a3, $s5, $a3
-bne $a3, $zero, tmp_label_19
-clz $a3, $s5
-subu $a3, $v1, $a3
-srav $t0, $s2, $a3
-j tmp_label_20
-tmp_label_19:
-div $s2, $s5
-mflo $t0
-tmp_label_20:
-
-# === #T41 = y / i ===
-bltz $s2, tmp_label_21
-addiu $a3, $s5, -1
-and $a3, $s5, $a3
-bne $a3, $zero, tmp_label_21
-clz $a3, $s5
-subu $a3, $v1, $a3
-srav $t1, $s2, $a3
-j tmp_label_22
-tmp_label_21:
-div $s2, $s5
-mflo $t1
-tmp_label_22:
-
-# === #T42 = #T41 / 2 ===
-bgez $t1, tmp_label_23
-# RELEASE $t1
-subu $a2, $zero, $t1
-# RELEASE $t1
-sra $t2, $a2, 1
-subu $t2, $zero, $t2
-j tmp_label_24
-tmp_label_23:
-sra $t2, $t1, 1
-# RELEASE $t1
-tmp_label_24:
-
-# === #T43 = #T42 * 2 ===
-sll $t1, $t2, 1
-# RELEASE $t2
-
-# === #T44 = #T40 - #T43 ===
-subu $t2, $t0, $t1
-# RELEASE $t0
-# RELEASE $t1
-
-# === #T45 = #T44 - 1 ===
-addiu $t0, $t2, -1
-# RELEASE $t2
-
-# === JUMP_IF  #T45!=0  label_19 ===
-bne $t0, $zero, label_19
-# RELEASE $t0
-
-# === #T46 = ret * 2 ===
-sll $t0, $s4, 1
-
-# === ret = #T46 + 1 ===
-addiu $s4, $t0, 1
-# RELEASE $t0
-
-# === LABEL   label_19 ===
-label_19:
-
-# === ret = ret * 2 ===
-sll $s4, $s4, 1
-
-# === LABEL   label_18 ===
-label_18:
-
-# === i = i * 2 ===
-sll $s5, $s5, 1
-
-# === -----LOOP END----- ===
-
-# === #T50 = i - 1073741824 ===
-lui $a2, 0xc000
-addu $t0, $s5, $a2
-
-# === JUMP_IF  #T50<0  label_16 ===
-bltz $t0, label_16
-# RELEASE $t0
-
-# === LABEL   label_15 ===
-label_15:
-
-# === RETURN  ret ===
-move $v0, $s4
-jr $ra
-
-# === LABEL   label_14 ===
-label_14:
-
-# === #T51 = kernelid - 4 ===
-addiu $t0, $s0, -4
-
-# === JUMP_IF  #T51!=0  label_20 ===
-bne $t0, $zero, label_20
-# RELEASE $t0
-
-# === ret = 0 ===
-move $s4, $zero
-
-# === i = 1 ===
-li $s5, 1
-
-# === #T52 = i - 1073741824 ===
-lui $a2, 0xc000
-addu $t0, $s5, $a2
-
-# === JUMP_IF  #T52>=0  label_21 ===
-bgez $t0, label_21
-# RELEASE $t0
-
-# === -----LOOP BEGIN----- ===
-
-# === LABEL   label_22 ===
-label_22:
-
-# === #T53 = x / i ===
-bltz $s1, tmp_label_25
-addiu $a3, $s5, -1
-and $a3, $s5, $a3
-bne $a3, $zero, tmp_label_25
-clz $a3, $s5
-subu $a3, $v1, $a3
-srav $t0, $s1, $a3
-j tmp_label_26
-tmp_label_25:
-div $s1, $s5
-mflo $t0
-tmp_label_26:
-
-# === #T54 = x / i ===
-bltz $s1, tmp_label_27
-addiu $a3, $s5, -1
-and $a3, $s5, $a3
-bne $a3, $zero, tmp_label_27
-clz $a3, $s5
-subu $a3, $v1, $a3
-srav $t1, $s1, $a3
-j tmp_label_28
-tmp_label_27:
-div $s1, $s5
-mflo $t1
-tmp_label_28:
-
-# === #T55 = #T54 / 2 ===
-bgez $t1, tmp_label_29
-# RELEASE $t1
-subu $a2, $zero, $t1
-# RELEASE $t1
-sra $t2, $a2, 1
-subu $t2, $zero, $t2
-j tmp_label_30
-tmp_label_29:
-sra $t2, $t1, 1
-# RELEASE $t1
-tmp_label_30:
-
-# === #T56 = #T55 * 2 ===
-sll $t1, $t2, 1
-# RELEASE $t2
-
-# === #T57 = #T53 - #T56 ===
-subu $t2, $t0, $t1
-# RELEASE $t0
-# RELEASE $t1
-
-# === #T58 = #T57 - 1 ===
-addiu $t0, $t2, -1
-# RELEASE $t2
-
-# === JUMP_IF  #T58!=0  label_23 ===
-bne $t0, $zero, label_23
-# RELEASE $t0
-
-# === #T59 = y / i ===
-bltz $s2, tmp_label_31
-addiu $a3, $s5, -1
-and $a3, $s5, $a3
-bne $a3, $zero, tmp_label_31
-clz $a3, $s5
-subu $a3, $v1, $a3
-srav $t0, $s2, $a3
-j tmp_label_32
-tmp_label_31:
-div $s2, $s5
-mflo $t0
-tmp_label_32:
-
-# === #T60 = y / i ===
-bltz $s2, tmp_label_33
-addiu $a3, $s5, -1
-and $a3, $s5, $a3
-bne $a3, $zero, tmp_label_33
-clz $a3, $s5
-subu $a3, $v1, $a3
-srav $t1, $s2, $a3
-j tmp_label_34
-tmp_label_33:
-div $s2, $s5
-mflo $t1
-tmp_label_34:
-
-# === #T61 = #T60 / 2 ===
-bgez $t1, tmp_label_35
-# RELEASE $t1
-subu $a2, $zero, $t1
-# RELEASE $t1
-sra $t2, $a2, 1
-subu $t2, $zero, $t2
-j tmp_label_36
-tmp_label_35:
-sra $t2, $t1, 1
-# RELEASE $t1
-tmp_label_36:
-
-# === #T62 = #T61 * 2 ===
-sll $t1, $t2, 1
-# RELEASE $t2
-
-# === #T63 = #T59 - #T62 ===
-subu $t2, $t0, $t1
-# RELEASE $t0
-# RELEASE $t1
-
-# === #T64 = #T63 - 1 ===
-addiu $t0, $t2, -1
-# RELEASE $t2
-
-# === JUMP_IF  #T64!=0  label_24 ===
-bne $t0, $zero, label_24
-# RELEASE $t0
-
-# === #T65 = ret * 2 ===
-sll $t0, $s4, 1
-
-# === ret = #T65 + 1 ===
-addiu $s4, $t0, 1
-# RELEASE $t0
-
-# === JUMP    label_25 ===
-j label_25
-
-# === LABEL   label_24 ===
-label_24:
-
-# === ret = ret * 2 ===
-sll $s4, $s4, 1
-
-# === LABEL   label_25 ===
-label_25:
-
-# === JUMP    label_26 ===
-j label_26
-
-# === LABEL   label_23 ===
-label_23:
-
-# === ret = ret * 2 ===
-sll $s4, $s4, 1
-
-# === LABEL   label_26 ===
-label_26:
-
-# === i = i * 2 ===
-sll $s5, $s5, 1
-
-# === -----LOOP END----- ===
-
-# === #T70 = i - 1073741824 ===
-lui $a2, 0xc000
-addu $t0, $s5, $a2
-
-# === JUMP_IF  #T70<0  label_22 ===
-bltz $t0, label_22
-# RELEASE $t0
-
-# === LABEL   label_21 ===
-label_21:
-
-# === RETURN  ret ===
-move $v0, $s4
-jr $ra
-
-# === LABEL   label_20 ===
-label_20:
-
-# === RETURN  0 ===
-move $v0, $zero
-jr $ra
-
-# === =============END_FUNC int reduce============== ===
-
-# === =============FUNC int getvalue============== ===
-getvalue:
-lw $s0, 100($sp)
-lw $s1, 104($sp)
-lw $s2, 108($sp)
-lw $s3, 112($sp)
-
-# === #T71 = x ===
-move $t0, $s2
-
-# === JUMP_IF  #T71>=0  label_27 ===
-bgez $t0, label_27
-# RELEASE $t0
-
-# === RETURN  0 ===
-move $v0, $zero
-jr $ra
-
-# === LABEL   label_27 ===
-label_27:
-
-# === #T72 = y ===
-move $t0, $s3
-
-# === JUMP_IF  #T72>=0  label_28 ===
-bgez $t0, label_28
-# RELEASE $t0
-
-# === RETURN  0 ===
-move $v0, $zero
-jr $ra
-
-# === LABEL   label_28 ===
-label_28:
-
-# === #T73 = x - n ===
-subu $t0, $s2, $s0
-
-# === JUMP_IF  #T73<0  label_29 ===
-bltz $t0, label_29
-# RELEASE $t0
-
-# === RETURN  0 ===
-move $v0, $zero
-jr $ra
-
-# === LABEL   label_29 ===
-label_29:
-
-# === #T74 = y - m ===
-subu $t0, $s3, $s1
-
-# === JUMP_IF  #T74<0  label_30 ===
-bltz $t0, label_30
-# RELEASE $t0
-
-# === RETURN  0 ===
-move $v0, $zero
-jr $ra
-
-# === LABEL   label_30 ===
-label_30:
-
-# === #T75 = x * m ===
-mul $t0, $s2, $s1
-
-# === #T76 = #T75 + y ===
-addu $t1, $t0, $s3
-# RELEASE $t0
-
-# === #T77 = a[#T76] ===
-sll $a1, $t1, 2
-# RELEASE $t1
+# === #T124 = a[i] ===
+sll $a1, $t4, 2
 lw $t0, arr__a_($a1)
 
-# === RETURN  #T77 ===
-move $v0, $t0
-# RELEASE $t0
-jr $ra
-
-# === =============END_FUNC int getvalue============== ===
-
-# === =============FUNC int convn============== ===
-convn:
-lw $s0, 100($sp)
-lw $s1, 104($sp)
-lw $s2, 108($sp)
-lw $s3, 112($sp)
-
-# === i = 0 ===
-move $s4, $zero
-
-# === j = 0 ===
-move $s5, $zero
-
-# === flag1 = 1 ===
-li $s6, 1
-
-# === flag2 = 1 ===
-li $s7, 1
-
-# === flag3 = 1 ===
-li $t4, 1
-
-# === flag4 = 1 ===
-li $t5, 1
-
-# === #T78 = flag1 - 1 ===
-addiu $t0, $s6, -1
-
-# === JUMP_IF  #T78!=0  label_31 ===
-bne $t0, $zero, label_31
-# RELEASE $t0
-
-# === -----LOOP BEGIN----- ===
-
-# === LABEL   label_32 ===
-label_32:
-
-# === j = 0 ===
-move $s5, $zero
-
-# === #T79 = flag2 - 1 ===
-addiu $t0, $s7, -1
-
-# === JUMP_IF  #T79!=0  label_33 ===
-bne $t0, $zero, label_33
-# RELEASE $t0
-
-# === -----LOOP BEGIN----- ===
-
-# === LABEL   label_34 ===
-label_34:
-
-# === curr = 0 ===
-move $t6, $zero
-
-# === #T80 = c / 2 ===
-bgez $s3, tmp_label_37
-subu $a2, $zero, $s3
-sra $t0, $a2, 1
-subu $t0, $zero, $t0
-j tmp_label_38
-tmp_label_37:
-sra $t0, $s3, 1
-tmp_label_38:
-
-# === x = i - #T80 ===
-subu $t7, $s4, $t0
-# RELEASE $t0
-
-# === #T82 = flag3 - 1 ===
-addiu $t0, $t4, -1
-
-# === JUMP_IF  #T82!=0  label_35 ===
-bne $t0, $zero, label_35
-# RELEASE $t0
-
-# === -----LOOP BEGIN----- ===
-
-# === LABEL   label_36 ===
-label_36:
-
-# === #T83 = c / 2 ===
-bgez $s3, tmp_label_39
-subu $a2, $zero, $s3
-sra $t0, $a2, 1
-subu $t0, $zero, $t0
-j tmp_label_40
-tmp_label_39:
-sra $t0, $s3, 1
-tmp_label_40:
-
-# === y = j - #T83 ===
-subu $t8, $s5, $t0
-# RELEASE $t0
-
-# === #T85 = flag4 - 1 ===
-addiu $t0, $t5, -1
-
-# === JUMP_IF  #T85!=0  label_37 ===
-bne $t0, $zero, label_37
-# RELEASE $t0
-
-# === -----LOOP BEGIN----- ===
-
-# === LABEL   label_38 ===
-label_38:
-
-# === PREPARE_CALL reduce ===
-addi $sp, $sp, -500
-
-# === PUSH_PARA kernelid ===
-sw $s0, 100($sp)
-
-# === PUSH_PARA curr ===
-sw $t6, 104($sp)
-
-# === _2_#T71 = x ===
-move $t0, $t7
-
-# === JUMP_IF  _2_#T71>=0  label_27_2_ ===
-bgez $t0, label_27_2_
-# RELEASE $t0
-
-# === %RET = 0 ===
-move $v0, $zero
-
-# === JUMP    label_54 ===
-j label_54
-
-# === LABEL   label_27_2_ ===
-label_27_2_:
-
-# === _2_#T72 = y ===
-move $t0, $t8
-
-# === JUMP_IF  _2_#T72>=0  label_28_2_ ===
-bgez $t0, label_28_2_
-# RELEASE $t0
-
-# === %RET = 0 ===
-move $v0, $zero
-
-# === JUMP    label_54 ===
-j label_54
-
-# === LABEL   label_28_2_ ===
-label_28_2_:
-
-# === _2_#T73 = x - n ===
-subu $t0, $t7, $s1
-
-# === JUMP_IF  _2_#T73<0  label_29_2_ ===
-bltz $t0, label_29_2_
-# RELEASE $t0
-
-# === %RET = 0 ===
-move $v0, $zero
-
-# === JUMP    label_54 ===
-j label_54
-
-# === LABEL   label_29_2_ ===
-label_29_2_:
-
-# === _2_#T74 = y - m ===
-subu $t0, $t8, $s2
-
-# === JUMP_IF  _2_#T74<0  label_30_2_ ===
-bltz $t0, label_30_2_
-# RELEASE $t0
-
-# === %RET = 0 ===
-move $v0, $zero
-
-# === JUMP    label_54 ===
-j label_54
-
-# === LABEL   label_30_2_ ===
-label_30_2_:
-
-# === _2_#T75 = x * m ===
-mul $t0, $t7, $s2
-
-# === _2_#T76 = _2_#T75 + y ===
-addu $t1, $t0, $t8
-# RELEASE $t0
-
-# === _2_#T77 = a[_2_#T76] ===
-sll $a1, $t1, 2
-# RELEASE $t1
-lw $t0, arr__a_($a1)
-
-# === %RET = _2_#T77 ===
-move $v0, $t0
-# RELEASE $t0
-
-# === LABEL   label_54 ===
-label_54:
-
-# === #T86 = %RET ===
-move $t0, $v0
-
-# === PUSH_PARA #T86 ===
-sw $t0, 108($sp)
-# RELEASE $t0
-
-# === CALL    reduce ===
-sw $s0, 24($sp)
-sw $s1, 28($sp)
-sw $s2, 32($sp)
-sw $s3, 36($sp)
-sw $s4, 40($sp)
-sw $s5, 44($sp)
-sw $ra, 0($sp)
-jal reduce
-lw $ra, 0($sp)
-lw $s0, 24($sp)
-lw $s1, 28($sp)
-lw $s2, 32($sp)
-lw $s3, 36($sp)
-lw $s4, 40($sp)
-lw $s5, 44($sp)
-addi $sp, $sp, 500
-
-# === curr = %RET ===
-move $t6, $v0
-
-# === y = y + 1 ===
-addiu $t8, $t8, 1
-
-# === #T89 = c / 2 ===
-bgez $s3, tmp_label_41
-subu $a2, $zero, $s3
-sra $t0, $a2, 1
-subu $t0, $zero, $t0
-j tmp_label_42
-tmp_label_41:
-sra $t0, $s3, 1
-tmp_label_42:
-
-# === #T90 = j + #T89 ===
-addu $t1, $s5, $t0
-# RELEASE $t0
-
-# === #T91 = y - #T90 ===
-subu $t0, $t8, $t1
+# === #T125 = a[i] ===
+sll $a1, $t4, 2
+lw $t1, arr__a_($a1)
+
+# === #T126 = #T125 / 100000 ===
+div $t2, $t1, 100000
 # RELEASE $t1
 
-# === JUMP_IF  #T91<0  label_39 ===
-bltz $t0, label_39
+# === #T127 = #T126 * 100000 ===
+mul $t1, $t2, 100000
+# RELEASE $t2
+
+# === #T128 = #T124 - #T127 ===
+subu $t2, $t0, $t1
 # RELEASE $t0
-
-# === flag4 = 0 ===
-move $t5, $zero
-
-# === LABEL   label_39 ===
-label_39:
-
-# === -----LOOP END----- ===
-
-# === #T92 = flag4 - 1 ===
-addiu $t0, $t5, -1
-
-# === JUMP_IF  #T92==0  label_38 ===
-beq $t0, $zero, label_38
-# RELEASE $t0
-
-# === LABEL   label_37 ===
-label_37:
-
-# === flag4 = 1 ===
-li $t5, 1
-
-# === x = x + 1 ===
-addiu $t7, $t7, 1
-
-# === #T94 = c / 2 ===
-bgez $s3, tmp_label_43
-subu $a2, $zero, $s3
-sra $t0, $a2, 1
-subu $t0, $zero, $t0
-j tmp_label_44
-tmp_label_43:
-sra $t0, $s3, 1
-tmp_label_44:
-
-# === #T95 = i + #T94 ===
-addu $t1, $s4, $t0
-# RELEASE $t0
-
-# === #T96 = x - #T95 ===
-subu $t0, $t7, $t1
 # RELEASE $t1
 
-# === JUMP_IF  #T96<0  label_40 ===
-bltz $t0, label_40
+# === tmp = tmp + #T128 ===
+addu $s7, $s7, $t2
+# RELEASE $t2
+
+# === #T130 = tmp / 100000 ===
+div $t0, $s7, 100000
+
+# === #T131 = #T130 * 100000 ===
+mul $t1, $t0, 100000
 # RELEASE $t0
 
-# === flag3 = 0 ===
-move $t4, $zero
-
-# === LABEL   label_40 ===
-label_40:
-
-# === -----LOOP END----- ===
-
-# === #T97 = flag3 - 1 ===
-addiu $t0, $t4, -1
-
-# === JUMP_IF  #T97==0  label_36 ===
-beq $t0, $zero, label_36
-# RELEASE $t0
-
-# === LABEL   label_35 ===
-label_35:
-
-# === flag3 = 1 ===
-li $t4, 1
-
-# === #T98 = i * m ===
-mul $t0, $s4, $s2
-
-# === #T99 = #T98 + j ===
-addu $t1, $t0, $s5
-# RELEASE $t0
-
-# === b[#T99] = curr ===
-sll $a1, $t1, 2
-# RELEASE $t1
-sw $t6, arr__b_($a1)
-
-# === j = j + 1 ===
-addiu $s5, $s5, 1
-
-# === #T101 = j - m ===
-subu $t0, $s5, $s2
-
-# === JUMP_IF  #T101<0  label_41 ===
-bltz $t0, label_41
-# RELEASE $t0
-
-# === flag2 = 0 ===
-move $s7, $zero
-
-# === LABEL   label_41 ===
-label_41:
-
-# === -----LOOP END----- ===
-
-# === #T102 = flag2 - 1 ===
-addiu $t0, $s7, -1
-
-# === JUMP_IF  #T102==0  label_34 ===
-beq $t0, $zero, label_34
-# RELEASE $t0
-
-# === LABEL   label_33 ===
-label_33:
-
-# === flag2 = 1 ===
-li $s7, 1
-
-# === i = i + 1 ===
-addiu $s4, $s4, 1
-
-# === #T104 = i - n ===
-subu $t0, $s4, $s1
-
-# === JUMP_IF  #T104<0  label_42 ===
-bltz $t0, label_42
-# RELEASE $t0
-
-# === flag1 = 0 ===
-move $s6, $zero
-
-# === LABEL   label_42 ===
-label_42:
-
-# === -----LOOP END----- ===
-
-# === #T105 = flag1 - 1 ===
-addiu $t0, $s6, -1
-
-# === JUMP_IF  #T105==0  label_32 ===
-beq $t0, $zero, label_32
-# RELEASE $t0
-
-# === LABEL   label_31 ===
-label_31:
-
-# === RETURN  0 ===
-move $v0, $zero
-jr $ra
-
-# === =============END_FUNC int convn============== ===
-
-# === =============FUNC void mymemmove============== ===
-mymemmove:
-lw $s0, 100($sp)
-
-# === i = 0 ===
-move $s1, $zero
-
-# === #T106 = i - n ===
-subu $t0, $s1, $s0
-
-# === JUMP_IF  #T106>=0  label_43 ===
-bgez $t0, label_43
-# RELEASE $t0
-
-# === -----LOOP BEGIN----- ===
-
-# === LABEL   label_44 ===
-label_44:
-
-# === #T107 = b[i] ===
-sll $a1, $s1, 2
-lw $t0, arr__b_($a1)
-
-# === a[i] = #T107 ===
-sll $a1, $s1, 2
-sw $t0, arr__a_($a1)
-# RELEASE $t0
-
-# === i = i + 1 ===
-addiu $s1, $s1, 1
-
-# === -----LOOP END----- ===
-
-# === #T109 = i - n ===
-subu $t0, $s1, $s0
-
-# === JUMP_IF  #T109<0  label_44 ===
-bltz $t0, label_44
-# RELEASE $t0
-
-# === LABEL   label_43 ===
-label_43:
-
-# === RETURN ===
-jr $ra
-
-# === =============END_FUNC void mymemmove============== ===
-
-# === =============FUNC void main============== ===
-main:
-
-# === i = 0 ===
-move $s0, $zero
-
-# === SCANF   _3_n ===
-li $v0, 5
-syscall
-move $s1, $v0
-
-# === %RET = _3_n ===
-move $v0, $s1
-
-# === LABEL   label_55 ===
-label_55:
-
-# === c = %RET ===
-move $s2, $v0
-
-# === SCANF   _4_n ===
-li $v0, 5
-syscall
-move $s3, $v0
-
-# === %RET = _4_n ===
-move $v0, $s3
-
-# === LABEL   label_56 ===
-label_56:
-
-# === n = %RET ===
-move $s4, $v0
-
-# === SCANF   _5_n ===
-li $v0, 5
-syscall
-move $s5, $v0
-
-# === %RET = _5_n ===
-move $v0, $s5
-
-# === LABEL   label_57 ===
-label_57:
-
-# === m = %RET ===
-move $s6, $v0
-
-# === SCANF   _6_n ===
-li $v0, 5
-syscall
-move $s7, $v0
-
-# === %RET = _6_n ===
-move $v0, $s7
-
-# === LABEL   label_58 ===
-label_58:
-
-# === arrlen = %RET ===
-move $t4, $v0
-
-# === #T114 = i - arrlen ===
-subu $t0, $s0, $t4
-
-# === JUMP_IF  #T114>=0  label_45 ===
-bgez $t0, label_45
-# RELEASE $t0
-
-# === -----LOOP BEGIN----- ===
-
-# === LABEL   label_46 ===
-label_46:
-
-# === SCANF   _7_n ===
-li $v0, 5
-syscall
-move $t5, $v0
-
-# === %RET = _7_n ===
-move $v0, $t5
-
-# === LABEL   label_59 ===
-label_59:
-
-# === #T115 = %RET ===
-move $t0, $v0
-
-# === a[i] = #T115 ===
-sll $a1, $s0, 2
-sw $t0, arr__a_($a1)
-# RELEASE $t0
-
-# === i = i + 1 ===
-addiu $s0, $s0, 1
-
-# === -----LOOP END----- ===
-
-# === #T117 = i - arrlen ===
-subu $t0, $s0, $t4
-
-# === JUMP_IF  #T117<0  label_46 ===
-bltz $t0, label_46
-# RELEASE $t0
-
-# === LABEL   label_45 ===
-label_45:
-
-# === SCANF   _8_n ===
-li $v0, 5
-syscall
-move $t6, $v0
-
-# === %RET = _8_n ===
-move $v0, $t6
-
-# === LABEL   label_60 ===
-label_60:
-
-# === task = %RET ===
-move $t7, $v0
-
-# === i = 0 ===
-move $s0, $zero
-
-# === #T119 = i - task ===
-subu $t0, $s0, $t7
-
-# === JUMP_IF  #T119>=0  label_47 ===
-bgez $t0, label_47
-# RELEASE $t0
-
-# === -----LOOP BEGIN----- ===
-
-# === LABEL   label_48 ===
-label_48:
-
-# === SCANF   _9_n ===
-li $v0, 5
-syscall
-move $t8, $v0
-
-# === %RET = _9_n ===
-move $v0, $t8
-
-# === LABEL   label_61 ===
-label_61:
-
-# === #T120 = %RET ===
-move $t0, $v0
-
-# === kernelid[i] = #T120 ===
-sll $a1, $s0, 2
-sw $t0, arr__kernelid_($a1)
-# RELEASE $t0
-
-# === i = i + 1 ===
-addiu $s0, $s0, 1
-
-# === -----LOOP END----- ===
-
-# === #T122 = i - task ===
-subu $t0, $s0, $t7
-
-# === JUMP_IF  #T122<0  label_48 ===
-bltz $t0, label_48
-# RELEASE $t0
-
-# === LABEL   label_47 ===
-label_47:
-
-# === i = 0 ===
-move $s0, $zero
-
-# === #T123 = i - task ===
-subu $t0, $s0, $t7
-
-# === JUMP_IF  #T123>=0  label_49 ===
-bgez $t0, label_49
-# RELEASE $t0
-
-# === -----LOOP BEGIN----- ===
-
-# === LABEL   label_50 ===
-label_50:
-
-# === PREPARE_CALL convn ===
-addi $sp, $sp, -392
-
-# === #T124 = kernelid[i] ===
-sll $a1, $s0, 2
-lw $t0, arr__kernelid_($a1)
-
-# === PUSH_PARA #T124 ===
-sw $t0, 100($sp)
-# RELEASE $t0
-
-# === PUSH_PARA n ===
-sw $s4, 104($sp)
-
-# === PUSH_PARA m ===
-sw $s6, 108($sp)
-
-# === PUSH_PARA c ===
-sw $s2, 112($sp)
-
-# === CALL    convn ===
-sw $s0, 24($sp)
-sw $s1, 28($sp)
-sw $s2, 32($sp)
-sw $s3, 36($sp)
-sw $s4, 40($sp)
-sw $s5, 44($sp)
-sw $s6, 48($sp)
-sw $s7, 52($sp)
-sw $t4, 56($sp)
-sw $t5, 60($sp)
-sw $t6, 64($sp)
-sw $t7, 68($sp)
-sw $t8, 72($sp)
-jal convn
-lw $s0, 24($sp)
-lw $s1, 28($sp)
-lw $s2, 32($sp)
-lw $s3, 36($sp)
-lw $s4, 40($sp)
-lw $s5, 44($sp)
-lw $s6, 48($sp)
-lw $s7, 52($sp)
-lw $t4, 56($sp)
-lw $t5, 60($sp)
-lw $t6, 64($sp)
-lw $t7, 68($sp)
-lw $t8, 72($sp)
-addi $sp, $sp, 392
-
-# === #T125 = n * m ===
-mul $t0, $s4, $s6
-
-# === @V135 = #T125 ===
-move $t9, $t0
-# RELEASE $t0
-
-# === _10_i = 0 ===
-move $k0, $zero
-
-# === _10_#T106 = _10_i - @V135 ===
-subu $t0, $k0, $t9
-
-# === JUMP_IF  _10_#T106>=0  label_43_10_ ===
-bgez $t0, label_43_10_
-# RELEASE $t0
-
-# === -----LOOP BEGIN----- ===
-
-# === LABEL   label_44_10_ ===
-label_44_10_:
-
-# === _10_#T107 = b[_10_i] ===
-sll $a1, $k0, 2
-lw $t0, arr__b_($a1)
-
-# === a[_10_i] = _10_#T107 ===
-sll $a1, $k0, 2
-sw $t0, arr__a_($a1)
-# RELEASE $t0
-
-# === _10_i = _10_i + 1 ===
-addiu $k0, $k0, 1
-
-# === -----LOOP END----- ===
-
-# === _10_#T109 = _10_i - @V135 ===
-subu $t0, $k0, $t9
-
-# === JUMP_IF  _10_#T109<0  label_44_10_ ===
-bltz $t0, label_44_10_
-# RELEASE $t0
-
-# === LABEL   label_43_10_ ===
-label_43_10_:
-
-# === LABEL   label_62 ===
-label_62:
-
-# === i = i + 1 ===
-addiu $s0, $s0, 1
-
-# === -----LOOP END----- ===
-
-# === #T127 = i - task ===
-subu $t0, $s0, $t7
-
-# === JUMP_IF  #T127<0  label_50 ===
-bltz $t0, label_50
-# RELEASE $t0
-
-# === LABEL   label_49 ===
-label_49:
-
-# === i = 0 ===
-move $s0, $zero
-
-# === #T128 = n * m ===
-mul $t0, $s4, $s6
-
-# === #T129 = i - #T128 ===
-subu $t1, $s0, $t0
-# RELEASE $t0
-
-# === JUMP_IF  #T129>=0  label_51 ===
-bgez $t1, label_51
+# === tmp = tmp - #T131 ===
+subu $s7, $s7, $t1
 # RELEASE $t1
 
-# === -----LOOP BEGIN----- ===
+# === i = i + 1 ===
+addiu $t4, $t4, 1
 
-# === LABEL   label_52 ===
-label_52:
+# === -----LOOP END----- ===
 
-# === #T130 = a[i] ===
-sll $a1, $s0, 2
-lw $t0, arr__a_($a1)
+# === #T134 = i - 1000 ===
+addiu $t0, $t4, -1000
 
-# === @V136 = #T130 ===
-move $k1, $t0
+# === JUMP_IF  #T134<0  label_13 ===
+bltz $t0, label_13
 # RELEASE $t0
 
-# === PRINT   @V136 int ===
-move $a0, $k1
+# === LABEL   label_12 ===
+label_12:
+
+# === PRINT   tmp int ===
+move $a0, $s7
 li $v0, 1
 syscall
 
@@ -1677,27 +1016,8 @@ la $a0, newline__
 li $v0, 4
 syscall
 
-# === LABEL   label_63 ===
-label_63:
-
-# === i = i + 1 ===
-addiu $s0, $s0, 1
-
-# === -----LOOP END----- ===
-
-# === #T132 = n * m ===
-mul $t0, $s4, $s6
-
-# === #T133 = i - #T132 ===
-subu $t1, $s0, $t0
-# RELEASE $t0
-
-# === JUMP_IF  #T133<0  label_52 ===
-bltz $t1, label_52
-# RELEASE $t1
-
-# === LABEL   label_51 ===
-label_51:
+# === LABEL   label_18 ===
+label_18:
 
 # === RETURN ===
 li $v0, 10
