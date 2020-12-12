@@ -284,3 +284,13 @@ void SymTable::reset() {
     local.clear();
     max_name_length = 5;
 }
+
+int SymTable::func_var_paras(const string &func) {
+    int ret = 0;
+    for (auto &item: local[func]) {
+        if (item.stiType == var || item.stiType == para) {
+            ret++;
+        }
+    }
+    return ret;
+}

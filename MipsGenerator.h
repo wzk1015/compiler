@@ -20,7 +20,7 @@
 #define STACK_RESERVED "96($sp)"
 
 #define NUM_T_REG 4
-#define NUM_S_REG 14
+#define NUM_S_REG 16
 
 
 class MipsGenerator {
@@ -32,7 +32,7 @@ public:
             "$s0", "$s1", "$s2", "$s3",
             "$s4", "$s5", "$s6", "$s7",
             "$t4", "$t5", "$t6", "$t7",
-            "$t8", "$t9"
+            "$t8", "$t9", "$k0", "$k1"
     };
 
     vector<string> t_regs = {
@@ -40,29 +40,19 @@ public:
     };
 
     vector<string> s_reg_table = {
-            VACANT,
-            VACANT,
-            VACANT,
-            VACANT,
-            VACANT,
-
-            VACANT,
-            VACANT,
-            VACANT,
-            VACANT,
-            VACANT,
-
-            VACANT,
-            VACANT,
-            VACANT,
-            VACANT
+            VACANT, VACANT, VACANT, VACANT, VACANT,
+            VACANT, VACANT, VACANT, VACANT, VACANT,
+            VACANT, VACANT, VACANT, VACANT, VACANT,
+            VACANT //, VACANT
     };
     vector<string> t_reg_table = {
-            VACANT,
-            VACANT,
-            VACANT,
-            VACANT,
+            VACANT, VACANT, VACANT, VACANT
     };
+    vector<int> s_reg_last_use = {
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0 //, 0
+    };
+    int clock = 0;
     string regs[32] = {
             "$zero", "$at", "$v0", "$v1",
             "$a0", "$a1", "$a2", "$a3",
@@ -73,6 +63,9 @@ public:
             "$t8", "$t9", "$k0", "$k1",
             "$gp", "$sp", "$fp", "$ra"
     };
+    string fp_content = INVALID;
+
+
     map<string, string> op_to_instr = {
             {OP_ADD, "addu"},
             {OP_SUB, "subu"},
@@ -81,6 +74,8 @@ public:
             {OP_SRA, "srav"}
     };
     string cur_func = GLOBAL;
+    int call_func_sregs = 0;
+    int cur_func_begin = 0;
     vector<vector<SymTableItem>> call_func_paras;
     vector<int> sp_size = {0};
     int call_func_sp_offset = 0;
@@ -88,6 +83,9 @@ public:
 
     bool optimize_assign_reg = false;
     bool optimize_muldiv = false;
+    bool optimize_2pow = false;
+
+    bool rel = true;
 
     MipsGenerator(): mid(PseudoCodeList::codes), strcons(PseudoCodeList::strcons) {};
 

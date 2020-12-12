@@ -99,6 +99,8 @@ public:
 
     static int func_size(const string &func);
 
+    static int func_var_paras(const string &func);
+
     static void reset();
 };
 

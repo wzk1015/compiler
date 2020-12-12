@@ -23,14 +23,19 @@ void MipsGenerator::generate(const string &op, const string &num1) {
 
 void MipsGenerator::generate(const string &op, const string &num1, const string &num2) {
     generate(op + " " + num1 + ", " + num2);
-    release(num2);
-    if (op == "sw" || op == "bltz" || op == "blez" || op == "bgtz" || op == "bgez") {
+    if (rel) {
+        release(num2);
+    }
+    if ((op == "sw" || op == "bltz" || op == "blez" || op == "bgtz" || op == "bgez") && rel) {
         release(num1);
     }
 }
 
 void MipsGenerator::generate(const string &op, const string &num1, const string &num2, const string &num3) {
     generate(op + " " + num1 + ", " + num2 + ", " + num3);
+    if (!rel) {
+        return;
+    }
     if (op == "addu" || op == "subu" || op == "addiu"
         || op == "mul" || op == "div" || op == "sll" || op == "sra") {
         if (num1 != num2) {
@@ -82,6 +87,7 @@ void MipsGenerator::translate() {
     }
     generate(R"(newline__: .asciiz "\n")");
     generate(".text");
+    generate("li", "$v1", "31"); // constant
 
     bool init = true;
 
@@ -106,6 +112,7 @@ void MipsGenerator::translate() {
             }
 
             cur_func = num2;
+            cur_func_begin = mips.size();
             call_func_sp_offset = 0;
             generate(num2 + ":");
             //被调用者保护s
@@ -138,6 +145,7 @@ void MipsGenerator::translate() {
             call_func_sp_offset = sum(sp_size);
             generate("addi $sp, $sp, -" + to_string(sp_size.back()));
             call_func_paras.push_back(SymTable::local[num1]);
+            call_func_sregs = SymTable::func_var_paras(num1);
         } else if (op == OP_PUSH_PARA) {
             /*
              * a在内存，b在寄存器：sw b,a
@@ -175,13 +183,13 @@ void MipsGenerator::translate() {
             for (int i = 0; i < NUM_T_REG; i++) {
                 if (t_reg_table[i] != VACANT) {
                     saved_t.push_back(i);
-                    generate("sw", t_regs[i],to_string(STACK_T_BEGIN + 4 * i) + "($sp)");
+                    generate("sw", t_regs[i], to_string(STACK_T_BEGIN + 4 * i) + "($sp)");
                     t_reg_table[i] = VACANT;
                 }
             }
 
             s_old = s_reg_table;
-            for (int i = 0; i < NUM_S_REG; i++) {
+            for (int i = 0; i < min(NUM_S_REG, call_func_sregs); i++) {
                 if (s_reg_table[i] != VACANT) {
                     saved_s.push_back(i);
                     generate("sw", s_regs[i], to_string(STACK_S_BEGIN + 4 * i) + "($sp)");
@@ -198,13 +206,13 @@ void MipsGenerator::translate() {
                 generate("lw", "$ra", STACK_RA);
             }
             for (int i: saved_s) {
-                generate("lw", s_regs[i],to_string(STACK_S_BEGIN + 4 * i) + "($sp)");
+                generate("lw", s_regs[i], to_string(STACK_S_BEGIN + 4 * i) + "($sp)");
             }
             s_reg_table = s_old;
 
             //调用者恢复t
             for (int i: saved_t) {
-                generate("lw", t_regs[i],to_string(STACK_T_BEGIN + 4 * i) + "($sp)");
+                generate("lw", t_regs[i], to_string(STACK_T_BEGIN + 4 * i) + "($sp)");
             }
             t_reg_table = t_old;
             if (sp_size.back() != 0) {
@@ -215,7 +223,7 @@ void MipsGenerator::translate() {
             call_func_sp_offset = sum(sp_size);
             call_func_paras.pop_back();
         } else if (op == OP_END_FUNC) {
-//            show_reg_status();
+            show_reg_status();
         } else if (op == OP_LABEL) {
             generate(num1 + ":");
         } else if (op == OP_PRINT) {
@@ -454,7 +462,7 @@ void MipsGenerator::translate() {
 }
 
 void MipsGenerator::gen_arithmetic(const string &instr, const string &num1, const string &num2, const string &num3) {
-    string reg3 = "$a3";
+    string reg3 = "$a2";
     if (is_const(num2)) {
         if (instr == "addu") {
             generate("addiu", num1, num3, num2);
@@ -463,10 +471,26 @@ void MipsGenerator::gen_arithmetic(const string &instr, const string &num1, cons
         } else if (instr == "div" || instr == "subu") {
             //div  a,5,b:  li reg3,5  divu a,reg3,b
 
-            generate("li", reg3, num2);
             if (instr == "div" && optimize_muldiv) {
+                generate("li", reg3, num2);
+                string label_else = assign_label();
+                string label_end = assign_label();
+                if (optimize_2pow) {
+                    rel = false;
+                    generate("bltz", num2, label_else); //判断是不是正数
+                    generate("addiu", "$a3", num3, "-1");
+                    generate("and", "$a3", num3, "$a3");
+                    generate("bne", "$a3", "$zero", label_else); //判断是不是2的幂
+                    generate("clz", "$a3", num3);
+                    generate("subu", "$a3", "$v1", "$a3");
+                    rel = true;
+                    generate("srav", num1, reg3, "$a3");
+                    generate("j", label_end);
+                    generate(label_else + ":");
+                }
                 generate("div", reg3, num3);
                 generate("mflo", num1);
+                generate(label_end + ":");
                 if (num1 != num3) {
                     release(num3);
                 }
@@ -477,8 +501,24 @@ void MipsGenerator::gen_arithmetic(const string &instr, const string &num1, cons
             generate(instr, num1, num2, num3);
         }
     } else if (instr == "div" && !is_const(num3) && optimize_muldiv) {
+        string label_else = assign_label();
+        string label_end = assign_label();
+        if (optimize_2pow) {
+            rel = false;
+            generate("bltz", num2, label_else); //判断是不是正数
+            generate("addiu", "$a3", num3, "-1");
+            generate("and", "$a3", num3, "$a3");
+            generate("bne", "$a3", "$zero", label_else); //判断是不是2的幂
+            generate("clz", "$a3", num3);
+            generate("subu", "$a3", "$v1", "$a3");
+            rel = true;
+            generate("srav", num1, num2, "$a3");
+            generate("j", label_end);
+            generate(label_else + ":");
+        }
         generate("div", num2, num3);
         generate("mflo", num1);
+        generate(label_end + ":");
         if (num1 != num2) {
             release(num2);
         }
@@ -587,14 +627,19 @@ bool MipsGenerator::assign_reg(const string &symbol, bool only_para) {
             if (sreg != INVALID) {
                 return true;
             }
-        }
-
-        else if (item.stiType == tmp && !only_para) {
+        } else if (item.stiType == tmp && !only_para) {
             string treg = assign_t_reg(symbol);
             if (treg != INVALID) {
                 return true;
             }
         }
+    }
+    SymTableItem item = SymTable::try_search(GLOBAL, symbol, true);
+    if (cur_func == "main" && item.stiType == var && item.dim == 0 && fp_content == INVALID) {
+        mips.insert(mips.begin() + cur_func_begin,
+                    "lw $fp, " + to_string(item.addr - LOCAL_ADDR_INIT) + "($gp)");
+        fp_content = symbol;
+        return true;
     }
     return false;
 }
@@ -616,7 +661,9 @@ bool MipsGenerator::in_reg(const string &symbol) {
             return true;
         }
     }
-
+    if (fp_content == symbol) {
+        return true;
+    }
     return false;
 }
 
@@ -648,8 +695,12 @@ string MipsGenerator::symbol_to_addr(const string &symbol) {
     }
     for (int i = 0; i < NUM_S_REG; i++) {
         if (s_reg_table[i] == symbol) {
+            s_reg_last_use[i] = clock++;
             return s_regs[i];
         }
+    }
+    if (fp_content == symbol) {
+        return "$fp";
     }
 
     SymTableItem item = SymTable::search(cur_func, symbol);
@@ -673,25 +724,43 @@ string MipsGenerator::assign_t_reg(const string &name) {
 }
 
 string MipsGenerator::assign_s_reg(const string &name) {
+    int min_clock = -1;
+    int min_reg = -1;
     for (int i = 0; i < NUM_S_REG; i++) {
         if (s_reg_table[i] == VACANT) {
             s_reg_table[i] = name;
             return s_regs[i];
         }
+        if (s_reg_last_use[i] < min_clock) {
+            min_clock = s_reg_last_use[i];
+            min_reg = i;
+        }
     }
-
-    return INVALID;
+    SymTableItem item = SymTable::search(cur_func, s_reg_table[min_reg]);
+    generate("# REPLACE " + s_regs[min_reg]);
+    generate("sw", s_regs[min_reg], to_string(item.addr + call_func_sp_offset) + "($sp)");
+    s_reg_table[min_reg] = name;
+    s_reg_last_use[min_reg] = clock++;
+    return s_regs[min_reg];
 }
 
 void MipsGenerator::show_reg_status() {
     cout << "==========REG TABLE==========" << endl;
     for (int i = 0; i < NUM_T_REG; i += 2) {
         cout << t_regs[i] << ": " << t_reg_table[i] << "   ";
-        cout << t_regs[i + 1] << ": " << t_reg_table[i + 1] << endl;
+        if (i + 1 < NUM_T_REG) {
+            cout << t_regs[i + 1] << ": " << t_reg_table[i + 1] << endl;
+        } else {
+            cout << endl;
+        }
     }
     for (int i = 0; i < NUM_S_REG; i += 2) {
         cout << s_regs[i] << ": " << s_reg_table[i] << "    ";
-        cout << s_regs[i + 1] << ": " << s_reg_table[i + 1] << endl;
+        if (i + 1 < NUM_S_REG) {
+            cout << s_regs[i + 1] << ": " << s_reg_table[i + 1] << endl;
+        } else {
+            cout << endl;
+        }
     }
     cout << "=============================" << endl;
 }

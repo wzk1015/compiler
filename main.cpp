@@ -16,6 +16,9 @@ int main() {
     grammar.save_to_file("output.txt");
     Errors::save_to_file("error.txt");
 
+    if (Errors::terminate()) {
+        return 0;
+    }
 
     //中间代码优化
 
@@ -42,7 +45,7 @@ int main() {
 
     PseudoCodeList::save_to_file("pseudo_code_old.txt");
 
-//    PseudoCodeList::loop_var_pow2();
+    //PseudoCodeList::loop_var_pow2();
 
     //PseudoCodeList::divide_basic_blocks();
 
@@ -68,18 +71,15 @@ int main() {
     MipsGenerator mips;
     mips.optimize_muldiv = true;
     mips.optimize_assign_reg = true;
+    mips.optimize_2pow = true;
     mips.translate();
 //    mips.save_to_file("docs/codes/testfile" + fileid + "_18231047_王肇凯_优化后目标代码.txt");
     mips.save_to_file("mips.txt");
     mips.show_reg_status();
 
-    //SymTable::show();
+    SymTable::show();
 
     //grammar.show_tree();
-
-    if (Errors::terminate()) {
-        return 0;
-    }
 
     return 0;
 }
