@@ -990,7 +990,7 @@ void Grammar::Stmt() {
     } else {
         error("statement");
     }
-    if (!stmtlist) {
+    if (!stmtlist && comment_pos < PseudoCodeList::codes.size()) {
         string comment;
         for (int i = stmt_start_pos; i < pos; i++) {
             Token cur = cur_lex_results[i];

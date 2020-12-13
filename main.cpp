@@ -24,7 +24,7 @@ int main() {
 
     PseudoCodeList::refactor();
 
-    PseudoCodeList::save_to_file("pseudo_code_old.txt");
+    //PseudoCodeList::save_to_file("pseudo_code_old.txt");
 
 //    string fileid = "1";
 //    PseudoCodeList::save_to_file("docs/codes/testfile" + fileid + "_18231047_王肇凯_优化前中间代码.txt");
@@ -40,10 +40,12 @@ int main() {
     //PseudoCodeList::DAG_optimize();
 
 
+
     PseudoCodeList::inline_function();
+    PseudoCodeList::save_to_file("pseudo_code_old.txt");
     PseudoCodeList::const_broadcast();
 
-    PseudoCodeList::save_to_file("pseudo_code_old.txt");
+
 
     //PseudoCodeList::loop_var_pow2();
 
@@ -71,7 +73,7 @@ int main() {
     MipsGenerator mips;
     mips.optimize_muldiv = true;
     mips.optimize_assign_reg = true;
-    mips.optimize_2pow = true;
+    mips.optimize_2pow = false;
     mips.translate();
 //    mips.save_to_file("docs/codes/testfile" + fileid + "_18231047_王肇凯_优化后目标代码.txt");
     mips.save_to_file("mips.txt");

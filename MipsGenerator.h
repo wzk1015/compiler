@@ -14,9 +14,9 @@
 
 #define STACK_RA "0($sp)"
 #define STACK_V0 "4($sp)" //unused
-#define STACK_A_BEGIN 8
-#define STACK_S_BEGIN 24
-#define STACK_T_BEGIN 56
+#define STACK_A_BEGIN -1
+#define STACK_S_BEGIN 4
+#define STACK_T_BEGIN 72
 #define STACK_RESERVED "96($sp)"
 
 #define NUM_T_REG 4
@@ -75,8 +75,9 @@ public:
             {OP_SRA, "srav"}
     };
     string cur_func = GLOBAL;
-    int call_func_sregs = 0;
+    vector<int> call_func_sregs;
     int cur_func_begin = 0;
+    vector<string> call_func;
     vector<vector<SymTableItem>> call_func_paras;
     vector<int> sp_size = {0};
     int call_func_sp_offset = 0;

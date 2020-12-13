@@ -142,6 +142,8 @@ public:
         return "label_" + to_string(label_index - 1);
     }
 
+    static bool var_modified_in_function(const string &var_name, const string &func);
+
     static void refactor();
 
     static void remove_redundant_tmp();
@@ -151,8 +153,6 @@ public:
     static void remove_tripple();
 
     static void const_broadcast();
-
-    static void interpret();
 
     static void divide_basic_blocks();
 

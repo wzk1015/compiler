@@ -28,6 +28,23 @@ bool var_modified(vector<PseudoCode> codes, int func_begin, int end, const strin
     return false;
 }
 
+bool PseudoCodeList::var_modified_in_function(const string &var_name, const string &func) {
+    map<string, vector<PseudoCode>> func_codes;
+    string cur_func = INVALID;
+    for (auto &code: codes) {
+        if (code.op == OP_FUNC) {
+            cur_func = code.num2;
+            func_codes[cur_func] = vector<PseudoCode>();
+        } else if (code.op == OP_END_FUNC) {
+            cur_func = INVALID;
+        } else if (cur_func != INVALID) {
+            func_codes[cur_func].push_back(code);
+        }
+    }
+
+    return var_modified(func_codes[func], 0, func_codes[func].size(), var_name);
+}
+
 string PseudoCode::to_str() const {
     if (op == OP_EMPTY && !num1.empty()) {
         return "-----" + num1 + "-----";
@@ -334,6 +351,7 @@ void PseudoCodeList::remove_redundant_tmp() {
 void PseudoCodeList::remove_tripple() {
     string cur_func = GLOBAL;
     vector<PseudoCode> new_codes;
+    vector<pair<string, string>> tripple_vars;
     for (int i = 0; i < codes.size() - 2; i++) {
         PseudoCode c1 = codes[i];
         PseudoCode c2 = codes[i + 1];
@@ -358,15 +376,31 @@ void PseudoCodeList::remove_tripple() {
         if (!begins_num(c2.result) && c2.result != VACANT) {
             it2r = &SymTable::ref_search(cur_func, c2.result);
         }
-        if (is_arith(c1.op) && c1.op == c2.op && c1.num1 == c2.num1 && c1.num2 == c2.num2 &&
-            it1r->stiType == tmp && it2r->stiType == tmp && c3.num1 == c1.result && c3.num2 == c2.result) {
-            if (c3.op == OP_SUB) {
-                new_codes.emplace_back(OP_ASSIGN, c3.result, "0", VACANT);
-                i += 2;
-            } else if (c3.op == OP_DIV) {
-                new_codes.emplace_back(OP_ASSIGN, c3.result, "1", VACANT);
-                i += 2;
-            }
+        if (c1.op == OP_DIV && c1.op == c2.op && is_arith(c3.op)
+            && c1.num1 == c2.num1 && c1.num2 == c2.num2 && c3.num1 == c2.result
+            && it1r->stiType == tmp && it2r->stiType == tmp) {
+            string name = c1.num1 + c1.op + c1.num2;
+            //TODO
+//            bool find = false;
+//            for (auto &item: tripple_vars) {
+//                if (item.first == name) {
+//                    find = true;
+//                    new_codes.emplace_back(c1.op, c1.num1, c1.num2, item.second);
+//                    new_codes.emplace_back(c3.op, item.second, c3.num2, c3.result);
+//                    for (auto &c: codes) {
+//                        if (c.num1 == )
+//                    }
+//                    break;
+//                }
+//            }
+//            string var_name = "@V" + to_string(code_index);
+//                code_index++;
+//                new_codes.emplace_back(OP_ASSIGN, var_name, code.num1, VACANT);
+//                int addr = SymTable::func_size(cur_func) + 4;
+//                SymTable::add(cur_func, var_name, var, SymTable::try_search(cur_func, code.num1, true).dataType, addr);
+//
+//            new_codes.push_back(c1);
+//            new_codes.emplace_back(c3.op, );
         } else if (i == codes.size() - 3) {
             new_codes.push_back(c1);
             new_codes.push_back(c2);
@@ -376,99 +410,6 @@ void PseudoCodeList::remove_tripple() {
             new_codes.push_back(c1);
         } else {
             new_codes.push_back(c1);
-        }
-    }
-    codes = new_codes;
-}
-
-void PseudoCodeList::interpret() {
-    //TODO: array
-    vector<PseudoCode> new_codes;
-    int i = 0;
-    while (codes[i].op != OP_FUNC) {
-        if (codes[i].op != OP_ASSIGN) {
-            panic("global code not assign statement: " + codes[i].to_str());
-        }
-        if (!begins_num(codes[i].num2)) {
-            panic("not begins num: " + codes[i].num2);
-        }
-        SymTableItem *it1 = &SymTable::ref_search(GLOBAL, codes[i].num1);
-        it1->const_value = codes[i].num2;
-        new_codes.push_back(codes[i]);
-        i++;
-    }
-    string cur_func = GLOBAL;
-    for (; i < codes.size(); i++) {
-        PseudoCode c = codes[i];
-        SymTableItem *it1, *it2, *itr;
-        if (!begins_num(c.num1)) {
-            it1 = &SymTable::ref_search(cur_func, c.num1);
-        }
-        if (!begins_num(c.num2)) {
-            it2 = &SymTable::ref_search(cur_func, c.num2);
-        }
-        if (!begins_num(c.result) && c.result != VACANT) {
-            itr = &SymTable::ref_search(cur_func, c.result);
-        }
-
-
-        if (c.op == OP_SCANF) {
-            //将所有值保存
-            for (auto &item: SymTable::global) {
-                if (item.modified) {
-                    new_codes.emplace_back(OP_ASSIGN, item.name, item.const_value, VACANT);
-                    item.modified = false;
-                }
-            }
-            for (auto &item: SymTable::local[cur_func]) {
-                if (item.modified && item.stiType != tmp) {
-                    new_codes.emplace_back(OP_ASSIGN, item.name, item.const_value, VACANT);
-                    item.modified = false;
-                }
-            }
-            while (codes[i].op != OP_END_FUNC) {
-                new_codes.push_back(codes[i]);
-                i++;
-            }
-            new_codes.push_back(codes[i]);
-        } else if (c.op == OP_PRINT) {
-            if (c.num2 == "int" || c.num2 == "char") {
-                if (it1->valid && it1->dataType == character) {
-                    char ch = (char) stoi(it1->const_value);
-                    PseudoCodeList::strcons.push_back("@" + string(&ch));
-                } else if (c.num2 == "char") {
-                    char ch = (char) stoi(c.num1);
-                    PseudoCodeList::strcons.push_back("@" + string(&ch));
-                } else if (it1->valid && it1->dataType == integer) {
-                    PseudoCodeList::strcons.push_back(it1->const_value);
-                } else {
-                    PseudoCodeList::strcons.push_back(c.num1);
-                }
-                new_codes.emplace_back(OP_PRINT, to_string(PseudoCodeList::strcons.size() - 1), "strcon", VACANT);
-            } else {
-                new_codes.push_back(codes[i]);
-            }
-        } else if (c.op == OP_END_FUNC) {
-            for (auto &item: SymTable::global) {
-                if (item.modified) {
-                    new_codes.emplace_back(OP_ASSIGN, item.name, item.const_value, VACANT);
-                    item.modified = false;
-                }
-            }
-            new_codes.push_back(codes[i]);
-        } else if (c.op == OP_FUNC) {
-            cur_func = c.num2;
-            new_codes.push_back(codes[i]);
-        } else if (c.op == OP_ASSIGN) {
-            it1->const_value = begins_num(c.num2) ? c.num2 : it2->const_value;
-            it1->modified = true;
-        } else if (is_arith(c.op)) {
-            int v1 = stoi(begins_num(c.num1) ? c.num1 : it1->const_value);
-            int v2 = stoi(begins_num(c.num2) ? c.num2 : it2->const_value);
-            int r = c.op == OP_ADD ? v1 + v2 : c.op == OP_SUB ? v1 - v2 :
-                                               c.op == OP_MUL ? v1 * v2 : c.op == OP_DIV ? v1 / v2 : 23333;
-            itr->const_value = to_string(r);
-            itr->modified = true;
         }
     }
     codes = new_codes;
@@ -894,8 +835,9 @@ void PseudoCodeList::inline_function() {
             }
             paras.emplace_back();
             call_func.push_back(code.num1);
-            call_times++;
             cout << "inline function: " << call_func.back() << endl;
+            ////
+            new_codes.emplace_back(OP_EMPTY, "inline " + call_func.back(), VACANT, VACANT);
         } else if (code.op == OP_PUSH_PARA && !call_func.empty()) {
             if (code.num1[0] == '#' || para_assigned[call_func.back()]) {
                 string var_name = "@V" + to_string(code_index);
@@ -908,6 +850,7 @@ void PseudoCodeList::inline_function() {
                 paras.back().push_back(code.num1);
             }
         } else if (code.op == OP_CALL && !call_func.empty()) {
+            call_times++;
             assertion(!call_func.empty());
             vector<pair<DataType, string>> call_paras = SymTable::search_func(call_func.back()).paras;
             string label_end_func = assign_label();
@@ -936,8 +879,11 @@ void PseudoCodeList::inline_function() {
             }
 
             new_codes.emplace_back(OP_LABEL, label_end_func, VACANT, VACANT);
+            new_codes.emplace_back(OP_EMPTY, "END inline " + call_func.back(), VACANT, VACANT);
             call_func.pop_back();
             paras.pop_back();
+            ///
+
         } else { // if (call_func.empty())
             new_codes.push_back(code);
         }
@@ -1120,8 +1066,7 @@ void PseudoCodeList::loop_var_pow2() {
                     && (codes[l].result == loop_var || codes[l].num1 == loop_var || codes[l].num2 == loop_var)) {
                     ref_not_div = true;
                     break;
-                }
-                else if (codes[l].op == OP_DIV && (codes[l].result == loop_var || codes[l].num1 == loop_var)) {
+                } else if (codes[l].op == OP_DIV && (codes[l].result == loop_var || codes[l].num1 == loop_var)) {
                     ref_not_div = true;
                     break;
                 }

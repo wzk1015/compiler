@@ -110,7 +110,7 @@ void MipsGenerator::translate() {
             }
 
             cur_func = num2;
-            cur_func_begin = mips.size();
+            cur_func_begin = mips.size() + 1;
             call_func_sp_offset = 0;
             generate(num2 + ":");
             //被调用者保护s
@@ -139,11 +139,12 @@ void MipsGenerator::translate() {
                 generate("jr $ra");
             }
         } else if (op == OP_PREPARE_CALL) {
+            call_func.push_back(num1);
             sp_size.push_back(LOCAL_ADDR_INIT + SymTable::func_size(num1));
             call_func_sp_offset = sum(sp_size);
             generate("addi $sp, $sp, -" + to_string(sp_size.back()));
             call_func_paras.push_back(SymTable::local[num1]);
-            call_func_sregs = SymTable::func_var_paras(num1);
+            call_func_sregs.push_back(SymTable::func_var_paras(num1));
         } else if (op == OP_PUSH_PARA) {
             /*
              * a在内存，b在寄存器：sw b,a
@@ -186,28 +187,36 @@ void MipsGenerator::translate() {
                 }
             }
 //            assertion(s_reg_table[SymTable::func_var_paras(cur_func)] == VACANT);
-            if (call_func_sregs + s_used() <= NUM_S_REG) {
-                s_assign_begin = 0;
-            } else {
-                int num_save = call_func_sregs + s_used() - NUM_S_REG;
-                for (int i = 0; i < num_save; i++) {
-                    saved_s.push_back(i);
-                    generate("sw", s_regs[i], to_string(STACK_S_BEGIN + 4 * i) + "($sp)");
-                    s_reg_table[i] = VACANT;
-                }
-                s_assign_begin = 0;
-            }
 
-//            s_old = s_reg_table;
-//            for (int i = 0; i < min(NUM_S_REG, call_func_sregs); i++) {
-//                if (s_reg_table[i] != VACANT) {
-//                    saved_s.push_back(i);
-//                    generate("sw", s_regs[i], to_string(STACK_S_BEGIN + 4 * i) + "($sp)");
-//                    s_reg_table[i] = VACANT;
-//                }
-//            }
+            if (!SymTable::search_func(call_func.back()).recur_func) {
+                if (call_func_sregs.back() + s_used() <= NUM_S_REG) {
+                    s_assign_begin = 0;
+                } else {
+                    int num_save = call_func_sregs.back() + s_used() - NUM_S_REG;
+                    for (int i = 0; i < num_save; i++) {
+                        saved_s.push_back(i);
+                        generate("sw", s_regs[i], to_string(STACK_S_BEGIN + 4 * i) + "($sp)");
+                        s_reg_table[i] = VACANT;
+                    }
+                    s_assign_begin = 0;
+                }
+            }
+            else {
+                s_old = s_reg_table;
+                for (int i = 0; i < NUM_S_REG; i++) {
+                    if (s_reg_table[i] != VACANT) {
+                        saved_s.push_back(i);
+                        generate("sw", s_regs[i], to_string(STACK_S_BEGIN + 4 * i) + "($sp)");
+                        s_reg_table[i] = VACANT;
+                    }
+                }
+            }
             if (cur_func != "main") {
                 generate("sw", "$ra", STACK_RA);
+            }
+            if (fp_content != INVALID && PseudoCodeList::var_modified_in_function(fp_content, call_func.back())) {
+                SymTableItem item = SymTable::try_search(GLOBAL, lower(fp_content), true);
+                generate("sw", "$fp", to_string(item.addr - LOCAL_ADDR_INIT) + "($gp)");
             }
             assertion(call_func_paras.back().empty() || call_func_paras.back().begin()->stiType != para);
             generate("jal", num1);
@@ -215,10 +224,17 @@ void MipsGenerator::translate() {
             if (cur_func != "main") {
                 generate("lw", "$ra", STACK_RA);
             }
+            if (fp_content != INVALID && PseudoCodeList::var_modified_in_function(fp_content, call_func.back())) {
+                SymTableItem item = SymTable::try_search(GLOBAL, lower(fp_content), true);
+                generate("lw", "$fp", to_string(item.addr - LOCAL_ADDR_INIT) + "($gp)");
+            }
             for (int i: saved_s) {
                 generate("lw", s_regs[i], to_string(STACK_S_BEGIN + 4 * i) + "($sp)");
             }
-//            s_reg_table = s_old;
+            if (SymTable::search_func(call_func.back()).recur_func) {
+                s_reg_table = s_old;
+            }
+
 
             //调用者恢复t
             for (int i: saved_t) {
@@ -232,6 +248,8 @@ void MipsGenerator::translate() {
 
             call_func_sp_offset = sum(sp_size);
             call_func_paras.pop_back();
+            call_func_sregs.pop_back();
+            call_func.pop_back();
         } else if (op == OP_END_FUNC) {
             show_reg_status();
         } else if (op == OP_LABEL) {
@@ -485,9 +503,8 @@ void MipsGenerator::gen_arithmetic(const string &instr, const string &num1, cons
                 generate("li", reg3, num2);
                 string label_else = assign_label();
                 string label_end = assign_label();
-                if (optimize_2pow) {
+                if (optimize_2pow && stoi(num2) >= 0) {
                     rel = false;
-                    generate("bltz", num2, label_else); //判断是不是正数
                     generate("addiu", "$a3", num3, "-1");
                     generate("and", "$a3", num3, "$a3");
                     generate("bne", "$a3", "$zero", label_else); //判断是不是2的幂
@@ -644,11 +661,11 @@ bool MipsGenerator::assign_reg(const string &symbol, bool only_para) {
             }
         }
     }
-    SymTableItem item = SymTable::try_search(GLOBAL, symbol, true);
+    SymTableItem item = SymTable::try_search(GLOBAL, lower(symbol), true);
     if (cur_func == "main" && item.stiType == var && item.dim == 0 && fp_content == INVALID) {
         mips.insert(mips.begin() + cur_func_begin,
                     "lw $fp, " + to_string(item.addr - LOCAL_ADDR_INIT) + "($gp)");
-        fp_content = symbol;
+        fp_content = lower(symbol);
         return true;
     }
     return false;
@@ -667,11 +684,11 @@ bool MipsGenerator::in_reg(const string &symbol) {
         }
     }
     for (int i = 0; i < NUM_S_REG; i++) {
-        if (s_reg_table[i] == cur_func + "*" + symbol) {
+        if (s_reg_table[i] == lower(cur_func + "*" + symbol)) {
             return true;
         }
     }
-    if (fp_content == symbol) {
+    if (fp_content == lower(symbol)) {
         return true;
     }
     return false;
@@ -704,12 +721,12 @@ string MipsGenerator::symbol_to_addr(const string &symbol) {
         }
     }
     for (int i = 0; i < NUM_S_REG; i++) {
-        if (s_reg_table[i] == cur_func + "*" + symbol) {
+        if (s_reg_table[i] == lower(cur_func + "*" + symbol)) {
             s_reg_last_use[i] = clock++;
             return s_regs[i];
         }
     }
-    if (fp_content == symbol) {
+    if (fp_content == lower(symbol)) {
         return "$fp";
     }
 
@@ -738,7 +755,7 @@ string MipsGenerator::assign_s_reg(const string &name) {
     int min_reg = -1;
     for (int i = s_assign_begin; i < NUM_S_REG; i++) {
         if (s_reg_table[i] == VACANT) {
-            s_reg_table[i] = cur_func + "*" + name;
+            s_reg_table[i] = lower(cur_func + "*" + name);
             return s_regs[i];
         }
         if (s_reg_last_use[i] < min_clock || min_clock == -1) {

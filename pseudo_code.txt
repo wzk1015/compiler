@@ -1,262 +1,38 @@
 ===============
-seed[0] = 19971231
-seed[1] = 19981013
-seed[2] = 1000000007
-staticvalue = 0
-=============FUNC int myscanf==============
-----------scanf(n);----------
-SCANF   n
-----------return(n);----------
-RETURN  n
-=============END_FUNC int myscanf==============
-=============FUNC void myprintf==============
-----------printf(n);----------
-PRINT   n int
-PRINT   #ENDL
-----------return;----------
+g = 5
+=============FUNC void func==============
+a[0] = 1
+a[1] = 2
+a[2] = 3
+a[3] = 4
+a[4] = 5
+a[5] = 6
+a[6] = 7
+a[7] = 8
+a[8] = 9
+a[9] = 0
+a[10] = 1
+a[11] = 2
+a[12] = 3
+a[13] = 4
+a[14] = 5
+a[15] = 6
+a[16] = 7
+a[17] = 8
+a[18] = 9
+a[19] = 0
+g = 4
 RETURN
-RETURN
-=============END_FUNC void myprintf==============
-=============FUNC int set==============
-i = 10
-v = 0
-x[0] = 1
-#T1 = x[0]
-#T2 = #T1 * 2
-x[1] = #T2
-#T3 = x[1]
-#T4 = #T3 * 2
-x[2] = #T4
-#T5 = x[2]
-#T6 = #T5 * 2
-x[3] = #T6
-#T7 = x[3]
-#T8 = #T7 * 2
-x[4] = #T8
-#T9 = x[4]
-#T10 = #T9 * 2
-x[5] = #T10
-#T11 = x[5]
-#T12 = #T11 * 2
-x[6] = #T12
-#T13 = x[6]
-#T14 = #T13 * 2
-x[7] = #T14
-#T15 = x[7]
-#T16 = #T15 * 2
-x[8] = #T16
-#T17 = x[8]
-#T18 = #T17 * 2
-x[9] = #T18
-#T19 = x[9]
-#T20 = #T19 * 2
-x[10] = #T20
-#T21 = i - 30
-JUMP_IF  #T21>=0  label_1
------LOOP BEGIN-----
-LABEL   label_2
-i = i + 1
-#T23 = i - 1
-#T24 = x[#T23]
-#T25 = #T24 * 2
-x[i] = #T25
------LOOP END-----
-#T26 = i - 30
-JUMP_IF  #T26<0  label_2
-LABEL   label_1
-#T27 = pos / 30
-#T28 = #T27 - 1000
-JUMP_IF  #T28<0  label_3
-RETURN  0
-LABEL   label_3
-#T29 = pos / 30
-#T30 = a[#T29]
-#T31 = pos / 30
-#T32 = #T31 * 30
-#T33 = pos - #T32
-#T34 = x[#T33]
-#T35 = #T30 / #T34
-#T36 = pos / 30
-#T37 = a[#T36]
-#T38 = pos / 30
-#T39 = #T38 * 30
-#T40 = pos - #T39
-#T41 = x[#T40]
-#T42 = #T37 / #T41
-#T43 = #T42 / 2
-#T44 = #T43 * 2
-#T45 = #T35 - #T44
-#T46 = #T45 - d
-JUMP_IF  #T46==0  label_4
-#T47 = pos / 30
-#T48 = a[#T47]
-#T49 = pos / 30
-#T50 = #T49 * 30
-#T51 = pos - #T50
-#T52 = x[#T51]
-#T53 = #T48 / #T52
-#T54 = pos / 30
-#T55 = a[#T54]
-#T56 = pos / 30
-#T57 = #T56 * 30
-#T58 = pos - #T57
-#T59 = x[#T58]
-#T60 = #T55 / #T59
-#T61 = #T60 / 2
-#T62 = #T61 * 2
-#T63 = #T53 - #T62
-#T64 = #T63
-JUMP_IF  #T64!=0  label_5
-#T65 = d - 1
-JUMP_IF  #T65!=0  label_6
-#T66 = pos / 30
-#T67 = #T66 * 30
-#T68 = pos - #T67
-v = x[#T68]
-LABEL   label_6
-LABEL   label_5
-#T70 = pos / 30
-#T71 = a[#T70]
-#T72 = pos / 30
-#T73 = #T72 * 30
-#T74 = pos - #T73
-#T75 = x[#T74]
-#T76 = #T71 / #T75
-#T77 = pos / 30
-#T78 = a[#T77]
-#T79 = pos / 30
-#T80 = #T79 * 30
-#T81 = pos - #T80
-#T82 = x[#T81]
-#T83 = #T78 / #T82
-#T84 = #T83 / 2
-#T85 = #T84 * 2
-#T86 = #T76 - #T85
-#T87 = #T86 - 1
-JUMP_IF  #T87!=0  label_7
-#T88 = d
-JUMP_IF  #T88!=0  label_8
-#T89 = pos / 30
-#T90 = #T89 * 30
-#T91 = pos - #T90
-#T92 = x[#T91]
-v = v - #T92
-LABEL   label_8
-LABEL   label_7
-LABEL   label_4
-#T94 = pos / 30
-#T95 = pos / 30
-#T96 = a[#T95]
-#T97 = #T96 + v
-a[#T94] = #T97
-RETURN  0
-=============END_FUNC int set==============
-=============FUNC int rand==============
-#T98 = seed[0]
-#T99 = staticvalue * #T98
-#T100 = seed[1]
-staticvalue = #T99 + #T100
-#T102 = seed[2]
-#T103 = staticvalue / #T102
-#T104 = seed[2]
-#T105 = #T103 * #T104
-staticvalue = staticvalue - #T105
-#T107 = staticvalue
-JUMP_IF  #T107>=0  label_9
-#T108 = seed[2]
-staticvalue = #T108 + staticvalue
-LABEL   label_9
-----------return(staticvalue);----------
-RETURN  staticvalue
-=============END_FUNC int rand==============
+=============END_FUNC void func==============
 =============FUNC void main==============
-tmp = 0
-i = 0
-SCANF   _1_n
-%RET = _1_n
-LABEL   label_14
-n = %RET
-SCANF   _2_n
-%RET = _2_n
-LABEL   label_15
-staticvalue = %RET
-#T112 = n
-JUMP_IF  #T112<=0  label_10
------LOOP BEGIN-----
-LABEL   label_11
-n = n - 1
-_3_#T98 = seed[0]
-_3_#T99 = staticvalue * _3_#T98
-_3_#T100 = seed[1]
-staticvalue = _3_#T99 + _3_#T100
-_3_#T102 = seed[2]
-_3_#T103 = staticvalue / _3_#T102
-_3_#T104 = seed[2]
-_3_#T105 = _3_#T103 * _3_#T104
-staticvalue = staticvalue - _3_#T105
-_3_#T107 = staticvalue
-JUMP_IF  _3_#T107>=0  label_9_3_
-_3_#T108 = seed[2]
-staticvalue = _3_#T108 + staticvalue
-LABEL   label_9_3_
-%RET = staticvalue
-LABEL   label_16
-z = %RET
-#T115 = z / 300000
-#T116 = #T115 * 300000
-x = z - #T116
-_4_#T98 = seed[0]
-_4_#T99 = staticvalue * _4_#T98
-_4_#T100 = seed[1]
-staticvalue = _4_#T99 + _4_#T100
-_4_#T102 = seed[2]
-_4_#T103 = staticvalue / _4_#T102
-_4_#T104 = seed[2]
-_4_#T105 = _4_#T103 * _4_#T104
-staticvalue = staticvalue - _4_#T105
-_4_#T107 = staticvalue
-JUMP_IF  _4_#T107>=0  label_9_4_
-_4_#T108 = seed[2]
-staticvalue = _4_#T108 + staticvalue
-LABEL   label_9_4_
-%RET = staticvalue
-LABEL   label_17
-z = %RET
-#T119 = z / 2
-#T120 = #T119 * 2
-y = z - #T120
-----------set(x,y);----------
-PREPARE_CALL set
-PUSH_PARA x
-PUSH_PARA y
-CALL    set
------LOOP END-----
-#T122 = n
-JUMP_IF  #T122>0  label_11
-LABEL   label_10
-#T123 = i - 1000
-JUMP_IF  #T123>=0  label_12
------LOOP BEGIN-----
-LABEL   label_13
-----------tmp=tmp+(a[i]-a[i]/100000*100000);----------
-#T124 = a[i]
-#T125 = a[i]
-#T126 = #T125 / 100000
-#T127 = #T126 * 100000
-#T128 = #T124 - #T127
-tmp = tmp + #T128
-#T130 = tmp / 100000
-#T131 = #T130 * 100000
-tmp = tmp - #T131
-i = i + 1
------LOOP END-----
-#T134 = i - 1000
-JUMP_IF  #T134<0  label_13
-LABEL   label_12
-PRINT   tmp int
+----------printf(g);----------
+PRINT   g int
 PRINT   #ENDL
-LABEL   label_18
-----------return;----------
-RETURN
+----------func();----------
+PREPARE_CALL func
+CALL    func
+----------printf(g);----------
+PRINT   g int
+PRINT   #ENDL
 RETURN
 =============END_FUNC void main==============
