@@ -98,9 +98,11 @@ public:
 
     static void save_to_file(const string &out_path) {
         ofstream out(out_path);
+        int prev_line = 0;
         for (auto &err: errors) {
-            if (err.eid > 1000 && err.line != 0) {
+            if (err.eid > 1000 && err.line != 0 && err.line != prev_line) {
                 out << err.line << " " << err.err_code << endl;
+                prev_line = err.line;
 //                if (err.err_code == 'j') {
 //                    out << err.msg << endl;
 //                }

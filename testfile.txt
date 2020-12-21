@@ -1,88 +1,46 @@
 
-int a[1000];
-int seed[3] = {19971231, 19981013, 1000000007};
-int staticvalue = 0;
+const int CONST_INT_2 = 2;
 
-int myscanf()
-{
-    int n;
-    scanf(n);
-    return (n);
-}
+void func1_print_99() {
+    const int a = 9;
+    const int b = 11;
 
-void myprintf(int n)
-{
-    printf(n);
-    return;
-}
+    printf("-----");
+    printf("func1_print_99 done!");
+    printf("The result is: ", a*b);
+    printf("-----");
 
-int set(int pos, int d){
-    int x[31];
-    int i = 10;
-    int v = 0;
-
-    x[0] = 1;
-    x[1] = x[0] * 2;
-    x[2] = x[1] * 2;
-    x[3] = x[2] * 2;
-    x[4] = x[3] * 2;
-    x[5] = x[4] * 2;
-    x[6] = x[5] * 2;
-    x[7] = x[6] * 2;
-    x[8] = x[7] * 2;
-    x[9] = x[8] * 2;
-    x[10] = x[9] * 2;
-
-    while (i < 30){
-        i = i + 1;
-        x[i] = x[i - 1] * 2;
-    }
-
-
-    if (pos / 30 >= 1000) return(0);
-    if ((a[pos / 30] / (x[pos-pos/30*30]))-(a[pos / 30] / (x[pos-pos/30*30]))/2*2 != d){
-        if ((a[pos / 30] / (x[pos-pos/30*30]))-(a[pos / 30] / (x[pos-pos/30*30]))/2*2 == 0)
-            if (d == 1)
-                v = (x[pos-pos/30*30]);
-
-        if ((a[pos / 30] / (x[pos-pos/30*30]))-(a[pos / 30] / (x[pos-pos/30*30]))/2*2 == 1)
-            if (d == 0)
-                v = v - (x[pos-pos/30*30]);
-    }
-
-    a[pos / 30] = a[pos / 30] + v;
-    return(0);
-}
-
-
-int rand(){
-    staticvalue = staticvalue * seed[0] + seed[1];
-    staticvalue = staticvalue - staticvalue / seed[2] * seed[2];
-    if (staticvalue < 0) staticvalue = seed[2] + staticvalue;
-    return(staticvalue);
-}
-
-void main(){
-
-    int n;
-    int x, y, z;
-    int tmp = 0;
-    int i = 0;
-    n = myscanf();
-    staticvalue = myscanf();
-    while (n > 0){
-        n = n - 1;
-        z = rand();
-        x = z - z / 300000 * 300000;
-        z = rand();
-        y = z - z / 2 * 2;
-        set(x, y);
-    }
-    while(i<1000){
-        tmp = tmp + (a[i] - a[i]/100000 * 100000);
-        tmp = tmp - tmp / 100000 * 100000;
-        i = i + 1;
-    }
-    myprintf(tmp);
     return ;
+}
+
+int fun2_print_return_999() {
+    int a = 111;
+    int b = 9;
+
+    printf("-----");
+    printf("fun2_print_return_999 done!");
+    printf("The result is below: ");
+    printf(a*b);
+    printf("-----");
+
+    return (a*b);
+}
+void errfun( {return;}
+void main() {
+const char fki = 'k';
+    int a;
+    int b = +100;
+    int c = -100;
+    char ff= 'f';
+    if(ff > 10) printf("nice");
+
+    c = b*c - (b*b);
+
+    printf("18231052");
+    if(12 > fki) printf("nice");
+
+    func1_print_99();
+
+    a = fun2_print_return_999();
+    
 }

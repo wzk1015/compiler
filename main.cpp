@@ -14,22 +14,9 @@ int main() {
 	Grammar grammar("testfile.txt", grammar_check);
     grammar.analyze();
     grammar.save_to_file("output.txt");
-//    grammar.save_lexer_results("testfile_replace.txt");
     Errors::save_to_file("error.txt");
 
 
-
-//    PseudoCodeList::reset();
-//    SymTable::reset();
-//    Grammar optimizer("testfile_replace.txt", gen_inline);
-//    optimizer.analyze();
-//    optimizer.save_lexer_results("testfile_optimize.txt");
-//
-//    //语义分析、中间代码生成
-//    PseudoCodeList::reset();
-//    SymTable::reset();
-//    Grammar semantic("testfile_optimize.txt", semantic_analyze);
-//    semantic.analyze();
 
     //中间代码优化
 
@@ -41,22 +28,13 @@ int main() {
     PseudoCodeList::const_broadcast();
     PseudoCodeList::remove_redundant_tmp();
 
-    PseudoCodeList::divide_basic_blocks();
-    //PseudoCodeList::DAG_optimize();
-
-    //PseudoCodeList::const_broadcast();
-
-    PseudoCodeList::save_to_file("pseudoCode_old.txt");
+    PseudoCodeList::save_to_file("pseudo_code_old.txt");
 
     PseudoCodeList::inline_function();
 //
     PseudoCodeList::const_broadcast();
-//
-//    PseudoCodeList::inline_function();
-//
-//    PseudoCodeList::const_broadcast();
 
-    PseudoCodeList::save_to_file("pseudoCode.txt");
+    PseudoCodeList::save_to_file("pseudo_code.txt");
 
     //目标代码生成
     MipsGenerator mips;
